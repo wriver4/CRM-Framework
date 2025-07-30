@@ -1,0 +1,9 @@
+{
+    "name": "mark-weisser/waveguard",
+    "autoload": {
+        "psr-4": {
+            "MarkWeisser\\Waveguard\\": "src/"
+        }
+    },
+    "require": {}
+}

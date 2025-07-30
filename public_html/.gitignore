@@ -1,0 +1,21 @@
+## vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+## dot folders
+.conf/
+.pki/
+## dot files
+.bash*
+.cloud*
+## folders
+cwp_stats/
+backupcwp/
+tmp/
+## files
+error.log
+request.log
+request_2.log

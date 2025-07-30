@@ -1,0 +1,11 @@
+ErrorDocument 503 "Site disabled for crawling"
+Header set X-Robots-Tag "none"
+RewriteEngine On
+RewriteCond %{HTTP_USER_AGENT} ^.*(bot|crawl|spider).*$ [NC] 
+RewriteCond %{REQUEST_URI} !^/robots.txt$
+RewriteRule .* - [R=503,L]
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]

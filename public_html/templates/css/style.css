@@ -1,0 +1,152 @@
+.ticket-title {
+	font-weight:bold;
+	font-size:20px;
+	margin-left:10px;
+}
+
+.answered {
+	font-size:10px;
+	color:#ffffff;
+	background-color:#7079d6;
+	margin:0px 0px 0px 5px;
+}
+
+.answered-text {
+
+	color:#ffffff;
+	background-color:#7079d6;
+	margin:0px 0px 0px 5px;
+	padding:2px;
+
+}
+
+.required:after {
+	content:" *";
+	color: red;
+}
+
+.table-row-nav {
+	max-width: 200px;
+}
+
+footer {
+	bottom: 0;
+	position: fixed;
+	width: 100%;
+}
+
+footer-table {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+
+}
+
+.footer{
+	height: 100px;
+  margin: auto;
+  text-align:center;
+}
+
+.dataTables_filter {
+    display: none;
+}
+
+a:active {
+	color: #000000;
+}
+
+.red {
+	color: red;
+}
+
+.loading {
+	border: 12px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 12px solid #2fa4e7;
+	width: 70px;
+	height: 70px;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.center {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+input[readonly] {
+	background-color:#e9ecef;
+}
+
+.help-button-custom {
+	height:50px;
+	width:52.5px;
+}
+
+.help-showall-button-custom {
+	height:38px;
+	width:120px;
+}
+
+.text-orientation-180 {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+	padding-right: .2rem;
+}
+
+th {
+  vertical-align: bottom;
+	text-align: center;
+	padding: .25rem;
+  width: 2rem;
+}
+td {
+	vertical-align: middle;
+	text-align: center;
+}
+
+.ticket-list-status {
+max-width: 2rem;
+}
+
+.contacts-list-email {
+text-align: left;
+}
+
+.ticket-count {
+	padding-top: .5rem;
+	text-align: center;
+	color:#20c997
+}
+
+.title-scroll {
+	overflow-x: scroll;
+}
+
+.pt-2-0 {
+	padding-top: 2rem !important;
+}
+
+.ticket-view-number {
+	font-size: 1.5rem;
+	line-height: 1.5rem;
+	color:#2fa4e7; 
+}
+
+.dropdown-hover-all .dropdown-menu, .dropdown-hover > .dropdown-menu.dropend { 
+	margin-left:-1px !important;
+ }
