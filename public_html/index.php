@@ -21,19 +21,7 @@ require SECTIONOPEN;
 ?>
 <div class="container">
   <div class="row">
-    <h4 class="text-danger">Fire Threat Map</h4>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <div class="clearfix"
-           style="height:70vh;">
-        <iframe width="100%"
-                style="height:100%;"
-                src="https://wfca.com/fire-map?lng=-104.84297526073&lat=39.5844205374117&zoom=8.00"
-                title="WFCA Fire Map">
-        </iframe>
-      </div>
-    </div>
+
   </div>
   <div class="row">
     <div class="col-12">
