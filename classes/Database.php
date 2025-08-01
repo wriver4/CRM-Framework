@@ -26,19 +26,19 @@ class Database
             \PDO::ATTR_EMULATE_PREPARES   => false,
         ];
     }
-    public function crm()
+    public function dbcrm()
     {
-        static $CRM = null;
-        if (is_null($CRM)) {
+        static $DBCRM = null;
+        if (is_null($DBCRM)) {
             $dsn = 'mysql:host=' . $this->crm_host . ';dbname=' . $this->crm_database . ';charset=' . $this->character_set;
             try {
                 $pdo = new \PDO($dsn, $this->crm_username, $this->crm_password, $this->options);
             } catch (\PDOException $e) {
                 throw new \PDOException($e->getMessage(), (int)$e->getCode());
             }
-            $CRM = $pdo;
+            $DBCRM = $pdo;
         }
-        return $CRM;
+        return $DBCRM;
     }
     
 }

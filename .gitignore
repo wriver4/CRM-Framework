@@ -8,6 +8,8 @@
 ## dot folders
 .conf/
 .pki/
+.trash/
+.qodo/
 ## dot files
 .bash*
 .cloud*

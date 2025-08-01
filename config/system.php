@@ -31,14 +31,6 @@ define("HEADER", DOCTEMPLATES . '/header.php');
 define("BODY", DOCTEMPLATES . '/body.php');
 define("NAV", DOCTEMPLATES . '/nav.php');
 define("LISTOPEN", DOCTEMPLATES . '/list_open.php');
-define("TICKETLISTOPEN", DOCTEMPLATES . '/ticket_list_open.php');
-define("LISTBUTTONS", DOCTEMPLATES . '/list_buttons.php');
-define("LISTCLOCK", DOCTEMPLATES . '/list_clock.php');
-define("LISTCLOSE", DOCTEMPLATES . '/list_close.php');
-define("SECTIONOPEN", DOCTEMPLATES . '/section_open.php');
-define("SECTIONCLOSE", DOCTEMPLATES . '/section_close.php');
-define("TICKETOPEN", DOCTEMPLATES . '/ticket_open.php');
-define("TICKETCLOSE", DOCTEMPLATES . '/ticket_close.php');
 define("FOOTER", DOCTEMPLATES . '/footer.php');
 define("CLASSES", DOCROOT . '/classes/');
 
@@ -49,14 +41,14 @@ define("IMG", TEMPLATES . '/img');
 define("CSS", TEMPLATES . '/css');
 define("JS", TEMPLATES . '/js');
 
-define("CLIENT_DOC_ROOT", '/home/clientrn/public_html');
+
 
 define("VALIDEMAIL", "(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){2,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){2,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}");
 
 
-define('NONCE_SECRET', 'Vf(&QPgyD+LXSt9JGaERfk6@>');
+define('NONCE_SECRET', 'pHAx1YhL_q/ed&$M)_X2zi!rzn?@au');
 
-require_once 'ftpconfig.php';
+// require_once 'ftpconfig.php';
 
 $systemToEmailAddress = "mark@waveguardco.com";
 $programLog = DOCROOT . '/logs/program.log';
@@ -80,29 +72,12 @@ spl_autoload_register('my_autoload');
 
 if (class_exists('Database')) {
   $db = new Database();
-  $dbadmin = $db->dbadmin();
-  $dbwr = $db->dbwr();
+  $dbcrm = $db->dbcrm();
 } else {
   echo 'Class Database does not exist';
 }
-
-if (class_exists('Properties')) {
-  $properties = new Properties();
-} else {
-  echo 'Class Properties does not exist';
-}
-
-if (class_exists('Systems')) {
-  $systems = new Systems();
-  
-  // print_r($systems->get_all_wrids());
- //  echo '<br>';
-  // print_r($systems->get_all());
-  // exit();
-} else {
-  echo 'Class Systems does not exist';
-}
-
+//echo "System configuration loaded. db exists<br>";
+//exit();
 //or do it during login
 if (class_exists('Users')) {
   $not = $users = new Users();
@@ -133,6 +108,7 @@ if (class_exists('Nonce')) {
 } else {
   echo 'Class Nonce does not exist';
 }
+
 /*
 $systemToEmailAddress = "mark@waveguard.com";
 $programLog = $basedir . '/logs/program.log';

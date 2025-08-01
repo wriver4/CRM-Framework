@@ -10,4 +10,3 @@ $leadCount = count($leads->listLeads());
 $salesPipeline = $sales->listDeals();
 
 // Render dashboard
-?>

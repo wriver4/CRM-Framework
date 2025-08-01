@@ -1,6 +1,8 @@
 <?php
 require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
-$not->loggedin();
+//$not->loggedin();
+echo 'index';
+// exit();
 $dir = basename(dirname(__FILE__));
 $page = substr(basename(__FILE__), 0, strrpos(basename(__FILE__), '.'));
 

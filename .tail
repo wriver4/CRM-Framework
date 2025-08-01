@@ -1,0 +1,2 @@
+tail -f -n 5 /usr/local/apache/domlogs/democrm.waveguardco.net.error.log
+tail -f -n 5 /home/democrm/logs/php_error.log
