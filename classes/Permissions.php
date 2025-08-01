@@ -25,7 +25,7 @@ class Permissions extends Database
   public function get_all()
   {
     $sql = "SELECT * FROM permissions";
-    $stmt = $this->dbadmin()->query($sql);
+    $stmt = $this->dbcrm()->query($sql);
     $stmt->execute();
     $results = $stmt->fetchAll();
     return $results;

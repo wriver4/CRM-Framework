@@ -26,7 +26,7 @@ class Logit extends Database
     $bt = $args['bt'];
     $context = $args['context'];
     $sql = "INSERT INTO logit (timestamp,  severity, message, bt, context) VALUES (:timestamp, :severity, :message, :bt, :context)";
-    $stmt = $this->dbadmin()->prepare($sql);
+    $stmt = $this->dbcrm()->prepare($sql);
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR);
     $stmt->bindParam(':severity', $severity, PDO::PARAM_STR);
     $stmt->bindParam(':message', $message, PDO::PARAM_STR);

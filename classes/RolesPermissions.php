@@ -24,7 +24,7 @@ class RolesPermissions extends Database
   {
     $session_roles_permissions = [];
     $sql = "SELECT pid FROM roles_permissions where rid = ?";
-    $stmt = $this->dbadmin()->prepare($sql);
+    $stmt = $this->dbcrm()->prepare($sql);
     $stmt->execute([$rid]);
     $role_permissions = $stmt->fetchAll();
     array_walk($role_permissions, function ($value) use (&$session_roles_permissions) {
@@ -41,7 +41,7 @@ class RolesPermissions extends Database
   public function get_all()
   {
     $sql = "SELECT * FROM roles_permissions";
-    $stmt = $this->dbadmin()->query($sql);
+    $stmt = $this->dbcrm()->query($sql);
     $stmt->execute();
     $results = $stmt->fetchAll();
     return $results;
@@ -55,7 +55,7 @@ class RolesPermissions extends Database
   public function get_roles_permissions($rid)
   {
     $sql = "SELECT pid FROM roles_permissions where rid = ?";
-    $stmt = $this->dbadmin()->prepare($sql);
+    $stmt = $this->dbcrm()->prepare($sql);
     $stmt->execute([$rid]);
     $role_permissions = $stmt->fetchAll();
     return $role_permissions;

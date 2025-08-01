@@ -33,12 +33,14 @@ class Database
             $dsn = 'mysql:host=' . $this->crm_host . ';dbname=' . $this->crm_database . ';charset=' . $this->character_set;
             try {
                 $pdo = new \PDO($dsn, $this->crm_username, $this->crm_password, $this->options);
+                //echo "Connected successfully";
             } catch (\PDOException $e) {
                 throw new \PDOException($e->getMessage(), (int)$e->getCode());
+                echo "Connection failed: " . $e->getMessage();
+                exit;
             }
             $DBCRM = $pdo;
         }
         return $DBCRM;
     }
-    
 }

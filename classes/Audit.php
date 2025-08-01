@@ -18,7 +18,7 @@ class Audit extends Database
   public function log($user_id, $event, $resource, $useragent, $ip, $location, $data)
   {
     $sql = "INSERT INTO audit (user_id, event, resource, ip, useragent, location, data) VALUES (:user_id, :event, :resource, :ip, :usergent, :location, :data)";
-    $stmt = $this->dbadmin()->prepare($sql);
+    $stmt = $this->dbcrm()->prepare($sql);
     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt->bindParam(':event', $event, PDO::PARAM_STR);
     $stmt->bindParam(':resource', $resource, PDO::PARAM_STR);
@@ -38,7 +38,7 @@ class Audit extends Database
   public function user_log($user_id)
   {
     $sql = "SELECT * FROM audit WHERE user_id = :user_id";
-    $stmt = $this->dbadmin()->prepare($sql);
+    $stmt = $this->dbcrm()->prepare($sql);
     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetchAll();
@@ -67,7 +67,7 @@ class Audit extends Database
   public function resource_log($resource)
   {
     $sql = "SELECT * FROM audit WHERE resource = :resource";
-    $stmt = $this->dbadmin()->prepare($sql);
+    $stmt = $this->dbcrm()->prepare($sql);
     $stmt->bindParam(':resource', $resource, PDO::PARAM_STR);
     $stmt->execute();
     $result = $stmt->fetchAll();
@@ -97,7 +97,7 @@ class Audit extends Database
   public function user_and_eventlog($user_id, $events)
   {
     $sql = "SELECT * FROM audit WHERE user_id = :user_id AND event IN (:events)";
-    $stmt = $this->dbadmin()->prepare($sql);
+    $stmt = $this->dbcrm()->prepare($sql);
     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt->bindParam(':events', $events, PDO::PARAM_STR);
     $stmt->execute();
@@ -130,7 +130,7 @@ class Audit extends Database
   public function resource_and_events_log($resource, $events)
   {
     $sql = "SELECT * FROM audit WHERE resource = :resource AND event IN (:events)";
-    $stmt = $this->dbadmin()->prepare($sql);
+    $stmt = $this->dbcrm()->prepare($sql);
     $stmt->bindParam(':resource', $resource, PDO::PARAM_STR);
     $stmt->bindParam(':events', $events, PDO::PARAM_STR);
     $stmt->execute();
@@ -161,7 +161,7 @@ class Audit extends Database
   public function cleanup($created_at)
   {
     $sql = "DELETE FROM audit WHERE created_at < :created_at";
-    $stmt = $this->dbadmin()->prepare($sql);
+    $stmt = $this->dbcrm()->prepare($sql);
     $stmt->bindParam(':created_at', $created_at, PDO::PARAM_INT);
     $stmt->execute();
     return true;

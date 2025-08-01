@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POS
   $m_postcode = htmlentities(trim($_POST['m_postcode']));
   $m_country = htmlentities(trim($_POST['m_country']));
   $sql = "INSERT INTO contacts (prop_id, ctype, call_order, first_name, family_name, fullname, cell_phone, business_phone, alt_phone, phones, personal_email, business_email, alt_email, emails, p_street_1, p_street_2, p_city, p_state, p_postcode, p_country, business_name, b_street_1, b_street_2, b_city, b_state, b_postcode, b_country, m_street_1, m_street_2, m_city, m_state, m_postcode, m_country) VALUES (:prop_id, :ctype, :call_order, :first_name, :family_name, :fullname, :cell_phone, :business_phone, :alt_phone, :phones, :personal_email, :business_email, :alt_email, :emails, :p_street_1, :p_street_2, :p_city, :p_state, :p_postcode, :p_country, :business_name, :b_street_1, :b_street_2, :b_city, :b_state, :b_postcode, :b_country, :m_street_1, :m_street_2, :m_city, :m_state, :m_postcode, :m_country)";
-  $stmt = $dbadmin->prepare($sql);
+  $stmt = $dbcrm->prepare($sql);
   $stmt->bindParam(':prop_id', $prop_id, PDO::PARAM_STR);
   $stmt->bindParam(':ctype', $ctype, PDO::PARAM_INT);
   $stmt->bindParam(':call_order', $call_order, PDO::PARAM_INT);
@@ -195,7 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POS
   $m_country = htmlentities(trim($_POST['m_country']));
   //$sql = "UPDATE contacts SET prop_id = :prop_id, ctype = :ctype, call_order = :call_order, first_name = :first_name, family_name = :family_name, fullname = :fullname, cell_phone = :cell_phone, business_phone = :business_phone, alt_phone = :alt_phone, phones = :phones, personal_email = :personal_email, business_email = :business_email, alt_email = :alt_email, emails = :emails, p_street_1 = :p_street_1, p_street_2 = :p_street_2, p_city = :p_city, p_state = :p_state, p_postcode = :p_postcode, p_country = :p_country, business_name = :business_name, b_street_1 = :b_street_1, b_street_2 = :b_street_2, b_city = :b_city, b_state = :b_state, b_postcode = :b_postcode, b_country = :b_country, m_street_1 = :m_street_1, m_street_2 = :m_street_2, m_city = :m_city, m_state = :m_state, m_postcode = :m_postcode, m_country = :m_country WHERE id = :id";
     $sql = "UPDATE contacts SET cell_phone = :cell_phone, business_phone = :business_phone, alt_phone = :alt_phone, phones = :phones, personal_email = :personal_email, business_email = :business_email, alt_email = :alt_email, emails = :emails, p_street_1 = :p_street_1, p_street_2 = :p_street_2, p_city = :p_city, p_state = :p_state, p_postcode = :p_postcode, p_country = :p_country, business_name = :business_name, b_street_1 = :b_street_1, b_street_2 = :b_street_2, b_city = :b_city, b_state = :b_state, b_postcode = :b_postcode, b_country = :b_country, m_street_1 = :m_street_1, m_street_2 = :m_street_2, m_city = :m_city, m_state = :m_state, m_postcode = :m_postcode, m_country = :m_country WHERE id = :id";
-  $stmt = $dbadmin->prepare($sql);
+  $stmt = $dbcrm->prepare($sql);
   $stmt->bindParam(':id', $id, PDO::PARAM_INT);
   //$stmt->bindParam(':prop_id', $prop_id, PDO::PARAM_INT);
   //$stmt->bindParam(':ctype', $ctype, PDO::PARAM_INT);
@@ -242,7 +242,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POS
   $status = 0;
   $id = trim($_POST["id"]);
   $sql = "UPDATE contacts SET status = :status WHERE id = :id";
-  $stmt = $dbadmin->prepare($sql);
+  $stmt = $dbcrm->prepare($sql);
 	$stmt->bindParam(':id', $id, PDO::PARAM_INT);
 	$stmt->bindParam(':status', $status, PDO::PARAM_INT);
     if ($stmt->execute()) {

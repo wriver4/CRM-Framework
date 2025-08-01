@@ -30,7 +30,7 @@ class Roles extends Database
   public function get_all()
   {
     $sql = "SELECT id, rid, rname FROM roles";
-    $stmt = $this->dbadmin()->query($sql);
+    $stmt = $this->dbcrm()->query($sql);
     $stmt->execute();
     $results = $stmt->fetchAll();
     return $results;
@@ -39,7 +39,7 @@ class Roles extends Database
   public function get_role_name($rid)
   {
     $sql = "SELECT * FROM roles where id = ?";
-    $stmt = $this->dbadmin()->prepare($sql);
+    $stmt = $this->dbcrm()->prepare($sql);
     $stmt->execute([$rid]);
     $role = $stmt->fetch();
     $role_name = $role['rname'];
@@ -48,7 +48,7 @@ class Roles extends Database
   public function get_role_names()
   {
     $sql = "SELECT * FROM roles ORDER BY rid DESC";
-    $stmt = $this->dbadmin()->prepare($sql);
+    $stmt = $this->dbcrm()->prepare($sql);
     $stmt->execute();
     $roles = $stmt->fetchAll();
     foreach ($roles as $role) {
@@ -59,11 +59,11 @@ class Roles extends Database
   public function set_role_name($rid)
   {
     $sql = "SELECT * FROM roles where id = ?";
-    $stmt = $this->dbadmin->prepare($sql);
+    $stmt = $this->dbcrm->prepare($sql);
     $stmt->execute([$rid]);
     $stmt->fetch();
-    echo '<option value="' . $rid . '">' . $this->get_role_name($this->dbadmin(), $rid) . '</option>';
-    $this->get_role_names($this->dbadmin());
+    echo '<option value="' . $rid . '">' . $this->get_role_name($this->dbcrm(), $rid) . '</option>';
+    $this->get_role_names($this->dbcrm());
   }
 
   public function update_role_array($lang)
