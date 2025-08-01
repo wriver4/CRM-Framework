@@ -31,6 +31,9 @@ define("HEADER", DOCTEMPLATES . '/header.php');
 define("BODY", DOCTEMPLATES . '/body.php');
 define("NAV", DOCTEMPLATES . '/nav.php');
 define("LISTOPEN", DOCTEMPLATES . '/list_open.php');
+define("LISTCLOSE", DOCTEMPLATES . '/list_close.php');
+define("SECTIONOPEN", DOCTEMPLATES . '/section_open.php');
+define("SECTIONCLOSE", DOCTEMPLATES . '/section_close.php');
 define("FOOTER", DOCTEMPLATES . '/footer.php');
 define("CLASSES", DOCROOT . '/classes/');
 

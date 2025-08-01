@@ -1,13 +1,13 @@
 <?php
 require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
-//$not->loggedin();
+$not->loggedin();
 
 $dir = basename(dirname(__FILE__));
 $page = substr(basename(__FILE__), 0, strrpos(basename(__FILE__), '.'));
 
 $table_page = false;
 
-$systemmessage = '';
+$system_message = '';
 
 require LANG . '/en.php';
 $title = 'Welcome to Administration!';

@@ -8,7 +8,7 @@
        aria-hidden="true"></i>&ensp; <?php echo $_SESSION['full_name']; ?></a>
   <ul class="dropdown-menu text-small"
       aria-labelledby="dropdownMenuLink">
-    <?php if (in_array(8, $_SESSION['permissions'])) : ?>
+    <?php // if (in_array(8, $_SESSION['permissions'])) : ?>
     <li><a class="dropdown-item"
          href="#"
          tabindex="0">Installer add - edit- list</a>
@@ -53,7 +53,7 @@
         </li>
       </ul>
     </div>
-    <?php endif; ?>
+    <?php // endif; ?>
     <li><a class="dropdown-item"
          href="<?php echo URL . '/help' ?>"
          tabindex="0"><?= $lang['navbar_help']; ?></a>
