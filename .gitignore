@@ -17,7 +17,11 @@
 cwp_stats/
 backupcwp/
 tmp/
+ssl/
+ftp/
 ## files
 error.log
 request.log
 request_2.log
+conf.json
+passwd
