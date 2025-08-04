@@ -21,6 +21,7 @@ ssl/
 ftp/
 ## files
 error.log
+php_errors.log
 request.log
 request_2.log
 conf.json
