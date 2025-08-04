@@ -168,13 +168,6 @@ if ($table_page == true) {
         .'     { orderable: false, targets: [0,1,3,4,5,6,7,8,10] }'
         .'    ],';
   }
-  if ($dir == 'properties' || $dir == 'systems') {
-    echo '   "pageLength": 8,'
-        .'    order: [[1, "asc"]],'
-        .'    columnDefs: ['
-        .'     { orderable: false, targets: [0] }'
-        .'    ],';
-  }
   if ($dir == 'contacts') {
     echo '   "pageLength": 7,'
         .'    order: [[1, "asc"]],'

@@ -86,12 +86,6 @@
   <meta http-equiv="refresh"
         content="<?php echo $_SESSION['refresh_time']; ?>">
   <?php } ?>
-  <?php if (isset($refresh) && $refresh == true && $_SESSION['refresh'] == true && $dir == "testing") { ?>
-  <meta http-equiv="refresh"
-        content="5">
-  <?php } ?>
-  <!-- <script src="https://kit.fontawesome.com/339b45b0e3.js"
-          crossorigin="anonymous"></script> -->
   <?php if ($table_page == true) { ?>
   <link rel="stylesheet"
         type="text/css"

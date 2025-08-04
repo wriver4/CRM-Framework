@@ -7,46 +7,77 @@
 
 session_start();
 
-if (
-  isset($_SERVER['HTTPS']) &&
-  ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
-  isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-  $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'
-) {
-  $protocol = 'https://';
-} else {
-  // 404 error or redirect to https
-  $protocol = 'http://';
+// --- AUTOLOADING ---
+// Autoloaders should be registered first to ensure classes are available
+// throughout the application's bootstrap process.
+
+// 1. Custom autoloader for the /classes directory.
+// This autoloader only handles non-namespaced classes to avoid
+// conflicts with Composer's autoloader.
+spl_autoload_register(function ($class_name) {
+    // Ignore namespaced classes (which are handled by Composer)
+    if (strpos($class_name, '\\') !== false) {
+        return;
+    }
+    $file = __DIR__ . '/../classes/' . $class_name . '.php';
+    if (file_exists($file)) {
+        require_once $file;
+    }
+});
+
+// 2. Composer's autoloader for vendor packages.
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// Determine if the connection is secure. The `HTTP_X_FORWARDED_PROTO`
+// check is important for applications behind a reverse proxy or load balancer.
+$isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
+
+// Skipped for command-line interface (CLI) scripts.
+if (!$isSecure && php_sapi_name() !== 'cli') {
+    $redirectUrl = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    header('HTTP/1.1 301 Moved Permanently');
+    header('Location: ' . $redirectUrl);
+    exit();
 }
 
+// Define the protocol based on the secure connection status.
+$protocol = 'https://';
+
+// --- FILE SYSTEM PATHS ---
+// Core application paths
 define("DOCROOT", dirname($_SERVER['DOCUMENT_ROOT']));
-define("DOCSUBDOMAIN", basename(DOCROOT));
-define("TABTITLEPREFIX", ucfirst(substr(basename(DOCROOT), 0, -2)));
 define("CONFIGROOT", DOCROOT . '/config');
+define("CLASSES", DOCROOT . '/classes/');
+
+// Publicly accessible paths
 define("DOCPUBLIC", $_SERVER['DOCUMENT_ROOT']);
 define("DOCTEMPLATES", DOCPUBLIC . '/templates');
-define("LANG", DOCTEMPLATES . '/languages');
-define("LOGINLANG", LANG . '/login');
+
+// Specific template file paths for includes
 define("HEADER", DOCTEMPLATES . '/header.php');
 define("BODY", DOCTEMPLATES . '/body.php');
 define("NAV", DOCTEMPLATES . '/nav.php');
+define("FOOTER", DOCTEMPLATES . '/footer.php');
 define("LISTOPEN", DOCTEMPLATES . '/list_open.php');
 define("LISTBUTTONS", DOCTEMPLATES . '/list_buttons.php');
 define("LISTCLOSE", DOCTEMPLATES . '/list_close.php');
 define("SECTIONOPEN", DOCTEMPLATES . '/section_open.php');
 define("SECTIONCLOSE", DOCTEMPLATES . '/section_close.php');
-define("FOOTER", DOCTEMPLATES . '/footer.php');
-define("CLASSES", DOCROOT . '/classes/');
 
+// --- URLS & BROWSER PATHS ---
 define("URL", $protocol . $_SERVER['HTTP_HOST']);
-define("SECURITY", URL . "/security");
 define("TEMPLATES", URL . "/templates");
 define("IMG", TEMPLATES . '/img');
 define("CSS", TEMPLATES . '/css');
 define("JS", TEMPLATES . '/js');
+define("SECURITY", URL . "/security");
 
-
-
+// --- APPLICATION & UI SETTINGS ---
+define("DOCSUBDOMAIN", basename(DOCROOT));
+define("TABTITLEPREFIX", ucfirst(substr(basename(DOCROOT), 0, -2)));
+define("LANG", DOCTEMPLATES . '/languages');
+define("LOGINLANG", LANG . '/login');
 define("VALIDEMAIL", "(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){2,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){2,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}");
 
 
@@ -60,67 +91,44 @@ $programLogSubject = "admin.waveguardco.com program log entry";
 $programLogMailTo = $systemToEmailAddress . '';
 $agent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)';
 
-function my_autoload($class_name)
-{
-  include CLASSES . $class_name . '.php';
-}
-//function monolog_autoload($class_name)
-//{
-//  include CLASSES .'Monolog/'. $class_name . '.php';
-//}
-spl_autoload_extensions('.php');
-spl_autoload_register('my_autoload');
-//spl_autoload_register('monolog_autoload');
-//use Monolog\Logger; 
-//use Monolog\Handler\StreamHandler; // send message to log file
+// --- ERROR & EXCEPTION HANDLING (Whoops & Monolog) ---
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+use Whoops\Run as WhoopsRun;
+use Whoops\Handler\PrettyPageHandler;
 
-require '/home/democrm/vendor/autoload.php'; // Composer autoload
-if (class_exists('Database')) {
-  $db = new Database();
-  $dbcrm = $db->dbcrm();
-} else {
-  echo 'Class Database does not exist';
-}
-//echo "System configuration loaded. db exists<br>";
-//exit();
-//or do it during login
-if (class_exists('Users')) {
-  $not = $users = new Users();
-} else {
-  echo 'Class Users does not exist';
-}
+// Set up Monolog to log errors to a file
+$log = new Logger('app_logger');
+$log->pushHandler(new StreamHandler(DOCROOT . '/logs/php_errors.log', Level::Error));
 
-if (class_exists('Audit')) {
-  $audit = new Audit();
-} else {
-  echo 'Class Audit does not exist';
+// Set up Whoops to provide detailed error pages for development
+$whoops = new WhoopsRun();
+$whoops->pushHandler(new PrettyPageHandler());
+
+// Add our custom Logit handler to the Whoops stack.
+$whoops->pushHandler(new Logit($log)); // The 'my_autoload' function will load /classes/Logit.php
+
+// Register Whoops to take over PHP's error handling.
+$whoops->register();
+
+// --- CORE SERVICES INITIALIZATION ---
+// Instantiate core application classes. If any of these fail, the autoloader and
+// Whoops will catch the fatal error, log it, and display a detailed error page
+// for debugging, which is more effective than the previous class_exists checks.
+try {
+    $db = new Database();
+    $dbcrm = $db->dbcrm();
+    $not = $users = new Users();
+    $audit = new Audit();
+    $helper = new Helpers();
+    $rolesperms = new RolesPermissions();
+    $nonce = new Nonce();
+} catch (\Throwable $e) {
+    // The Logit handler has already logged the detailed error via Whoops.
+    // Now, we can stop execution gracefully with a user-friendly message.
+    http_response_code(503); // Service Unavailable
+    die("A critical application service could not be started. Please check the error logs.");
 }
-
-if (class_exists('Helpers')) {
-  $helper = new Helpers();
-} else {
-  echo 'Class Helpers does not exist';
-}
-
-if (class_exists('RolesPermissions')) {
-  $rolesperms = new RolesPermissions();
-} else {
-  echo 'Class RolesPermissions does not exist';
-}
-
-if (class_exists('Nonce')) {
-  $nonce = new Nonce();
-} else {
-  echo 'Class Nonce does not exist';
-}
-
-/*
-$systemToEmailAddress = "mark@waveguard.com";
-$programLog = $basedir . '/logs/program.log';
-$programLogSubject = "admin.waveguardco.com program log entry";
-$programLogMailTo = $systemToEmailAddress . '';
-$agent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)';
-*/
-
 
 require_once 'helpers.php';

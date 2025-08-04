@@ -6,9 +6,11 @@
         }
     },
     "require-dev": {
-        "filp/whoops": "^2.18"
+        "filp/whoops": "^2.18",
+        "monolog/monolog": "^3.9"
     },
     "require": {
-        "monolog/monolog": "^3.9"
+        "monolog/monolog": "^3.9",
+        "filp/whoops": "^2.18"
     }
 }
