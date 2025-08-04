@@ -97,5 +97,6 @@
         type="text/css"
         href="https://cdn.datatables.net/v/bs5/dt-1.12.1/fh-3.2.4/r-2.3.0/datatables.min.css" />
   <?php } ?>
+
   <link rel="stylesheet"
         href="<?php echo CSS . "/style.css"; ?>">

@@ -10,7 +10,7 @@ $table_page = false;
 $system_message = '';
 
 require LANG . '/en.php';
-$title = 'Welcome to Administration!';
+$title = 'Welcome to CRM!';
 
 $title_icon = '<i class="fa-solid fa-bars-progress"
    aria-hidden="true"></i>';
@@ -22,7 +22,13 @@ require SECTIONOPEN;
 ?>
 <div class="container">
   <div class="row">
-
+    <div class="col-12">
+      <h1 class="text-center">Dashboard</h1>
+      <p class="text-center">Welcome to your CRM dashboard!</p>
+      <?php
+      require_once 'dashboard.php';
+      ?>
+    </div>
   </div>
   <div class="row">
     <div class="col-12">

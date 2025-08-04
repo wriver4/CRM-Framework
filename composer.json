@@ -5,5 +5,10 @@
             "MarkWeisser\\Waveguard\\": "src/"
         }
     },
-    "require": {}
+    "require-dev": {
+        "filp/whoops": "^2.18"
+    },
+    "require": {
+        "monolog/monolog": "^3.9"
+    }
 }

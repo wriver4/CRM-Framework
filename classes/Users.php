@@ -157,7 +157,8 @@ class Users extends Database
 
 	public function get_all()
 	{
-		$sql = 'SELECT u.id, u.full_name, u.username, r.rname, u.prop_id, u.status from users u LEFT JOIN roles r ON u.rid = r.rid';
+		# $sql = 'SELECT u.id, u.full_name, u.username, r.rname, u.prop_id, u.status from users u LEFT JOIN roles r ON u.rid = r.rid';
+		$sql = 'SELECT u.id, u.full_name, u.name, u.username, r.rname, u.status from users u LEFT JOIN roles r ON u.rid = r.rid';
 		$sql .= " ORDER BY u.full_name ASC";
 		$stmt = $this->dbcrm()->query($sql);
 		$stmt->execute();
@@ -167,7 +168,7 @@ class Users extends Database
 
 	public function get_all_active()
 	{
-		$sql = 'SELECT u.id, u.full_name, u.username, r.rname, u.prop_id from users u LEFT JOIN roles r ON u.rid = r.rid WHERE u.status = 1 ORDER BY u.full_name ASC';
+		$sql = 'SELECT u.id, u.full_name, u.username, r.rname from users u LEFT JOIN roles r ON u.rid = r.rid WHERE u.status = 1 ORDER BY u.full_name ASC';
 		$stmt = $this->dbcrm()->query($sql);
 		$stmt->execute();
 		$results = $stmt->fetchAll();

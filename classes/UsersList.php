@@ -16,8 +16,7 @@ class UsersList extends ActionTable
       'action' => $lang['action'],
       'full_name' => $lang['full_name'],
       'username' => $lang['username'],
-      'rname' => $lang['rname'],
-      'prop_id' => $lang['prop_id']
+      'rname' => $lang['rname']
     ];
     $this->lang = $lang;
     $this->users = new Users();

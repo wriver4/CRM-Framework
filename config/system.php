@@ -31,6 +31,7 @@ define("HEADER", DOCTEMPLATES . '/header.php');
 define("BODY", DOCTEMPLATES . '/body.php');
 define("NAV", DOCTEMPLATES . '/nav.php');
 define("LISTOPEN", DOCTEMPLATES . '/list_open.php');
+define("LISTBUTTONS", DOCTEMPLATES . '/list_buttons.php');
 define("LISTCLOSE", DOCTEMPLATES . '/list_close.php');
 define("SECTIONOPEN", DOCTEMPLATES . '/section_open.php');
 define("SECTIONCLOSE", DOCTEMPLATES . '/section_close.php');
@@ -73,6 +74,7 @@ spl_autoload_register('my_autoload');
 //use Monolog\Logger; 
 //use Monolog\Handler\StreamHandler; // send message to log file
 
+require '/home/democrm/vendor/autoload.php'; // Composer autoload
 if (class_exists('Database')) {
   $db = new Database();
   $dbcrm = $db->dbcrm();
