@@ -19,18 +19,6 @@ require SECTIONOPEN;
 <form action="post.php"
       method="POST"
       autocomplete="off">
-
-  <div class="form-group pb-2">
-    <label for="prop_id"
-           class="required pb-1"><?= $lang['prop_id']; ?></label>
-    <select name="prop_id"
-            id="prop_id"
-            class="form-select"
-            required
-            autocomplete="off"
-            autofocus="autofocus">
-      <?php $helper->select_property_id($lang); ?></select>
-  </div>
   <div class="row">
     <div class="col">
       <div class="form-group pb-2">
@@ -199,7 +187,7 @@ require SECTIONOPEN;
                 data-bs-target="#address-personal"
                 aria-expanded="false"
                 aria-controls="address-personal">
-          <?= $lang['personal']; ?>&emsp;&emsp;<span class="text-warning"><?= $lang['personal_note']; ?></span></button>
+          <?= $lang['personal']; ?></button>
       </h2>
       <div id="address-personal"
            class="accordion-collapse collapse"
@@ -286,7 +274,7 @@ require SECTIONOPEN;
                 data-bs-target="#address-business"
                 aria-expanded="false"
                 aria-controls="address-business">
-          <?= $lang['business']; ?>&emsp;&emsp;<span class="text-warning"><?= $lang['business_note']; ?></span></button>
+          <?= $lang['business']; ?></button>
       </h2>
       <div id="address-business"
            class="accordion-collapse collapse"

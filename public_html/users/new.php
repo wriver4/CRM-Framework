@@ -33,34 +33,6 @@ require SECTIONOPEN;
             tabindex="1">
       <?php $helper->select_role($lang); ?></select>
   </div>
-  <div class="row">
-    <div class="col">
-      <div class="form-group pb-2">
-        <label for="prop_id"
-               class="required pb-1 pt-1"><?= $lang['prop_id']; ?></label>
-        <input type="text"
-               name="prop_id"
-               id="prop_id"
-               class="form-control"
-               placeholder="<?= $lang['new_user_prop_id_placeholder']; ?>"
-               required=""
-               autocomplete="off"
-               tabindex="2">
-      </div>
-    </div>
-    <div class="col">
-      <div class="form-group pb-2">
-        <label for="find_prop_id"
-               class="pb-2"><?= $lang['find_prop_id']; ?></label>
-        <select id="prop_id"
-                class="form-select"
-                autocomplete="off"
-                readonly="readonly"
-                tabindex="-1">
-          <?php $helper->find_property_id($lang); ?></select>
-      </div>
-    </div>
-  </div>
   <div class="form-group pb-2">
     <label for="full_name"
            class="required pb-1 pt-1"><?= $lang['full_name']; ?></label>
@@ -108,7 +80,7 @@ require SECTIONOPEN;
            class="required pb-1"><?= $lang['password']; ?></label>
     <div id="password_note"
          class="form-text">
-      <?php echo '<span class="text-warning">'
+      <?php /* echo '<span class="text-warning">'
                             . $lang['password_note_1']
                             . '<span class="text-dark">'
                             . $last_user_id
@@ -120,6 +92,7 @@ require SECTIONOPEN;
                             . '<span class="text-info">'
                             . $lang['password_note_3']
                             . '</span>';
+                            */
                      ?>
     </div>
     <input type="password"

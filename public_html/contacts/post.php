@@ -7,7 +7,6 @@ require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 $not->loggedin();
 $contacts = new Contacts();
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POST['page'] == 'new') {
-  $prop_id = htmlentities(trim($_POST['prop_id']));
   $ctype = htmlentities(trim($_POST['ctype']));
   $call_order = htmlentities(trim($_POST['call_order']));
   $first_name = htmlentities(trim($_POST['first_name']));
@@ -66,7 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POS
   $m_country = htmlentities(trim($_POST['m_country']));
   $sql = "INSERT INTO contacts (prop_id, ctype, call_order, first_name, family_name, fullname, cell_phone, business_phone, alt_phone, phones, personal_email, business_email, alt_email, emails, p_street_1, p_street_2, p_city, p_state, p_postcode, p_country, business_name, b_street_1, b_street_2, b_city, b_state, b_postcode, b_country, m_street_1, m_street_2, m_city, m_state, m_postcode, m_country) VALUES (:prop_id, :ctype, :call_order, :first_name, :family_name, :fullname, :cell_phone, :business_phone, :alt_phone, :phones, :personal_email, :business_email, :alt_email, :emails, :p_street_1, :p_street_2, :p_city, :p_state, :p_postcode, :p_country, :business_name, :b_street_1, :b_street_2, :b_city, :b_state, :b_postcode, :b_country, :m_street_1, :m_street_2, :m_city, :m_state, :m_postcode, :m_country)";
   $stmt = $dbcrm->prepare($sql);
-  $stmt->bindParam(':prop_id', $prop_id, PDO::PARAM_STR);
   $stmt->bindParam(':ctype', $ctype, PDO::PARAM_INT);
   $stmt->bindParam(':call_order', $call_order, PDO::PARAM_INT);
   $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR);

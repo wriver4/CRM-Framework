@@ -12,7 +12,6 @@ class ContactsList extends ActionTable
     parent::__construct($results, $this->column_names, "contacts-list");
     $this->column_names = [
       'action' => $lang['action'],
-      'prop_id' => $lang['prop_id'],
       'ctype' => $lang['ctype'],
       'fullname' => $lang['fullname'],
       'phones' => $lang['phones'],

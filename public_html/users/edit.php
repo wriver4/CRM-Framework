@@ -17,11 +17,7 @@ require HEADER;
 require BODY;
 require NAV;
 require SECTIONOPEN;
-?>
-<?php $form ="properties";
-require 'get.php'; 
-require 'user_properties.php';?>
-<?php $form ="profile";
+$form ="profile";
 require 'get.php';
 ?>
 <h3><?= $lang['user_profile_edit']; ?></h3>
@@ -87,12 +83,14 @@ require 'get.php';
   </div>
   <div class="form-group pb-1">
     <label for="status"
-           class="required pb-1 pt-1"><?= $lang['status']; ?></label>
-    <select name="status"
-            class="form-select"
-            id="status"
-            required="">
-      <?php $helper->set_status($status); ?></select>
+           class="pb-1 pt-1"><?= $lang['status']; ?></label>
+    <input type="text"
+           disabled
+           name="status"
+           maxlength="100"
+           id="status"
+           class="form-control"
+           value="<?php echo $helper->get_status($status); ?>">
   </div>
   <p></p>
   <input type="hidden"

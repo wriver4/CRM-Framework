@@ -44,9 +44,9 @@ class Users extends Database
 		header('Location: /');
 	}
 
-	public function new($rid, $prop_id, $full_name, $username, $email, $password)
+	public function new($rid, $full_name, $username, $email, $password)
 	{
-		$sql = "INSERT INTO users (rid, prop_id, full_name, username, email, password  ) VALUES (:rid, :prop_id, :full_name, :username, :email, :password)";
+		$sql = "INSERT INTO users (rid, full_name, username, email, password  ) VALUES (:rid, :full_name, :username, :email, :password)";
 		$stmt = $this->dbcrm()->prepare($sql);
 		$stmt->bindParam(':rid', $rid, PDO::PARAM_INT);
 		$stmt->bindParam(':full_name', $full_name, PDO::PARAM_STR);
@@ -60,14 +60,6 @@ class Users extends Database
 		} catch (PDOException $e) {
 			echo $e->getMessage();
 		}
-	}
-
-	public function add_prop_id($id, $prop_id)
-	{
-		$sql = "UPDATE `users` SET `prop_id` = '$prop_id' WHERE `id` = '$id'";
-		$stmt = $this->dbcrm()->query($sql);
-		$stmt->execute();
-		$stmt = null;
 	}
 
 	public function edit_profile($id, $full_name, $password, $rid, $email)
@@ -116,34 +108,6 @@ class Users extends Database
 		}
 	}
 
-	public function get_user_properties_by_id($id)
-	{
-		$sql = 'SELECT prop_id from properties_users WHERE user_id = :id';
-		$stmt = $this->dbcrm()->prepare($sql);
-		$stmt->bindParam(':id', $id, PDO::PARAM_STR);
-		$stmt->execute();
-		$result = $stmt->fetchAll(PDO::FETCH_COLUMN);
-		return $result;
-	}
-
-	public function add_user_properties_by_id($user_id, $prop_id){
-		$sql = "INSERT INTO properties_users (user_id, prop_id) VALUES (:user_id, :prop_id)";
-		$stmt = $this->dbcrm()->prepare($sql);
-		$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-		$stmt->bindParam(':prop_id', $prop_id, PDO::PARAM_STR);
-		$stmt->execute();
-		$stmt = null;
-	}
-
-	public function delete_user_properties_by_id($user_id)
-	{
-		$sql = "DELETE FROM properties_users WHERE user_id = :user_id";
-		$stmt = $this->dbcrm()->prepare($sql);
-		$stmt->bindParam(':user_id', $user_id, PDO::PARAM_STR);
-		$stmt->execute();
-		$deleted = $stmt->rowCount();
-		$stmt = null;
-	}
 
 	public function get_by_id($id)
 	{
@@ -157,7 +121,6 @@ class Users extends Database
 
 	public function get_all()
 	{
-		# $sql = 'SELECT u.id, u.full_name, u.username, r.rname, u.prop_id, u.status from users u LEFT JOIN roles r ON u.rid = r.rid';
 		$sql = 'SELECT u.id, u.full_name, u.name, u.username, r.rname, u.status from users u LEFT JOIN roles r ON u.rid = r.rid';
 		$sql .= " ORDER BY u.full_name ASC";
 		$stmt = $this->dbcrm()->query($sql);

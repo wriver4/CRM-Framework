@@ -5,9 +5,6 @@ $not->loggedin();
 $users = new Users();
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'users' && $_POST['page'] == 'new') {
   $rid = htmlentities(trim($_POST["rid"]));
-  $prop_id = htmlentities(trim($_POST["prop_id"]));
-  // $prop_id = str_replace(' ', '', $prop_id);
-  // $prop_id = json_encode($prop_id, JSON_FORCE_OBJECT);
   $full_name = htmlentities(trim($_POST["full_name"]));
   $username = htmlentities(trim($_POST["username"]));
   $username = str_replace(' ', '', $username);
@@ -17,8 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'users' && $_POST['
   $password = htmlentities(trim($_POST["password"]));
   $password = $helper->hash_password($password);
   $users->new($rid, $full_name, $username, $email, $password);
-  $user_id = $users->last_row_id();
-  $prop_result = $users->add_user_properties_by_id($user_id, $prop_id);
+  $user_id = $users->last_row_id();;
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'users' && $_POST['page'] == 'edit' && $_POST['form_name'] == 'user_profile') {
@@ -71,5 +67,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'users' && $_POST['
   $status = 0;
   $id = htmlentities(trim($_POST['id']));
   $users->delete($id, $status);;
-  $users->delete_user_properties_by_id($id);
 }

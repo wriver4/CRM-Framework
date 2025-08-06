@@ -13,8 +13,6 @@ if ($dir == 'users' && $page == 'view') {
   $id = trim($_GET["id"]);
   $result = $users->get_by_id($id);
   $rname = $result["rname"];
-  $prop_result = $users->get_user_properties_by_id($id);
-  $prop_id = implode (', ', $prop_result);
   $full_name = $result["full_name"];
   $username = $result["username"];
   $password = $result["password"];
@@ -25,12 +23,7 @@ if ($dir == 'users' && $page == 'view') {
 }
 
 if ($dir == 'users' && $page == 'edit') {
-  if ($form == "properties"){
-    $id = trim($_GET["id"]);
-    $result = $users->get_user_properties_by_id($id);
-    $prop_id = implode (', ', $result);
-  }
-  if ($form == "profile"){
+   if ($form == "profile"){
     $id = trim($_GET["id"]);
     $result = $users->get_by_id($id);
     $rid = $result["rid"];
@@ -46,13 +39,6 @@ if ($dir == 'users' && $page == 'delete') {
 $id = trim($_GET["id"]);
 $result = $users->get_by_id($id);
 $rid = $result["rname"];
-$jdcv = json_decode($result["prop_id"], true);
-  if (is_array($jdcv)) {
-    $jdvc_s = implode(', ', $jdcv);
-    $prop_id = $jdvc_s;
-  } else {
-    $prop_id = $jdcv;
-  }
 $full_name = $result["full_name"];
 $username = $result["username"];
 $password = $result["password"];

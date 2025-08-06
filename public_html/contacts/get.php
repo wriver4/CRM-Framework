@@ -2,7 +2,6 @@
 require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 $not->loggedin();
 $contacts = new Contacts();
-$properties = new Properties();
 if ($dir == 'contacts' && $page == 'list') {
   $results = $contacts->get_active_list();
   $list = new ContactsList($results, $lang);
@@ -12,13 +11,11 @@ if ($dir == 'contacts' && $page == 'list') {
 if ($dir == 'contacts' && $page == 'view') {
   $id = trim($_GET["id"]);
   $result = $contacts->get_by_id($id);
-  $nickname = $properties->get_prop_id_nickname($result['prop_id']);
 }
 
 if ($dir == 'contacts' && $page == 'edit') {
   $id = trim($_GET["id"]);
   $result = $contacts->get_by_id($id);
-  $prop_id = $result['prop_id'];
   $ctype = (int) $result['ctype'];
   $call_order = (int) $result['call_order'];
   $first_name = $result['first_name'];
@@ -49,7 +46,6 @@ if ($dir == 'contacts' && $page == 'edit') {
   $m_state = $result['m_state'];
   $m_postcode = $result['m_postcode'];
   $m_country = $result['m_country'];
-  $nickname = $properties->get_prop_id_nickname($prop_id);
 }
 
 if ($dir == 'contacts' && $page == 'delete') {

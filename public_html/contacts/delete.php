@@ -20,16 +20,6 @@ require SECTIONOPEN;
 <form action="post.php"
       method="POST">
   <div class="form-group pb-2">
-    <label for="prop_id"
-           class="pb-1"><?= $lang['prop_id']; ?></label>
-    <input type="text"
-           name="prop_id"
-           id="prop_id"
-           class="form-control"
-           value="<?= $result['prop_id']; ?>"
-           readonly>
-  </div>
-  <div class="form-group pb-2">
     <label for="ctype"
            class="pb-1"><?= $lang['ctype']; ?></label>
     <input type="text"
