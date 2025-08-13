@@ -19,6 +19,7 @@ backupcwp/
 tmp/
 ssl/
 ftp/
+Archive/
 ## files
 error.log
 php_errors.log

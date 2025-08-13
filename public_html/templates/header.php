@@ -94,3 +94,5 @@
 
   <link rel="stylesheet"
         href="<?php echo CSS . "/style.css"; ?>">
+  <link rel="stylesheet"
+        href="<?php echo CSS . "/forms.css"; ?>">

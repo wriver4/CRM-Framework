@@ -18,10 +18,14 @@ if ($page != 'login') {
 // validation
 if ($page == 'new' || $page == 'edit') {
   echo '<script src="/templates/js/validator.min.js"></script>';
-  //echo '<script src="https://unpkg.com/just-validate@latest/dist/just-validate.production.min.js"></script>';
-  //echo "<script>setTimeout(() => { $('.message').fadeOut('slow'); }, 3000); </script>";
-/* dev only */
-  echo '<script>
+}
+
+// conditional forms
+if ($dir == 'leads' && $page == 'new') {
+  echo '<script src="/templates/js/conditional-forms.js"></script>';
+}
+// dev only
+/*
 // Defining a function to display error message
 function printError(elemId, hintMsg) {
     document.getElementById(elemId).innerHTML = hintMsg;
@@ -137,7 +141,7 @@ function validateForm() {
 </script>';
 /* end dev only */
 
-}
+
 
 if ($dir == 'test') {
   echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>';

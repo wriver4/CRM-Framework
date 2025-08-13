@@ -341,6 +341,90 @@ public function admin_select_property_id($lang, $prop_id )
     return $countries;
   }
 
+  // Lead Services Interested In
+  public function get_lead_services_array($lang)
+  {
+    $services_array = [
+      '1' => $lang['lead_service_wildfire_spray'], // Exterior Wildfire Spray System
+      '2' => $lang['lead_service_assessment_drone'], // Site Assessment and Drone Footage
+      '3' => $lang['lead_service_gutter_protection'], // Gutter Protection
+      '4' => $lang['lead_service_ember_vent'], // Ember Vent Protection
+      '5' => $lang['lead_service_ltr_application'], // Long Term Retardant (LTR) Application
+      '6' => $lang['lead_service_lease_system'], // Lease a Protection System
+      '7' => $lang['lead_service_landscape_mitigation'], // Landscape Mitigation
+    ];
+    return $services_array;
+  }
+
+  // Lead Structure Description
+  public function get_lead_structure_description_array($lang)
+  {
+    $structure_array = [
+      '1' => $lang['lead_structure_rambler'], // Rambler - One Story
+      '2' => $lang['lead_structure_two_story'], // Two Story
+      '3' => $lang['lead_structure_three_story'], // Three Story
+      '4' => $lang['lead_structure_walkout_basement'], // Walkout Basement
+      '5' => $lang['lead_structure_modern'], // Modern
+      '6' => $lang['lead_other'], // Other
+    ];
+    return $structure_array;
+  }
+
+  // Lead How Did You Hear About Us
+  public function get_lead_hear_about_array($lang)
+  {
+    $hear_about_array = [
+      '1' => $lang['lead_hear_mass_mailing'], // Mass mailing
+      '2' => $lang['lead_hear_tv_radio'], // TV/radio ad
+      '3' => $lang['lead_hear_internet_search'], // Internet search
+      '4' => $lang['lead_hear_neighbor'], // Neighbor
+      '5' => $lang['lead_hear_trade_home_show'], // Trade/home show
+      '6' => $lang['lead_other'], // Other
+    ];
+    return $hear_about_array;
+  }
+
+  // Lead Source
+  public function get_lead_source_array($lang)
+  {
+    $lead_source_array = [
+      '1' => $lang['lead_source_web_estimate'], // Web Estimate
+      '2' => $lang['lead_source_ltr_form'], // LTR Form
+      '3' => $lang['lead_source_contact_form'], // Contact Form
+      '4' => $lang['lead_source_phone_inquiry'], // Phone Inquiry
+      '5' => $lang['lead_source_cold_call'], // Cold Call
+      '6' => $lang['lead_source_in_person'], // In Person
+    ];
+    return $lead_source_array;
+  }
+
+  // Lead Contact Type
+  public function get_lead_contact_type_array($lang)
+  {
+    $lead_contact_array = [
+      '1' => $lang['lead_owner'], // Owner
+      '2' => $lang['lead_owner_existing_system'], // Owner with Existing System
+      '3' => $lang['lead_representative'], // Representative
+      '4' => $lang['lead_architect_engineer'], // Architect or Engineer
+      '5' => $lang['lead_product_dealer_installer'], // Product Dealer or Installer
+    ];
+    return $lead_contact_array;
+  }
+
+  // Lead Structure Type
+  public function get_lead_structure_type_array($lang)
+  {
+    $structure_type_array = [
+      '1' => $lang['lead_existing_home'], // Existing Home
+      '2' => $lang['lead_new_home'], // New Home
+      '3' => $lang['lead_existing_multi_tenant'], // Existing Multi-Tenant
+      '4' => $lang['lead_new_multi_tenant'], // New Multi-Tenant
+      '5' => $lang['lead_existing_commercial'], // Existing Commercial
+      '6' => $lang['lead_new_commercial'], // New Commercial
+    ];
+    return $structure_type_array;
+  }
+
   public function select_country($lang, $country = null)
   {
     $countries = $this->get_countries_array($lang);

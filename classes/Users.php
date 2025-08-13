@@ -147,6 +147,23 @@ class Users extends Database
 		return $result['last_id'];
 	}
 
+	/** Get user name by ID for edited_by display */
+	public function get_name_by_id($id)
+	{
+		if (empty($id)) {
+			return null;
+		}
+		$sql = 'SELECT full_name, username FROM users WHERE id = :id';
+		$stmt = $this->dbcrm()->prepare($sql);
+		$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+		$stmt->execute();
+		$result = $stmt->fetch();
+		if ($result) {
+			return !empty($result['full_name']) ? $result['full_name'] : $result['username'];
+		}
+		return null;
+	}
+
 	/* On login page for now
 	public function login()
 	{
