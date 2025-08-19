@@ -8,7 +8,7 @@ if (file_exists(LANG . '/' . $browser_language . '.php')) {
 }
 require_once 'nav_start.php';
 require_once 'nav_item_leads_new.php';
-//require_once 'nav_item_leads_list.php';
+require_once 'nav_item_leads_list.php';
 //require_once 'nav_item_leads_view.php';
 //require_once 'nav_item_leads_edit.php';
 //require_once 'nav_item_leads_delete.php';

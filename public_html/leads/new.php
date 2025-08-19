@@ -78,6 +78,43 @@ require SECTIONOPEN;
     </div>
   </div>
 
+  <!-- Contact Type & Business Name Fields -->
+  <div class="row">
+    <div class="col form-field"
+         id="contact-type-field">
+      <div class="form-group pb-2">
+        <label for="ctype"
+               class="pb-1"
+               id="contact-type-label"><?= $lang['lead_contact_type']; ?></label>
+        <select name="ctype"
+                id="ctype"
+                class="form-select"
+                autocomplete="off">
+          <option value=""><?= $lang['lead_select_contact_type']; ?></option>
+<?php
+        $contact_types = $helpers->get_lead_contact_type_array($lang);
+        foreach ($contact_types as $key => $value) {
+          $selected = ($key == '1') ? ' selected' : ''; // Default to Owner (key 1)
+          echo '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
+        }
+        ?>
+        </select>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group pb-2">
+        <label for="business_name"
+               class="pb-1"><?= $lang['lead_business_name'] ?? 'Business Name'; ?></label>
+        <input type="text"
+               name="business_name"
+               maxlength="255"
+               id="business_name"
+               class="form-control"
+               autocomplete="off">
+      </div>
+    </div>
+  </div>
+
   <!-- Fields 2-3: Cell Phone, Email & Contact Type -->
   <div class="row form-field"
        id="contact-info-section">
@@ -108,27 +145,6 @@ require SECTIONOPEN;
                autocomplete="off">
       </div>
     </div>
-    <div class="col form-field"
-         id="contact-type-field">
-      <div class="form-group pb-2">
-        <label for="ctype"
-               class="pb-1"
-               id="contact-type-label"><?= $lang['lead_contact_type']; ?></label>
-        <select name="ctype"
-                id="ctype"
-                class="form-select"
-                autocomplete="off">
-          <option value=""><?= $lang['lead_select_contact_type']; ?></option>
-<?php
-        $contact_types = $helpers->get_lead_contact_type_array($lang);
-        foreach ($contact_types as $key => $value) {
-          $selected = ($key == '1') ? ' selected' : ''; // Default to Owner (key 1)
-          echo '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
-        }
-        ?>
-        </select>
-      </div>
-    </div>
   </div>
 
 
@@ -157,26 +173,26 @@ require SECTIONOPEN;
     <div class="row">
       <div class="col">
         <div class="form-group pb-2">
-          <label for="p_street_1"
+          <label for="form_street_1"
                  class="pb-1"
                  id="street1-label"><?= $lang['lead_street_address_1']; ?></label>
           <input type="text"
-                 name="p_street_1"
+                 name="form_street_1"
                  maxlength="100"
-                 id="p_street_1"
+                 id="form_street_1"
                  class="form-control"
                  autocomplete="off">
         </div>
       </div>
       <div class="col">
         <div class="form-group pb-2">
-          <label for="p_street_2"
+          <label for="form_street_2"
                  class="pb-1"
                  id="street2-label"><?= $lang['lead_street_address_2']; ?></label>
           <input type="text"
-                 name="p_street_2"
+                 name="form_street_2"
                  maxlength="50"
-                 id="p_street_2"
+                 id="form_street_2"
                  class="form-control"
                  autocomplete="off">
         </div>
@@ -186,24 +202,24 @@ require SECTIONOPEN;
     <div class="row">
       <div class="col">
         <div class="form-group pb-2">
-          <label for="p_city"
+          <label for="form_city"
                  class="pb-1"
                  id="city-label"><?= $lang['lead_city']; ?></label>
           <input type="text"
-                 name="p_city"
+                 name="form_city"
                  maxlength="50"
-                 id="p_city"
+                 id="form_city"
                  class="form-control"
                  autocomplete="off">
         </div>
       </div>
       <div class="col">
         <div class="form-group pb-2">
-          <label for="p_state"
+          <label for="form_state"
                  class="pb-1"
                  id="state-label"><?= $lang['lead_state']; ?></label>
-          <select name="p_state"
-                  id="p_state"
+          <select name="form_state"
+                  id="form_state"
                   class="form-select"
                   autocomplete="off">
             <option value=""><?= $lang['select_state']; ?></option>
@@ -229,24 +245,24 @@ require SECTIONOPEN;
     <div class="row">
       <div class="col">
         <div class="form-group pb-2">
-          <label for="p_postcode"
+          <label for="form_postcode"
                  class="pb-1"
                  id="postcode-label"><?= $lang['lead_postal_code']; ?></label>
           <input type="text"
-                 name="p_postcode"
+                 name="form_postcode"
                  maxlength="15"
-                 id="p_postcode"
+                 id="form_postcode"
                  class="form-control"
                  autocomplete="off">
         </div>
       </div>
       <div class="col">
         <div class="form-group pb-2">
-          <label for="p_country"
+          <label for="form_country"
                  class="pb-1"
                  id="country-label"><?= $lang['lead_country']; ?></label>
-          <select name="p_country"
-                  id="p_country"
+          <select name="form_country"
+                  id="form_country"
                   class="form-select"
                   autocomplete="off">
             <option value=""><?= $lang['select_country']; ?></option>
@@ -529,9 +545,9 @@ require SECTIONOPEN;
   </div>
   <input type="hidden"
          name="stage"
-         value="Lead">
+         value="1">
   <input type="hidden"
-         name="edited_by"
+         name="last_edited_by"
          value="<?= $_SESSION['user_id'] ?? null; ?>">
   <input type="hidden"
          name="dir"

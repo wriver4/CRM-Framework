@@ -17,12 +17,12 @@ if ($page != 'login') {
 }
 // validation
 if ($page == 'new' || $page == 'edit') {
-  echo '<script src="/templates/js/validator.min.js"></script>';
+  echo '<script src="/assets/js/validator.min.js"></script>';
 }
 
 // conditional forms
 if ($dir == 'leads' && $page == 'new') {
-  echo '<script src="/templates/js/conditional-forms.js"></script>';
+  echo '<script src="/assets/js/conditional-forms.js"></script>';
 }
 // dev only
 /*
@@ -189,6 +189,13 @@ if ($table_page == true) {
   if ($dir == 'users') {
     echo '   "pageLength": 8,'
         .'    order: [[1, "asc"]],'
+        .'    columnDefs: ['
+        .'     { orderable: false, targets: [0] }'
+        .'    ],';
+  }
+  if ($dir == 'leads') {
+    echo '   "pageLength": 7,'
+        .'    "ordering": false,'
         .'    columnDefs: ['
         .'     { orderable: false, targets: [0] }'
         .'    ],';

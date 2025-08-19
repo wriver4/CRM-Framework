@@ -1,10 +1,8 @@
 <?php
 
-class Leads {
-    private $db;
-
+class Leads extends Database {
     public function __construct() {
-        $this->db = new Database();
+        parent::__construct();
     }
 
     // Helper method to get lead source options (1-6)
@@ -30,6 +28,81 @@ class Leads {
         ];
     }
 
+    // Helper method to get lead stage options (1-8)
+    public function get_lead_stage_array() {
+        return [
+            1 => 'Lead',
+            2 => 'Prospect', 
+            3 => 'Qualified',
+            4 => 'Proposal',
+            5 => 'Closing Conference',
+            6 => 'Completed Estimate',
+            7 => 'Closed Won',
+            8 => 'Closed Lost',
+            9 => 'Referral'
+        ];
+    }
+
+    // Helper method to get stage badge class
+    public function get_stage_badge_class($stage_number) {
+        switch ($stage_number) {
+            case 1: // Lead
+                return 'badge bg-primary';
+            case 2: // Prospect
+            case 9: // Referral
+                return 'badge bg-info';
+            case 3: // Qualified
+            case 4: // Proposal
+                return 'badge bg-warning';
+            case 5: // Closing Conference
+            case 6: // Completed Estimate
+            case 7: // Closed Won
+                return 'badge bg-success';
+            case 8: // Closed Lost
+                return 'badge bg-danger';
+            default:
+                return 'badge bg-secondary';
+        }
+    }
+
+    // Helper method to get stage display name with multilingual support
+    public function get_stage_display_name($stage_number, $lang = null) {
+        // If $lang array is provided, use it for multilingual support
+        if ($lang && isset($lang['stage_' . $stage_number])) {
+            return $lang['stage_' . $stage_number];
+        }
+        
+        // Otherwise fall back to English defaults
+        $stages = $this->get_lead_stage_array();
+        return $stages[$stage_number] ?? 'Unknown';
+    }
+
+    // Helper method to get all stages with multilingual support
+    public function get_lead_stage_array_multilingual($lang = null) {
+        $stages = [];
+        for ($i = 1; $i <= 9; $i++) {
+            $stages[$i] = $this->get_stage_display_name($i, $lang);
+        }
+        return $stages;
+    }
+
+    // Helper method to convert old text stages to numbers (for migration)
+    public function convert_text_stage_to_number($text_stage) {
+        $mapping = [
+            'lead' => 1,
+            'prospect' => 2,
+            'qualified' => 3,
+            'proposal' => 4,
+            'closing conference' => 5,
+            'completed estimate' => 6,
+            'closed won' => 7,
+            'closed lost' => 8,
+            'referral' => 9
+        ];
+        
+        return $mapping[strtolower(trim($text_stage))] ?? 1; // Default to Lead
+    }
+
     // Helper method to get structure type options (1-6)
     public function get_lead_structure_type_array() {
         return [
@@ -46,11 +119,11 @@ class Leads {
         // SQL to insert a new lead with updated structure
         $sql = "INSERT INTO leads (
             lead_source, first_name, last_name, cell_phone, email, ctype, notes, 
-            estimate_number, p_street_1, p_street_2, p_city, p_state, p_postcode, p_country,
+            estimate_number, business_name, form_street_1, form_street_2, form_city, form_state, form_postcode, form_country, full_address,
             services_interested_in, structure_type, structure_description, structure_other, structure_additional,
             picture_submitted_1, picture_submitted_2, picture_submitted_3,
             plans_submitted_1, plans_submitted_2, plans_submitted_3,
-            picture_upload_link, plans_upload_link, plans_and_pics, get_updates, hear_about, hear_about_other, stage, edited_by,
+            picture_upload_link, plans_upload_link, plans_and_pics, get_updates, hear_about, hear_about_other, stage, last_edited_by,
             -- Keep existing business fields
             family_name, fullname, existing_client, address, proposal_sent_date, scheduled_date,
             lead_lost_notes, site_visit_by, referred_to, lead_notes, prospect_notes, lead_lost,
@@ -59,11 +132,11 @@ class Leads {
             prospect_lost, to_contracting
         ) VALUES (
             :lead_source, :first_name, :last_name, :cell_phone, :email, :ctype, :notes,
-            :estimate_number, :p_street_1, :p_street_2, :p_city, :p_state, :p_postcode, :p_country,
+            :estimate_number, :business_name, :form_street_1, :form_street_2, :form_city, :form_state, :form_postcode, :form_country, :full_address,
             :services_interested_in, :structure_type, :structure_description, :structure_other, :structure_additional,
             :picture_submitted_1, :picture_submitted_2, :picture_submitted_3,
             :plans_submitted_1, :plans_submitted_2, :plans_submitted_3,
-            :picture_upload_link, :plans_upload_link, :plans_and_pics, :get_updates, :hear_about, :hear_about_other, :stage, :edited_by,
+            :picture_upload_link, :plans_upload_link, :plans_and_pics, :get_updates, :hear_about, :hear_about_other, :stage, :last_edited_by,
             -- Keep existing business fields
             :family_name, :fullname, :existing_client, :address, :proposal_sent_date, :scheduled_date,
             :lead_lost_notes, :site_visit_by, :referred_to, :lead_notes, :prospect_notes, :lead_lost,
@@ -71,19 +144,27 @@ class Leads {
             :date_qualified, :contacted_date, :referral_done, :jd_referral_notes, :closing_notes,
             :prospect_lost, :to_contracting
         )";
-        return $this->db->execute($sql, $data);
+        $stmt = $this->dbcrm()->prepare($sql);
+        foreach ($data as $key => $value) {
+            $stmt->bindParam(':' . $key, $value);
+        }
+        return $stmt->execute();
     }
 
     public function get_leads() {
         // SQL to fetch all leads
         $sql = "SELECT * FROM leads";
-        return $this->db->query($sql);
+        $stmt = $this->dbcrm()->query($sql);
+        return $stmt->fetchAll();
     }
 
     public function get_lead_by_id($id) {
         // SQL to fetch a lead by ID
         $sql = "SELECT * FROM leads WHERE id = :id";
-        return $this->db->query($sql, ['id' => $id]);
+        $stmt = $this->dbcrm()->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
 
     public function update_lead($id, $data) {
@@ -91,8 +172,8 @@ class Leads {
         $sql = "UPDATE leads SET 
             lead_source = :lead_source, first_name = :first_name, last_name = :last_name, 
             cell_phone = :cell_phone, email = :email, ctype = :ctype, notes = :notes,
-            estimate_number = :estimate_number, p_street_1 = :p_street_1, p_street_2 = :p_street_2,
-            p_city = :p_city, p_state = :p_state, p_postcode = :p_postcode, p_country = :p_country,
+            estimate_number = :estimate_number, business_name = :business_name, form_street_1 = :form_street_1, form_street_2 = :form_street_2,
+            form_city = :form_city, form_state = :form_state, form_postcode = :form_postcode, form_country = :form_country, full_address = :full_address,
             services_interested_in = :services_interested_in, structure_type = :structure_type,
             structure_description = :structure_description, structure_other = :structure_other,
             structure_additional = :structure_additional, picture_submitted_1 = :picture_submitted_1,
@@ -101,7 +182,7 @@ class Leads {
             plans_submitted_3 = :plans_submitted_3, picture_upload_link = :picture_upload_link,
             plans_upload_link = :plans_upload_link, plans_and_pics = :plans_and_pics,
             get_updates = :get_updates, hear_about = :hear_about, hear_about_other = :hear_about_other,
-            stage = :stage, edited_by = :edited_by, updated_at = CURRENT_TIMESTAMP,
+            stage = :stage, last_edited_by = :last_edited_by, updated_at = CURRENT_TIMESTAMP,
             -- Keep existing business fields
             family_name = :family_name, fullname = :fullname, existing_client = :existing_client,
             address = :address, proposal_sent_date = :proposal_sent_date, scheduled_date = :scheduled_date,
@@ -114,19 +195,25 @@ class Leads {
             to_contracting = :to_contracting
         WHERE id = :id";
         $data['id'] = $id;
-        return $this->db->execute($sql, $data);
+        $stmt = $this->dbcrm()->prepare($sql);
+        foreach ($data as $key => $value) {
+            $stmt->bindParam(':' . $key, $value);
+        }
+        return $stmt->execute();
     }
 
     public function delete_lead($id) {
         // SQL to delete a lead
         $sql = "DELETE FROM leads WHERE id = :id";
-        return $this->db->execute($sql, ['id' => $id]);
+        $stmt = $this->dbcrm()->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 
     public function get_last_estimate_number() {
         // SQL to get the highest estimate number
         $sql = "SELECT MAX(CAST(estimate_number AS UNSIGNED)) as max_estimate FROM leads WHERE estimate_number IS NOT NULL AND estimate_number != ''";
-        $stmt = $this->db->dbcrm()->query($sql);
+        $stmt = $this->dbcrm()->query($sql);
         $result = $stmt->fetch();
         
         if ($result && !empty($result['max_estimate'])) {
@@ -171,6 +258,11 @@ class Leads {
             $errors[] = 'Invalid structure type';
         }
         
+        // Validate stage is within range (1-9)
+        if (!empty($data['stage']) && (!is_numeric($data['stage']) || $data['stage'] < 1 || $data['stage'] > 9)) {
+            $errors[] = 'Invalid stage';
+        }
+        
         // Validate field length constraints
         if (!empty($data['first_name']) && strlen($data['first_name']) > 100) {
             $errors[] = 'First name too long (max 100 characters)';
@@ -211,13 +303,74 @@ class Leads {
             $params['structure_type'] = $filters['structure_type'];
         }
         
-        if (!empty($filters['p_state'])) {
-            $sql .= " AND p_state = :p_state";
-            $params['p_state'] = $filters['p_state'];
+        if (!empty($filters['form_state'])) {
+            $sql .= " AND form_state = :form_state";
+            $params['form_state'] = $filters['form_state'];
         }
         
         $sql .= " ORDER BY created_at DESC";
         
-        return $this->db->query($sql, $params);
+        $stmt = $this->dbcrm()->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindParam(':' . $key, $value);
+        }
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    // Get all leads for list display
+    public function get_all_active($filters = []) {
+        $sql = "SELECT 
+            id, lead_source, first_name, family_name, business_name, email, cell_phone, 
+            stage, structure_type, ctype, created_at, updated_at, last_edited_by,
+            estimate_number, form_street_1, form_city, form_state, form_postcode, full_address
+        FROM leads 
+        WHERE stage NOT IN (7, 8, 9)";
+        
+        $params = [];
+        
+        // Add filters if needed
+        if (!empty($filters['stage'])) {
+            $sql .= " AND stage = :stage";
+            $params['stage'] = $filters['stage'];
+        }
+        
+        if (!empty($filters['search'])) {
+            $sql .= " AND (first_name LIKE :search OR family_name LIKE :search OR email LIKE :search)";
+            $params['search'] = '%' . $filters['search'] . '%';
+        }
+        
+        $sql .= " ORDER BY updated_at DESC";
+        
+        $stmt = $this->dbcrm()->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindParam(':' . $key, $value);
+        }
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    // Get leads count for pagination
+    public function get_count($filters = []) {
+        $sql = "SELECT COUNT(*) as total FROM leads WHERE 1=1";
+        $params = [];
+        
+        if (!empty($filters['stage'])) {
+            $sql .= " AND stage = :stage";
+            $params['stage'] = $filters['stage'];
+        }
+        
+        if (!empty($filters['search'])) {
+            $sql .= " AND (first_name LIKE :search OR family_name LIKE :search OR email LIKE :search)";
+            $params['search'] = '%' . $filters['search'] . '%';
+        }
+        
+        $stmt = $this->dbcrm()->prepare($sql);
+        foreach ($params as $key => $value) {
+            $stmt->bindParam(':' . $key, $value);
+        }
+        $stmt->execute();
+        $result = $stmt->fetch();
+        return $result['total'] ?? 0;
     }
 }

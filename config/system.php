@@ -68,15 +68,16 @@ define("SECTIONCLOSE", DOCTEMPLATES . '/section_close.php');
 // --- URLS & BROWSER PATHS ---
 define("URL", $protocol . $_SERVER['HTTP_HOST']);
 define("TEMPLATES", URL . "/templates");
-define("IMG", TEMPLATES . '/img');
-define("CSS", TEMPLATES . '/css');
-define("JS", TEMPLATES . '/js');
+define("ASSETS", URL . "/assets");
+define("IMG", ASSETS . '/img');
+define("CSS", ASSETS . '/css');
+define("JS", ASSETS . '/js');
 define("SECURITY", URL . "/security");
 
 // --- APPLICATION & UI SETTINGS ---
 define("DOCSUBDOMAIN", basename(DOCROOT));
 define("TABTITLEPREFIX", ucfirst(substr(basename(DOCROOT), 0, -2)));
-define("LANG", DOCTEMPLATES . '/languages');
+define("LANG", DOCPUBLIC . '/admin/languages');
 define("LOGINLANG", LANG . '/login');
 define("VALIDEMAIL", "(?![_.-])((?![_.-][_.-])[a-zA-Z\d_.-]){2,63}[a-zA-Z\d]@((?!-)((?!--)[a-zA-Z\d-]){2,63}[a-zA-Z\d]\.){1,2}([a-zA-Z]{2,14}\.)?[a-zA-Z]{2,14}");
 

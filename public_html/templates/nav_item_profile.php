@@ -14,15 +14,15 @@
          tabindex="0">Installer add - edit- list</a>
     </li>
     <li><a class="dropdown-item"
-         href="<?php echo URL . '/logs/internal' ?>"
+         href="<?php echo URL . '/admin/logs/internal' ?>"
          tabindex="0"><?= $lang['internal_error_log']; ?></a>
     </li>
     <li><a class="dropdown-item"
-         href="<?php echo URL . '/logs/phperror' ?>"
+         href="<?php echo URL . '/admin/logs/phperror' ?>"
          tabindex="0"><?= $lang['php_error_log']; ?></a>
     </li>
     <li><a class="dropdown-item"
-         href="<?php echo URL . '/logs/audit' ?>"
+         href="<?php echo URL . '/admin/logs/audit' ?>"
          tabindex="0"><?= $lang['audit_log']; ?></a>
     </li>
     <li><a class="dropdown-item"

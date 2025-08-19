@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Form field configurations for each lead source
     const formConfigs = {
-        'Web Estimate': {
+        '1': { // Web Estimate
             fields: {
                 phone: { show: true, required: true },
                 contactType: { show: true, required: true },
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'address-header': 'Property Address'
             }
         },
-        'LTR Form': {
+        '2': { // LTR Form
             fields: {
                 phone: { show: true, required: true },
                 contactType: { show: false, required: false },
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'address-header': 'Property Address'
             }
         },
-        'Contact Form': {
+        '3': { // Contact Form
             fields: {
                 phone: { show: false, required: false },
                 contactType: { show: false, required: false },
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'address-header': 'Address'
             }
         },
-        'Phone Inquiry': {
+        '4': { // Phone Inquiry
             fields: {
                 phone: { show: true, required: true },
                 contactType: { show: true, required: false },
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'address-header': 'Address'
             }
         },
-        'Cold Call': {
+        '5': { // Cold Call
             fields: {
                 phone: { show: true, required: true },
                 contactType: { show: true, required: false },
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'address-header': 'Address'
             }
         },
-        'In Person': {
+        '6': { // In Person
             fields: {
                 phone: { show: true, required: true },
                 contactType: { show: true, required: true },
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!config) {
             console.log('No config found for', selectedSource, 'using Web Estimate config');
             // For other lead sources, use Web Estimate config
-            updateFieldsWithConfig(formConfigs['Web Estimate']);
+            updateFieldsWithConfig(formConfigs['1']);
             return;
         }
         
@@ -232,8 +232,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Update required status for address fields
-        const addressFields = ['p_street_1', 'p_city', 'p_state', 'p_postcode', 'p_country'];
-        const addressLabels = ['street1-label', 'city-label', 'state-label', 'postcode-label', 'country-label'];
+        const addressFields = ['form_street_1', 'form_street_2', 'form_city', 'form_state', 'form_postcode', 'form_country'];
+        const addressLabels = ['street1-label', 'street2-label', 'city-label', 'state-label', 'postcode-label', 'country-label'];
         
         addressFields.forEach((fieldId, index) => {
             const field = document.getElementById(fieldId);
