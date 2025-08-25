@@ -6,7 +6,7 @@ alwaysApply: true
 # CRM Framework Information
 
 ## Summary
-A PHP-based CRM (Customer Relationship Management) framework providing functionality for managing leads, contacts, users, and sales pipelines. The application follows a traditional PHP web application structure with database connectivity, user management, and table display functionality.
+A PHP-based CRM (Customer Relationship Management) framework providing functionality for managing leads, contacts, users, and sales pipelines. The application follows a traditional PHP web application structure with database connectivity, user management, and table display functionality. The application is multilingual with language files stored in arrays in the admin/languages folder, and helper classes to support iternationalization. The application also includes a reporting module that generates various types of reports based on different criteria. It includes features like CRUD operations, role-based access control, and audit trails. It uses Boostrap 5 and Bootstrap Icons for frontend design as well as Font awesome for icons. There are other javascript tools used such validator.js and  jquery and datatable.js.
 
 ## Structure
 - **classes/**: Core framework classes for database, security, and business logic
