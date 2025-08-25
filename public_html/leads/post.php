@@ -4,6 +4,29 @@ require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 // Check if user is logged in
 $not->loggedin();
 
+// Function to format phone number with dashes
+function format_phone_number($phone) {
+    if (empty($phone)) {
+        return '';
+    }
+    
+    // Remove all non-numeric characters
+    $phone = preg_replace('/[^0-9]/', '', $phone);
+    
+    // Remove leading 1 for US numbers
+    if (strlen($phone) == 11 && substr($phone, 0, 1) == '1') {
+        $phone = substr($phone, 1);
+    }
+    
+    // Format 10-digit US numbers as XXX-XXX-XXXX
+    if (strlen($phone) == 10) {
+        return substr($phone, 0, 3) . '-' . substr($phone, 3, 3) . '-' . substr($phone, 6, 4);
+    }
+    
+    // If not standard 10-digit format, return as-is
+    return $phone;
+}
+
 // Check if this is a POST request
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: list.php');
@@ -40,11 +63,11 @@ if (isset($_POST['page']) && $_POST['page'] == 'edit') {
         'lead_source' => $_POST['lead_source'] ?? 1,
         'first_name' => $_POST['first_name'] ?? '',
         'last_name' => $_POST['last_name'] ?? '',
-        'cell_phone' => $_POST['cell_phone'] ?? '',
+        'cell_phone' => format_phone_number($_POST['cell_phone'] ?? ''),
         'email' => $_POST['email'] ?? '',
         'ctype' => $_POST['ctype'] ?? 1,
         'notes' => $_POST['notes'] ?? '',
-        'estimate_number' => $_POST['estimate_number'] ?? '',
+        'lead_number' => $_POST['lead_number'] ?? '',
         'business_name' => $_POST['business_name'] ?? '',
         'form_street_1' => $_POST['form_street_1'] ?? '',
         'form_street_2' => $_POST['form_street_2'] ?? '',
@@ -52,6 +75,7 @@ if (isset($_POST['page']) && $_POST['page'] == 'edit') {
         'form_state' => $_POST['form_state'] ?? '',
         'form_postcode' => $_POST['form_postcode'] ?? '',
         'form_country' => $_POST['form_country'] ?? 'US',
+        'timezone' => $_POST['timezone'] ?? null,
         'full_address' => trim(implode('', array_filter([
             ($_POST['form_street_1'] ?? '') ? ($_POST['form_street_1'] . ', ') : '',
             ($_POST['form_street_2'] ?? '') ? ($_POST['form_street_2'] . ', ') : '',
@@ -123,6 +147,22 @@ if (isset($_POST['page']) && $_POST['page'] == 'edit') {
     $result = $leads->update_lead($id, $data);
     
     if ($result) {
+        // Handle note creation if note_text is provided
+        if (!empty(trim($_POST['note_text'] ?? ''))) {
+            $notes = new Notes();
+            $note_data = [
+                'source' => $_POST['note_source'] ?? 1,
+                'note_text' => trim($_POST['note_text']),
+                'user_id' => $_SESSION['user_id'] ?? null,
+                'form_source' => 'leads'
+            ];
+            
+            $note_validation = $notes->validate_note_data($note_data);
+            if (empty($note_validation)) {
+                $notes->create_note_for_lead($id, $note_data);
+            }
+        }
+        
         $_SESSION['success_message'] = 'Lead updated successfully';
         header('Location: view.php?id=' . $id);
         exit;
@@ -144,11 +184,11 @@ try {
         'lead_source' => $_POST['lead_source'] ?? 1,
         'first_name' => $_POST['first_name'] ?? '',
         'last_name' => $_POST['last_name'] ?? '',
-        'cell_phone' => $_POST['cell_phone'] ?? '',
+        'cell_phone' => format_phone_number($_POST['cell_phone'] ?? ''),
         'email' => $_POST['email'] ?? '',
         'ctype' => $_POST['ctype'] ?? 1,
         'notes' => $_POST['notes'] ?? '',
-        'estimate_number' => $_POST['estimate_number'] ?? '',
+        'lead_number' => $_POST['lead_number'] ?? '',
         'business_name' => $_POST['business_name'] ?? '',
         'form_street_1' => $_POST['form_street_1'] ?? '',
         'form_street_2' => $_POST['form_street_2'] ?? '',
@@ -156,6 +196,7 @@ try {
         'form_state' => $_POST['form_state'] ?? '',
         'form_postcode' => $_POST['form_postcode'] ?? '',
         'form_country' => $_POST['form_country'] ?? 'US',
+        'timezone' => $_POST['timezone'] ?? null,
         'full_address' => trim(implode('', array_filter([
             ($_POST['form_street_1'] ?? '') ? ($_POST['form_street_1'] . ', ') : '',
             ($_POST['form_street_2'] ?? '') ? ($_POST['form_street_2'] . ', ') : '',

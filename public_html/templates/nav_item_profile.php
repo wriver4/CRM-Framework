@@ -25,9 +25,19 @@
          href="<?php echo URL . '/admin/logs/audit' ?>"
          tabindex="0"><?= $lang['audit_log']; ?></a>
     </li>
+    <li><a class="dropdown-item<?php echo ($dir == "admin/leads") ? ' active' : ''; ?>"
+         href="<?php echo URL . '/admin/leads/list' ?>"
+         tabindex="0">
+         <i class="fa-solid fa-user-shield me-2"></i><?= $lang['navbar_admin_leads'] ?? 'Admin Leads'; ?>
+       </a>
+    </li>
     <li><a class="dropdown-item"
          href="<?php echo URL . '/maintenance/list' ?>"
          tabindex="0"><?= $lang['navbar_maintenance']; ?></a>
+    </li>
+    <li><a class="dropdown-item<?php echo ($dir == "users") ? ' active' : ''; ?>"
+         href="<?php echo URL . '/users/list' ?>"
+         tabindex="0"><?= $lang['navbar_users']; ?></a>
     </li>
     <div class="dropdown dropdown-hover-all">
       <div class="dropdown-item dropdown-toggle"

@@ -13,7 +13,6 @@ require_once 'nav_item_leads_list.php';
 //require_once 'nav_item_leads_edit.php';
 //require_once 'nav_item_leads_delete.php';
 require_once 'nav_item_contacts.php';
-require_once 'nav_item_users.php';
 require_once 'nav_item_reports.php';
 ?>
 </ul>

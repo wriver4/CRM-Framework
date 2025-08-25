@@ -116,10 +116,35 @@ class Leads extends Database {
     }
 
     public function create_lead($data) {
+        // Build full_address if not provided
+        if (empty($data['full_address'])) {
+            $street1 = trim($data['form_street_1'] ?? '');
+            $street2 = trim($data['form_street_2'] ?? '');
+            $city = trim($data['form_city'] ?? '');
+            $state = trim($data['form_state'] ?? '');
+            $postcode = trim($data['form_postcode'] ?? '');
+            $country = trim($data['form_country'] ?? '');
+
+            $line1 = trim(implode(' ', array_filter([$street1, $street2], fn($v) => $v !== '')));
+
+            $cityPart = $city;
+            if ($city !== '' && ($state !== '' || $postcode !== '')) {
+                $cityPart .= ',';
+            }
+            $statePost = trim($state . ($postcode !== '' ? ' ' . $postcode : ''));
+            $line2 = trim(implode(' ', array_filter([$cityPart, $statePost], fn($v) => $v !== '')));
+
+            $lines = [];
+            if ($line1 !== '') { $lines[] = $line1; }
+            if ($line2 !== '') { $lines[] = $line2; }
+            if ($country !== '') { $lines[] = $country; }
+
+            $data['full_address'] = implode("\n", $lines);
+        }
         // SQL to insert a new lead with updated structure
         $sql = "INSERT INTO leads (
             lead_source, first_name, last_name, cell_phone, email, ctype, notes, 
-            estimate_number, business_name, form_street_1, form_street_2, form_city, form_state, form_postcode, form_country, full_address,
+            lead_number, business_name, form_street_1, form_street_2, form_city, form_state, form_postcode, form_country, timezone, full_address,
             services_interested_in, structure_type, structure_description, structure_other, structure_additional,
             picture_submitted_1, picture_submitted_2, picture_submitted_3,
             plans_submitted_1, plans_submitted_2, plans_submitted_3,
@@ -132,7 +157,7 @@ class Leads extends Database {
             prospect_lost, to_contracting
         ) VALUES (
             :lead_source, :first_name, :last_name, :cell_phone, :email, :ctype, :notes,
-            :estimate_number, :business_name, :form_street_1, :form_street_2, :form_city, :form_state, :form_postcode, :form_country, :full_address,
+            :lead_number, :business_name, :form_street_1, :form_street_2, :form_city, :form_state, :form_postcode, :form_country, :timezone, :full_address,
             :services_interested_in, :structure_type, :structure_description, :structure_other, :structure_additional,
             :picture_submitted_1, :picture_submitted_2, :picture_submitted_3,
             :plans_submitted_1, :plans_submitted_2, :plans_submitted_3,
@@ -168,12 +193,37 @@ class Leads extends Database {
     }
 
     public function update_lead($id, $data) {
+        // Build full_address if not provided
+        if (empty($data['full_address'])) {
+            $street1 = trim($data['form_street_1'] ?? '');
+            $street2 = trim($data['form_street_2'] ?? '');
+            $city = trim($data['form_city'] ?? '');
+            $state = trim($data['form_state'] ?? '');
+            $postcode = trim($data['form_postcode'] ?? '');
+            $country = trim($data['form_country'] ?? '');
+
+            $line1 = trim(implode(' ', array_filter([$street1, $street2], fn($v) => $v !== '')));
+
+            $cityPart = $city;
+            if ($city !== '' && ($state !== '' || $postcode !== '')) {
+                $cityPart .= ',';
+            }
+            $statePost = trim($state . ($postcode !== '' ? ' ' . $postcode : ''));
+            $line2 = trim(implode(' ', array_filter([$cityPart, $statePost], fn($v) => $v !== '')));
+
+            $lines = [];
+            if ($line1 !== '') { $lines[] = $line1; }
+            if ($line2 !== '') { $lines[] = $line2; }
+            if ($country !== '') { $lines[] = $country; }
+
+            $data['full_address'] = implode("\n", $lines);
+        }
         // SQL to update a lead with new structure
         $sql = "UPDATE leads SET 
             lead_source = :lead_source, first_name = :first_name, last_name = :last_name, 
             cell_phone = :cell_phone, email = :email, ctype = :ctype, notes = :notes,
-            estimate_number = :estimate_number, business_name = :business_name, form_street_1 = :form_street_1, form_street_2 = :form_street_2,
-            form_city = :form_city, form_state = :form_state, form_postcode = :form_postcode, form_country = :form_country, full_address = :full_address,
+            lead_number = :lead_number, business_name = :business_name, form_street_1 = :form_street_1, form_street_2 = :form_street_2,
+            form_city = :form_city, form_state = :form_state, form_postcode = :form_postcode, form_country = :form_country, timezone = :timezone, full_address = :full_address,
             services_interested_in = :services_interested_in, structure_type = :structure_type,
             structure_description = :structure_description, structure_other = :structure_other,
             structure_additional = :structure_additional, picture_submitted_1 = :picture_submitted_1,
@@ -210,14 +260,14 @@ class Leads extends Database {
         return $stmt->execute();
     }
 
-    public function get_last_estimate_number() {
-        // SQL to get the highest estimate number
-        $sql = "SELECT MAX(CAST(estimate_number AS UNSIGNED)) as max_estimate FROM leads WHERE estimate_number IS NOT NULL AND estimate_number != ''";
+    public function get_last_lead_number() {
+        // SQL to get the highest lead number
+        $sql = "SELECT MAX(CAST(lead_number AS UNSIGNED)) as max_lead FROM leads WHERE lead_number IS NOT NULL AND lead_number != ''";
         $stmt = $this->dbcrm()->query($sql);
         $result = $stmt->fetch();
         
-        if ($result && !empty($result['max_estimate'])) {
-            return $result['max_estimate'];
+        if ($result && !empty($result['max_lead'])) {
+            return $result['max_lead'];
         }
         
         return 0;
@@ -323,7 +373,7 @@ class Leads extends Database {
         $sql = "SELECT 
             id, lead_source, first_name, family_name, business_name, email, cell_phone, 
             stage, structure_type, ctype, created_at, updated_at, last_edited_by,
-            estimate_number, form_street_1, form_city, form_state, form_postcode, full_address
+            lead_number, form_street_1, form_city, form_state, form_postcode, full_address
         FROM leads 
         WHERE stage NOT IN (7, 8, 9)";
         
@@ -372,5 +422,47 @@ class Leads extends Database {
         $stmt->execute();
         $result = $stmt->fetch();
         return $result['total'] ?? 0;
+    }
+
+    // Get notes for a lead through the leads_notes bridge table
+    public function get_lead_notes($lead_id) {
+        $sql = "SELECT n.*, ln.date_linked 
+                FROM notes n 
+                INNER JOIN leads_notes ln ON n.id = ln.note_id 
+                WHERE ln.lead_id = :lead_id 
+                ORDER BY n.date_created DESC";
+        $stmt = $this->dbcrm()->prepare($sql);
+        $stmt->bindParam(':lead_id', $lead_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    // Get previous lead ID for navigation
+    public function get_previous_lead_id($current_id) {
+        $sql = "SELECT id FROM leads WHERE id < :current_id ORDER BY id DESC LIMIT 1";
+        $stmt = $this->dbcrm()->prepare($sql);
+        $stmt->bindParam(':current_id', $current_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        return $result ? $result['id'] : null;
+    }
+
+    // Get next lead ID for navigation
+    public function get_next_lead_id($current_id) {
+        $sql = "SELECT id FROM leads WHERE id > :current_id ORDER BY id ASC LIMIT 1";
+        $stmt = $this->dbcrm()->prepare($sql);
+        $stmt->bindParam(':current_id', $current_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        return $result ? $result['id'] : null;
+    }
+
+    // Get lead navigation info (previous, current, next)
+    public function get_lead_navigation($current_id) {
+        return [
+            'previous' => $this->get_previous_lead_id($current_id),
+            'current' => $current_id,
+            'next' => $this->get_next_lead_id($current_id)
+        ];
     }
 }

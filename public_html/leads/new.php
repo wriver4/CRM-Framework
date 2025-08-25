@@ -35,7 +35,7 @@ require SECTIONOPEN;
                 class="form-select"
                 required
                 autocomplete="off">
-<?php
+          <?php
         $lead_sources = $helpers->get_lead_source_array($lang);
         foreach ($lead_sources as $key => $value) {
           $selected = ($key == '1') ? ' selected' : ''; // Default to Web Estimate (key 1)
@@ -43,6 +43,19 @@ require SECTIONOPEN;
         }
         ?>
         </select>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group pb-2">
+        <label for="lead_number"
+               class="required pb-1"><?= $lang['lead_number']; ?></label>
+        <input type="text"
+               name="lead_number"
+               id="lead_number"
+               class="form-control"
+               placeholder="<?= $lang['lead_last_number_placeholder_hint'] . ' ' . $last_lead_number; ?>"
+               autocomplete="off"
+               required>
       </div>
     </div>
   </div>
@@ -73,43 +86,6 @@ require SECTIONOPEN;
                id="last_name"
                class="form-control"
                required
-               autocomplete="off">
-      </div>
-    </div>
-  </div>
-
-  <!-- Contact Type & Business Name Fields -->
-  <div class="row">
-    <div class="col form-field"
-         id="contact-type-field">
-      <div class="form-group pb-2">
-        <label for="ctype"
-               class="pb-1"
-               id="contact-type-label"><?= $lang['lead_contact_type']; ?></label>
-        <select name="ctype"
-                id="ctype"
-                class="form-select"
-                autocomplete="off">
-          <option value=""><?= $lang['lead_select_contact_type']; ?></option>
-<?php
-        $contact_types = $helpers->get_lead_contact_type_array($lang);
-        foreach ($contact_types as $key => $value) {
-          $selected = ($key == '1') ? ' selected' : ''; // Default to Owner (key 1)
-          echo '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
-        }
-        ?>
-        </select>
-      </div>
-    </div>
-    <div class="col">
-      <div class="form-group pb-2">
-        <label for="business_name"
-               class="pb-1"><?= $lang['lead_business_name'] ?? 'Business Name'; ?></label>
-        <input type="text"
-               name="business_name"
-               maxlength="255"
-               id="business_name"
-               class="form-control"
                autocomplete="off">
       </div>
     </div>
@@ -147,25 +123,46 @@ require SECTIONOPEN;
     </div>
   </div>
 
-
-
-  <!-- Field: Estimate Number -->
-  <div class="row form-field"
-       id="estimate-number-section">
-    <div class="col-6">
+  <!-- Contact Type & Business Name Fields -->
+  <div class="row">
+    <div class="col form-field"
+         id="contact-type-field">
       <div class="form-group pb-2">
-        <label for="estimate_number"
-               class="pb-1"><?= $lang['lead_estimate_number']; ?></label>
+        <label for="ctype"
+               class="pb-1"
+               id="contact-type-label"><?= $lang['lead_contact_type']; ?></label>
+        <select name="ctype"
+                id="ctype"
+                class="form-select"
+                autocomplete="off">
+          <option value=""><?= $lang['lead_select_contact_type']; ?></option>
+          <?php
+        $contact_types = $helpers->get_lead_contact_type_array($lang);
+        foreach ($contact_types as $key => $value) {
+          $selected = ($key == '1') ? ' selected' : ''; // Default to Owner (key 1)
+          echo '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
+        }
+        ?>
+        </select>
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group pb-2">
+        <label for="business_name"
+               class="pb-1"><?= $lang['lead_business_name'] ?? 'Business Name'; ?></label>
         <input type="text"
-               name="estimate_number"
-               id="estimate_number"
+               name="business_name"
+               maxlength="255"
+               id="business_name"
                class="form-control"
-               placeholder="<?= $lang['lead_last_estimate'] . ' ' . $last_estimate_number; ?>"
                autocomplete="off">
       </div>
     </div>
   </div>
 
+
+
+  
   <!-- Address Fields -->
   <div class="form-field"
        id="address-section">
@@ -278,6 +275,9 @@ require SECTIONOPEN;
         </div>
       </div>
     </div>
+    
+    <!-- Hidden timezone field - populated by JavaScript based on address -->
+    <input type="hidden" name="timezone" id="timezone" value="">
   </div>
 
   <!-- Field 17: Services Interested In -->
@@ -315,7 +315,7 @@ require SECTIONOPEN;
                   id="structure_type"
                   class="form-select"
                   autocomplete="off">
-<?php
+            <?php
         $structure_types = $helpers->get_lead_structure_type_array($lang);
         foreach ($structure_types as $key => $value) {
           $selected = ($key == '1') ? ' selected' : ''; // Default to Existing Home (key 1)
@@ -571,6 +571,86 @@ require SECTIONOPEN;
     <?= $lang['lead_submit']; ?>
   </button>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Function to get timezone from location
+  function getTimezoneFromLocation(state, country) {
+    // Clean up state code - remove country prefix if present
+    state = state.replace(/^(US-|CA-)/, '').toUpperCase();
+    country = country.toUpperCase();
+    
+    // US state to timezone mapping
+    const usTimezones = {
+      // Pacific Time
+      'CA': 'America/Los_Angeles', 'WA': 'America/Los_Angeles', 'OR': 'America/Los_Angeles', 'NV': 'America/Los_Angeles',
+      // Mountain Time
+      'AZ': 'America/Phoenix', 'UT': 'America/Denver', 'CO': 'America/Denver', 'WY': 'America/Denver', 
+      'MT': 'America/Denver', 'NM': 'America/Denver', 'ND': 'America/Denver', 'SD': 'America/Denver', 'ID': 'America/Denver',
+      // Central Time
+      'TX': 'America/Chicago', 'OK': 'America/Chicago', 'KS': 'America/Chicago', 'NE': 'America/Chicago',
+      'MN': 'America/Chicago', 'IA': 'America/Chicago', 'MO': 'America/Chicago', 'AR': 'America/Chicago',
+      'LA': 'America/Chicago', 'MS': 'America/Chicago', 'AL': 'America/Chicago', 'TN': 'America/Chicago',
+      'KY': 'America/Chicago', 'IN': 'America/Chicago', 'IL': 'America/Chicago', 'WI': 'America/Chicago',
+      // Eastern Time
+      'MI': 'America/Detroit', 'OH': 'America/New_York', 'WV': 'America/New_York', 'VA': 'America/New_York',
+      'PA': 'America/New_York', 'NY': 'America/New_York', 'VT': 'America/New_York', 'NH': 'America/New_York',
+      'ME': 'America/New_York', 'MA': 'America/New_York', 'RI': 'America/New_York', 'CT': 'America/New_York',
+      'NJ': 'America/New_York', 'DE': 'America/New_York', 'MD': 'America/New_York', 'DC': 'America/New_York',
+      'NC': 'America/New_York', 'SC': 'America/New_York', 'GA': 'America/New_York', 'FL': 'America/New_York',
+      // Alaska & Hawaii
+      'AK': 'America/Anchorage', 'HI': 'Pacific/Honolulu'
+    };
+    
+    // Check for US states first
+    if (country === 'US' && usTimezones[state]) {
+      return usTimezones[state];
+    }
+    
+    // Country-level timezone defaults
+    const countryTimezones = {
+      'US': 'America/New_York', // Default to Eastern if state unknown
+      'CA': 'America/Toronto',   // Canada
+      'MX': 'America/Mexico_City', // Mexico
+      'UK': 'Europe/London',     // United Kingdom
+      'AU': 'Australia/Sydney',  // Australia
+      'NZ': 'Pacific/Auckland',  // New Zealand
+      'BR': 'America/Sao_Paulo', // Brazil
+    };
+    
+    return countryTimezones[country] || 'UTC';
+  }
+  
+  // Function to update timezone field
+  function updateTimezone() {
+    const stateField = document.getElementById('form_state');
+    const countryField = document.getElementById('form_country');
+    const timezoneField = document.getElementById('timezone');
+    
+    if (stateField && countryField && timezoneField) {
+      const state = stateField.value;
+      const country = countryField.value;
+      const timezone = getTimezoneFromLocation(state, country);
+      timezoneField.value = timezone;
+    }
+  }
+  
+  // Update timezone when state or country changes
+  const stateField = document.getElementById('form_state');
+  const countryField = document.getElementById('form_country');
+  
+  if (stateField) {
+    stateField.addEventListener('change', updateTimezone);
+  }
+  
+  if (countryField) {
+    countryField.addEventListener('change', updateTimezone);
+  }
+  
+  // Set initial timezone on page load
+  updateTimezone();
+});
+</script>
 
 <?php
 require SECTIONCLOSE;

@@ -451,6 +451,8 @@ require SECTIONOPEN;
     </div>
   </div>
   <p></p>
+  <!-- Hidden timezone field - populated by JavaScript based on address -->
+  <input type="hidden" name="timezone" id="timezone" value="">
   <input type="hidden"
          name="dir"
          value="<?= $dir; ?>">
@@ -470,6 +472,87 @@ require SECTIONOPEN;
           tabindex="0">
     <?= $lang['submit']; ?></button>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Function to get timezone from location
+  function getTimezoneFromLocation(state, country) {
+    // Clean up state code - remove country prefix if present
+    state = state.replace(/^(US-|CA-)/, '').toUpperCase();
+    country = country.toUpperCase();
+    
+    // US state to timezone mapping
+    const usTimezones = {
+      // Pacific Time
+      'CA': 'America/Los_Angeles', 'WA': 'America/Los_Angeles', 'OR': 'America/Los_Angeles', 'NV': 'America/Los_Angeles',
+      // Mountain Time
+      'AZ': 'America/Phoenix', 'UT': 'America/Denver', 'CO': 'America/Denver', 'WY': 'America/Denver', 
+      'MT': 'America/Denver', 'NM': 'America/Denver', 'ND': 'America/Denver', 'SD': 'America/Denver', 'ID': 'America/Denver',
+      // Central Time
+      'TX': 'America/Chicago', 'OK': 'America/Chicago', 'KS': 'America/Chicago', 'NE': 'America/Chicago',
+      'MN': 'America/Chicago', 'IA': 'America/Chicago', 'MO': 'America/Chicago', 'AR': 'America/Chicago',
+      'LA': 'America/Chicago', 'MS': 'America/Chicago', 'AL': 'America/Chicago', 'TN': 'America/Chicago',
+      'KY': 'America/Chicago', 'IN': 'America/Chicago', 'IL': 'America/Chicago', 'WI': 'America/Chicago',
+      // Eastern Time
+      'MI': 'America/Detroit', 'OH': 'America/New_York', 'WV': 'America/New_York', 'VA': 'America/New_York',
+      'PA': 'America/New_York', 'NY': 'America/New_York', 'VT': 'America/New_York', 'NH': 'America/New_York',
+      'ME': 'America/New_York', 'MA': 'America/New_York', 'RI': 'America/New_York', 'CT': 'America/New_York',
+      'NJ': 'America/New_York', 'DE': 'America/New_York', 'MD': 'America/New_York', 'DC': 'America/New_York',
+      'NC': 'America/New_York', 'SC': 'America/New_York', 'GA': 'America/New_York', 'FL': 'America/New_York',
+      // Alaska & Hawaii
+      'AK': 'America/Anchorage', 'HI': 'Pacific/Honolulu'
+    };
+    
+    // Check for US states first
+    if (country === 'US' && usTimezones[state]) {
+      return usTimezones[state];
+    }
+    
+    // Country-level timezone defaults
+    const countryTimezones = {
+      'US': 'America/New_York', // Default to Eastern if state unknown
+      'CA': 'America/Toronto',   // Canada
+      'MX': 'America/Mexico_City', // Mexico
+      'UK': 'Europe/London',     // United Kingdom
+      'AU': 'Australia/Sydney',  // Australia
+      'NZ': 'Pacific/Auckland',  // New Zealand
+      'BR': 'America/Sao_Paulo', // Brazil
+    };
+    
+    return countryTimezones[country] || 'UTC';
+  }
+  
+  // Function to update timezone field
+  function updateTimezone() {
+    const stateField = document.getElementById('m_state');
+    const countryField = document.getElementById('m_country');
+    const timezoneField = document.getElementById('timezone');
+    
+    if (stateField && countryField && timezoneField) {
+      const state = stateField.value;
+      const country = countryField.value;
+      const timezone = getTimezoneFromLocation(state, country);
+      timezoneField.value = timezone;
+    }
+  }
+  
+  // Update timezone when state or country changes
+  const stateField = document.getElementById('m_state');
+  const countryField = document.getElementById('m_country');
+  
+  if (stateField) {
+    stateField.addEventListener('change', updateTimezone);
+  }
+  
+  if (countryField) {
+    countryField.addEventListener('change', updateTimezone);
+  }
+  
+  // Set initial timezone on page load
+  updateTimezone();
+});
+</script>
+
 <?php
 require SECTIONCLOSE;
 require FOOTER;

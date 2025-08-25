@@ -231,9 +231,9 @@ document.addEventListener('DOMContentLoaded', function() {
             addressSection.classList.add('d-none');
         }
         
-        // Update required status for address fields
-        const addressFields = ['form_street_1', 'form_street_2', 'form_city', 'form_state', 'form_postcode', 'form_country'];
-        const addressLabels = ['street1-label', 'street2-label', 'city-label', 'state-label', 'postcode-label', 'country-label'];
+        // Update required status for address fields (excluding form_street_2 which is always optional)
+        const addressFields = ['form_street_1', 'form_city', 'form_state', 'form_postcode', 'form_country'];
+        const addressLabels = ['street1-label', 'city-label', 'state-label', 'postcode-label', 'country-label'];
         
         addressFields.forEach((fieldId, index) => {
             const field = document.getElementById(fieldId);
@@ -255,6 +255,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+        
+        // Always ensure form_street_2 is not required
+        const street2Field = document.getElementById('form_street_2');
+        const street2Label = document.getElementById('street2-label');
+        
+        if (street2Field) {
+            street2Field.removeAttribute('required');
+        }
+        
+        if (street2Label) {
+            street2Label.classList.remove('required');
+        }
     }
     
     function updateLabels(labelUpdates) {

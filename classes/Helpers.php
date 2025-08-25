@@ -635,5 +635,103 @@ public function admin_select_property_id($lang, $prop_id )
     ];
   }
 
+  /**
+   * Get timezone based on location (state/country)
+   * @param string $state State code (e.g., 'CA', 'US-CA')
+   * @param string $country Country code (e.g., 'US', 'CA')
+   * @return string Timezone identifier (e.g., 'America/Los_Angeles')
+   */
+  public function get_timezone_from_location($state = '', $country = '') {
+    // Clean up state code - remove country prefix if present
+    $state = str_replace(['US-', 'CA-'], '', strtoupper($state));
+    $country = strtoupper($country);
+    
+    // US state to timezone mapping
+    $us_timezones = [
+      // Pacific Time
+      'CA' => 'America/Los_Angeles',
+      'WA' => 'America/Los_Angeles', 
+      'OR' => 'America/Los_Angeles',
+      'NV' => 'America/Los_Angeles',
+      
+      // Mountain Time
+      'AZ' => 'America/Phoenix', // Arizona doesn't observe DST
+      'UT' => 'America/Denver',
+      'CO' => 'America/Denver',
+      'WY' => 'America/Denver',
+      'MT' => 'America/Denver',
+      'NM' => 'America/Denver',
+      'ND' => 'America/Denver',
+      'SD' => 'America/Denver',
+      'ID' => 'America/Denver',
+      
+      // Central Time
+      'TX' => 'America/Chicago',
+      'OK' => 'America/Chicago',
+      'KS' => 'America/Chicago',
+      'NE' => 'America/Chicago',
+      'MN' => 'America/Chicago',
+      'IA' => 'America/Chicago',
+      'MO' => 'America/Chicago',
+      'AR' => 'America/Chicago',
+      'LA' => 'America/Chicago',
+      'MS' => 'America/Chicago',
+      'AL' => 'America/Chicago',
+      'TN' => 'America/Chicago',
+      'KY' => 'America/Chicago',
+      'IN' => 'America/Chicago',
+      'IL' => 'America/Chicago',
+      'WI' => 'America/Chicago',
+      
+      // Eastern Time
+      'MI' => 'America/Detroit',
+      'OH' => 'America/New_York',
+      'WV' => 'America/New_York',
+      'VA' => 'America/New_York',
+      'PA' => 'America/New_York',
+      'NY' => 'America/New_York',
+      'VT' => 'America/New_York',
+      'NH' => 'America/New_York',
+      'ME' => 'America/New_York',
+      'MA' => 'America/New_York',
+      'RI' => 'America/New_York',
+      'CT' => 'America/New_York',
+      'NJ' => 'America/New_York',
+      'DE' => 'America/New_York',
+      'MD' => 'America/New_York',
+      'DC' => 'America/New_York',
+      'NC' => 'America/New_York',
+      'SC' => 'America/New_York',
+      'GA' => 'America/New_York',
+      'FL' => 'America/New_York',
+      
+      // Alaska & Hawaii
+      'AK' => 'America/Anchorage',
+      'HI' => 'Pacific/Honolulu'
+    ];
+    
+    // Check for US states first
+    if ($country === 'US' && isset($us_timezones[$state])) {
+      return $us_timezones[$state];
+    }
+    
+    // Country-level timezone defaults
+    $country_timezones = [
+      'US' => 'America/New_York', // Default to Eastern if state unknown
+      'CA' => 'America/Toronto',   // Canada
+      'MX' => 'America/Mexico_City', // Mexico
+      'GB' => 'Europe/London',     // United Kingdom
+      'AU' => 'Australia/Sydney',  // Australia
+      'DE' => 'Europe/Berlin',     // Germany
+      'FR' => 'Europe/Paris',      // France
+      'JP' => 'Asia/Tokyo',        // Japan
+      'CN' => 'Asia/Shanghai',     // China
+      'IN' => 'Asia/Kolkata',      // India
+      'BR' => 'America/Sao_Paulo', // Brazil
+    ];
+    
+    return $country_timezones[$country] ?? 'UTC';
+  }
+
 
 }

@@ -24,6 +24,11 @@ if ($page == 'new' || $page == 'edit') {
 if ($dir == 'leads' && $page == 'new') {
   echo '<script src="/assets/js/conditional-forms.js"></script>';
 }
+// hide empty Structure Other/Additional on edit view
+if ($dir == 'leads' && $page == 'edit') {
+  echo '<script src="' . JS . '/hide-empty-structure.js"></script>';
+  echo '<script src="/assets/js/edit-leads.js"></script>';
+}
 // dev only
 /*
 // Defining a function to display error message

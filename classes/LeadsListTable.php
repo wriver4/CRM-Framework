@@ -11,13 +11,12 @@ class LeadsListTable extends ActionTable
     {
         $this->column_names = [
             'action' => $lang['action'] ?? 'Action',
-            'estimate_number' => $lang['lead_number'] ?? 'Lead #',
+            'lead_number' => $lang['lead_number'] ?? 'Lead #',
             'stage' => $lang['lead_stage'] ?? 'Stage',
             'full_name' => $lang['full_name'] ?? 'Full Name',
             'cell_phone' => $lang['lead_cell_phone'] ?? 'Phone',
             'email' => $lang['lead_email'] ?? 'Email',
-            'full_address' => $lang['full_address'] ?? 'Address',
-            'updated_at' => $lang['updates'] ?? 'Updates'
+            'full_address' => $lang['full_address'] ?? 'Address'
         ];
         parent::__construct($results, $this->column_names, "leads-list");
         $this->lang = $lang;
@@ -35,9 +34,9 @@ class LeadsListTable extends ActionTable
                     echo '</td>';
                     break;
                 
-                case 'estimate_number':
+                case 'lead_number':
                     echo '<td>';
-                    $value = $results['estimate_number'] ?? '';
+                    $value = $results['lead_number'] ?? '';
                     echo htmlspecialchars($value ?: '-');
                     echo '</td>';
                     break;
@@ -100,21 +99,38 @@ class LeadsListTable extends ActionTable
                     echo '</td>';
                     break;
                 
-                case 'updated_at':
-                    echo '<td>';
-                    $value = $results['updated_at'] ?? '';
-                    if ($value && $value != '0000-00-00 00:00:00') {
-                        echo date('M j, Y g:i A', strtotime($value));
-                    } else {
-                        echo '-';
-                    }
-                    echo '</td>';
-                    break;
                 
                 default:
                     echo '<td>-</td>';
                     break;
             }
         }
+    }
+
+    public function row_nav($value, $rid)
+    {
+        echo $this->row_nav_open;
+
+        // View button
+        echo
+        $this->row_nav_button_open
+          . $this->row_nav_button_view_class_enabled
+          . $this->row_nav_button_href_view_open
+          . urlencode($value)
+          . $this->row_nav_button_href_close
+          . $this->row_nav_button_view_icon
+          . $this->row_nav_button_close;
+
+        // Regular edit button
+        echo $this->row_nav_button_open;
+        echo $this->row_nav_button_edit_class_enabled;
+        echo
+        $this->row_nav_button_href_edit_open
+          . urlencode($value)
+          . $this->row_nav_button_href_close
+          . $this->row_nav_button_edit_icon
+          . $this->row_nav_button_close;
+
+        echo $this->row_nav_close;
     }
 }

@@ -12,10 +12,10 @@ $helpers = new Helpers();
 // Handle different GET requests
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
-        case 'estimate_number':
-            // Get the last estimate number
-            $last_estimate_number = $leads->get_last_estimate_number();
-            echo $last_estimate_number;
+        case 'lead_number':
+            // Get the last lead number
+            $last_lead_number = $leads->get_last_lead_number();
+            echo $last_lead_number;
             break;
             
         case 'lead_with_user':
@@ -39,15 +39,15 @@ if (isset($_GET['action'])) {
             break;
             
         default:
-            // Default: Get the last estimate number for backward compatibility
-            $last_estimate_number = $leads->get_last_estimate_number();
-            echo $last_estimate_number;
+            // Default: Get the last lead number for backward compatibility
+            $last_lead_number = $leads->get_last_lead_number();
+            echo $last_lead_number;
             break;
     }
 } else {
-    // Default: Get the last estimate number for backward compatibility
-    $last_estimate_number = $leads->get_last_estimate_number();
-    // echo $last_estimate_number;
+    // Default: Get the last lead number for backward compatibility
+    $last_lead_number = $leads->get_last_lead_number();
+    // echo $last_lead_number;
 }
 
 // Handle page-specific logic
@@ -68,10 +68,14 @@ if ($dir == 'leads' && $page == 'view') {
         $cell_phone = $result["cell_phone"];
         $email = $result["email"];
         $ctype = $result["ctype"];
-        $notes = $result["notes"];
-        $estimate_number = $result["estimate_number"];
+        $lead_number = $result["lead_number"];
         $stage = $result["stage"];
         $structure_type = $result["structure_type"];
+        $structure_description = $result["structure_description"];
+        $structure_other = $result["structure_other"];
+        $structure_additional = $result["structure_additional"];
+        $picture_upload_link = $result["picture_upload_link"];
+        $plans_upload_link = $result["plans_upload_link"];
         $created_at = $result["created_at"];
         $updated_at = $result["updated_at"];
         $last_edited_by = $result["last_edited_by"];
@@ -85,20 +89,25 @@ if ($dir == 'leads' && $page == 'edit') {
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
         $lead_source = $result["lead_source"];
-        $first_name = $result["first_name"];
-        $last_name = $result["family_name"];
+        $full_name = $result["full_name"];
         $business_name = $result["business_name"];
+        $project_name = $result["project_name"];
         $cell_phone = $result["cell_phone"];
         $email = $result["email"];
         $ctype = $result["ctype"];
-        $notes = $result["notes"];
-        $estimate_number = $result["estimate_number"];
+        $lead_number = $result["lead_number"];
         $form_street_1 = $result["form_street_1"];
         $form_street_2 = $result["form_street_2"];
         $form_city = $result["form_city"];
         $form_state = $result["form_state"];
         $form_postcode = $result["form_postcode"];
         $form_country = $result["form_country"];
+        $timezone = $result["timezone"];
+        // If timezone is not set, calculate it from location
+        if (empty($timezone)) {
+            $timezone = $helpers->get_timezone_from_location($form_state, $form_country);
+        }
+        $full_address = $result["full_address"];
         $services_interested_in = $result["services_interested_in"];
         $structure_type = $result["structure_type"];
         $structure_description = $result["structure_description"];
@@ -139,4 +148,3 @@ if ($dir == 'leads' && $page == 'delete') {
         $last_edited_by_name = !empty($last_edited_by) ? $users->get_name_by_id($last_edited_by) : null;
     }
 }
-?>
