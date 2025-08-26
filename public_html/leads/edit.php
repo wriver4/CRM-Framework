@@ -597,8 +597,7 @@ require SECTIONOPEN;
                 3 => 'Text Message',
                 4 => 'Internal Note',
                 5 => 'Meeting',
-                6 => 'Site Visit',
-                7 => 'Follow-up'
+                6 => 'Site Visit'
             ];
             foreach ($next_action_sources as $key => $value): ?>
             <div class="form-check form-check-inline">
@@ -1033,7 +1032,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         if (selectedTime) {
-          timeConversionElement.textContent = `${selectedTime} client time = ${userTime} your time`;
+          const clientTime = timeToConvert.toLocaleTimeString('en-US', {
+            timeZone: clientTz,
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+          });
+          timeConversionElement.textContent = `${clientTime} client time = ${userTime} your time`;
         } else {
           timeConversionElement.textContent = `Example: 9:00 AM client time = ${userTime} your time`;
         }

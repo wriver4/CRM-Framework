@@ -86,37 +86,37 @@ No formal testing framework is implemented; testing appears to be done through m
 
 ```
 .
-├── classes/                          # Core framework classes
+├── classes/                         # Core framework classes
 │   ├── ActionTable.php              # Extended table with action buttons
-│   ├── AuditList.php                # Audit trail list display
 │   ├── Audit.php                    # Audit logging functionality
+│   ├── AuditList.php                # Audit trail list display
 │   ├── Communications.php           # Communication management
-│   ├── ContactsList.php             # Contact list display
 │   ├── Contacts.php                 # Contact management
+│   ├── ContactsList.php             # Contact list display
 │   ├── Database.php                 # Base database connection class
 │   ├── EditDeleteTable.php          # Table with edit/delete functionality
 │   ├── FormComponents.php           # Form building utilities
-│   ├── Helpers.php                  # Utility functions
+│   ├── Helpers.php                  # Utility functions (multilingual support)
 │   ├── InternalErrors.php           # Internal error handling
-│   ├── LeadsList_orginal.php        # Original leads list (backup)
-│   ├── LeadsListTable.php           # Leads list table display
 │   ├── Leads.php                    # Lead management
+│   ├── LeadsListTable.php           # Leads list table display
+│   ├── LeadsList_orginal.php        # Original leads list (backup)
 │   ├── Logit.php                    # Logging utilities
 │   ├── Nonce.php                    # CSRF protection
 │   ├── Notes.php                    # Notes functionality
-│   ├── PermissionsList.php          # Permissions list display
 │   ├── Permissions.php              # Permission management
+│   ├── PermissionsList.php          # Permissions list display
 │   ├── PhpErrorLog.php              # PHP error logging
-│   ├── RolesList.php                # Roles list display
-│   ├── RolesPermissionsList.php     # Role-permission mapping display
-│   ├── RolesPermissions.php         # Role-permission management
 │   ├── Roles.php                    # Role management
+│   ├── RolesList.php                # Roles list display
+│   ├── RolesPermissions.php         # Role-permission management
+│   ├── RolesPermissionsList.php     # Role-permission mapping display
 │   ├── Sales.php                    # Sales functionality
 │   ├── Security.php                 # Authentication and authorization
 │   ├── Sessions.php                 # Session management
 │   ├── Table.php                    # Base table display functionality
-│   ├── UsersList.php                # Users list display
 │   ├── Users.php                    # User management
+│   ├── UsersList.php                # Users list display
 │   └── ViewTable.php                # Read-only table display
 ├── config/                          # Configuration files
 │   ├── cronconfig.php               # Cron job configuration
@@ -125,23 +125,42 @@ No formal testing framework is implemented; testing appears to be done through m
 │   └── system.php                   # System configuration
 ├── examples/                        # Example implementations
 │   └── notes_integration_examples.php # Notes system examples
+├── logs/                            # Application logs
 ├── public_html/                     # Web-accessible files
 │   ├── admin/                       # Administrative tools
-│   │   ├── languages/               # Language files
+│   │   ├── languages/               # Language files (multilingual support)
 │   │   │   ├── login/               # Login-specific translations
 │   │   │   │   ├── en.php           # English login translations
 │   │   │   │   ├── es.php           # Spanish login translations
 │   │   │   │   └── template.php     # Translation template
 │   │   │   ├── en.php               # English translations
 │   │   │   └── _es.php              # Spanish translations
+│   │   ├── leads/                   # Admin lead management
+│   │   │   ├── edit.php             # Admin lead editing
+│   │   │   ├── get.php              # Admin lead retrieval
+│   │   │   ├── list.php             # Admin lead listing
+│   │   │   └── post.php             # Admin lead processing
+│   │   ├── logs/                    # Admin log viewers
+│   │   │   ├── audit.php            # Audit log viewer
+│   │   │   ├── internal.php         # Internal log viewer
+│   │   │   └── phperror.php         # PHP error log viewer
 │   │   ├── original/                # Original/backup files
 │   │   │   ├── leads/               # Original lead files
-│   │   │   └── logo files           # Original logos
+│   │   │   │   ├── import_csv.php   # CSV import functionality
+│   │   │   │   └── upload_form.php  # Upload form
+│   │   │   ├── logo.svg             # Original logo
+│   │   │   └── waveGUARD-wildfire-mitigation-solutions-logo-v.2_LR.png
 │   │   ├── run_notes_migration.php  # Notes migration runner
 │   │   └── test_notes_migration.php # Notes migration tester
 │   ├── assets/                      # Static assets
 │   │   ├── css/                     # Stylesheets
 │   │   │   ├── webfonts/            # Font Awesome fonts
+│   │   │   │   ├── fa-brands-400.woff2
+│   │   │   │   ├── fa-regular-400.woff2
+│   │   │   │   ├── fa-solid-900.woff2
+│   │   │   │   └── fa-v4compatibility.woff2
+│   │   │   ├── old ms.min/          # Old CSS files
+│   │   │   │   └── bootstrap.min.css
 │   │   │   ├── all.css              # Font Awesome CSS
 │   │   │   ├── bootstrap.min.css    # Bootstrap framework
 │   │   │   ├── forms.css            # Form styling
@@ -149,21 +168,35 @@ No formal testing framework is implemented; testing appears to be done through m
 │   │   │   └── style.css            # Main application styles
 │   │   ├── help/                    # Help documentation
 │   │   │   ├── administration.php   # Admin help
+│   │   │   ├── common_elements.php  # Common elements help
 │   │   │   ├── contacts.php         # Contacts help
+│   │   │   ├── get.php              # Help retrieval
+│   │   │   ├── index.php            # Help index
 │   │   │   ├── properties.php       # Properties help
 │   │   │   ├── reports.php          # Reports help
-│   │   │   └── [other help files]   # Various help topics
+│   │   │   ├── status.php           # Status help
+│   │   │   ├── systems.php          # Systems help
+│   │   │   ├── testing.php          # Testing help
+│   │   │   ├── this_app.php         # Application help
+│   │   │   ├── tickets.php          # Tickets help
+│   │   │   └── users.php            # Users help
 │   │   ├── img/                     # Images and icons
+│   │   │   ├── browserconfig.xml    # Browser configuration
 │   │   │   ├── logo.svg             # Application logo
-│   │   │   └── [favicon files]      # Browser icons
+│   │   │   ├── safari-pinned-tab.svg # Safari icon
+│   │   │   └── site.webmanifest     # Web manifest
 │   │   └── js/                      # JavaScript files
 │   │       ├── user/                # User-specific scripts
+│   │       │   ├── edit.js          # User edit scripts
+│   │       │   └── new.js           # User creation scripts
 │   │       ├── conditional-forms.js # Dynamic form behavior
 │   │       ├── countdown.js         # Countdown functionality
 │   │       ├── edit-leads.js        # Lead editing scripts
 │   │       ├── general.js           # General utilities
 │   │       ├── hide-empty-structure.js # UI optimization
-│   │       └── validator.min.js     # Form validation
+│   │       ├── user.js              # User functionality
+│   │       ├── validator.min.js     # Form validation
+│   │       └── validator.min.js.map # Source map
 │   ├── contacts/                    # Contact management
 │   │   ├── call_order_list.php      # Call order listing
 │   │   ├── delete.php               # Contact deletion
@@ -184,6 +217,7 @@ No formal testing framework is implemented; testing appears to be done through m
 │   │   ├── delete.php               # Lead deletion
 │   │   ├── edit.php                 # Lead editing
 │   │   ├── get.php                  # Lead retrieval
+│   │   ├── leads notes.txt          # Notes documentation
 │   │   ├── list.php                 # Lead listing
 │   │   ├── new.php                  # New lead creation
 │   │   ├── notes_ajax.php           # AJAX notes handling
@@ -191,6 +225,7 @@ No formal testing framework is implemented; testing appears to be done through m
 │   │   └── view.php                 # Lead viewing
 │   ├── reports/                     # Reporting system
 │   │   ├── contacts/                # Contact reports
+│   │   │   └── all.php              # All contacts report
 │   │   ├── reports/                 # Specific reports
 │   │   │   ├── customer_activity.php # Customer activity report
 │   │   │   └── sales_performance.php # Sales performance report
@@ -201,15 +236,46 @@ No formal testing framework is implemented; testing appears to be done through m
 │   │   └── pipeline.php             # Sales pipeline
 │   ├── security/                    # Security management
 │   │   ├── permissions/             # Permission management
+│   │   │   ├── assign_role_permissions.php # Role permission assignment
+│   │   │   ├── delete.php           # Permission deletion
+│   │   │   ├── get.php              # Permission retrieval
+│   │   │   ├── list.php             # Permission listing
+│   │   │   ├── new.php              # New permission creation
+│   │   │   └── post.php             # Permission processing
 │   │   ├── roles/                   # Role management
+│   │   │   ├── delete.php           # Role deletion
+│   │   │   ├── edit_role.php        # Role editing
+│   │   │   ├── get.php              # Role retrieval
+│   │   │   ├── list.php             # Role listing
+│   │   │   ├── new.php              # New role creation
+│   │   │   ├── post.php             # Role processing
+│   │   │   └── view.php             # Role viewing
 │   │   └── roles_permissions/       # Role-permission mapping
+│   │       ├── delete.php           # Role-permission deletion
+│   │       ├── get.php              # Role-permission retrieval
+│   │       ├── list.php             # Role-permission listing
+│   │       └── post.php             # Role-permission processing
 │   ├── templates/                   # HTML templates
 │   │   ├── body.php                 # Page body template
 │   │   ├── footer.php               # Page footer
 │   │   ├── header.php               # Page header
-│   │   ├── nav*.php                 # Navigation components
-│   │   ├── list_*.php               # List display components
-│   │   └── section_*.php            # Section components
+│   │   ├── list_buttons.php         # List button components
+│   │   ├── list_clock.php           # Clock component
+│   │   ├── list_close.php           # List close component
+│   │   ├── list_open.php            # List open component
+│   │   ├── nav.php                  # Main navigation
+│   │   ├── nav_end.php              # Navigation end
+│   │   ├── nav_item_contacts.php    # Contacts navigation
+│   │   ├── nav_item_leads_list.php  # Leads list navigation
+│   │   ├── nav_item_leads_new.php   # New lead navigation
+│   │   ├── nav_item_profile.php     # Profile navigation
+│   │   ├── nav_item_reports.php     # Reports navigation
+│   │   ├── nav_item_users.php       # Users navigation
+│   │   ├── nav_start.php            # Navigation start
+│   │   ├── section_close.php        # Section close
+│   │   ├── section_footer.php       # Section footer
+│   │   ├── section_header.php       # Section header
+│   │   └── section_open.php         # Section open
 │   ├── users/                       # User management
 │   │   ├── delete.php               # User deletion
 │   │   ├── edit.php                 # User editing
@@ -219,23 +285,42 @@ No formal testing framework is implemented; testing appears to be done through m
 │   │   ├── post.php                 # User form processing
 │   │   └── view.php                 # User viewing
 │   ├── dashboard.php                # Main dashboard
+│   ├── index.html                   # Static index page
 │   ├── index.php                    # Application entry point
+│   ├── INSTALLATION.md              # Installation documentation
+│   ├── LICENSE.txt                  # License file
 │   ├── login.php                    # Login page
 │   ├── logout.php                   # Logout handler
-│   └── post.php                     # General form processor
+│   ├── php.ini                      # PHP configuration
+│   ├── post.php                     # General form processor
+│   └── README.md                    # Public HTML documentation
 ├── scripts/                         # Utility scripts
 │   ├── migrate_notes.php            # Notes migration script
 │   └── test_migration.php           # Migration testing
 ├── sql/                            # Database scripts
+│   ├── add_timezone_fields.sql      # Timezone field additions
+│   ├── clean_and_parse_leads_address.sql # Address parsing
 │   ├── create_leads_notes_table.sql # Notes table creation
 │   ├── democrm_democrm.sql          # Main database schema
-│   ├── leads_comparison.sql         # Leads comparison queries
+│   ├── fix_form_country.sql         # Country field fixes
 │   ├── leads.sql                    # Leads table schema
-│   └── notes.sql                    # Notes table schema
-├── composer.json                    # Composer dependencies
-├── composer.lock                    # Dependency lock file
+│   ├── leads_comparison.sql         # Leads comparison queries
+│   ├── notes.sql                    # Notes table schema
+│   ├── parse_contacts_address.sql   # Contact address parsing
+│   ├── parse_leads_address.sql      # Lead address parsing
+│   ├── parse_postcode_state.sql     # Postcode/state parsing
+│   ├── update_contacts_timezone.sql # Contact timezone updates
+│   └── update_leads_timezone.sql    # Lead timezone updates
+├── vendor/                          # Composer dependencies
+│   ├── composer/                    # Composer files
+│   ├── filp/                        # Whoops error handling
+│   ├── monolog/                     # Monolog logging
+│   ├── psr/                         # PSR standards
+│   └── autoload.php                 # Composer autoloader
 ├── .gitignore                       # Git ignore rules
 ├── .htaccess                        # Apache configuration
+├── composer.json                    # Composer dependencies
+├── composer.lock                    # Dependency lock file
 ├── project_context.txt              # Project context documentation
 └── README.md                        # Project documentation
 ```

@@ -35,6 +35,12 @@
          href="<?php echo URL . '/maintenance/list' ?>"
          tabindex="0"><?= $lang['navbar_maintenance']; ?></a>
     </li>
+    <li><a class="dropdown-item"
+         href="<?php echo URL . '/profile/cleanup_duplicate_notes' ?>"
+         tabindex="0">
+         <i class="fa-solid fa-broom me-2"></i>Cleanup Duplicate Notes
+       </a>
+    </li>
     <li><a class="dropdown-item<?php echo ($dir == "users") ? ' active' : ''; ?>"
          href="<?php echo URL . '/users/list' ?>"
          tabindex="0"><?= $lang['navbar_users']; ?></a>
