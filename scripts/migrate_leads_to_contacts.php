@@ -208,7 +208,7 @@ class LeadContactMigration
                         l.id as lead_id,
                         l.lead_number,
                         l.first_name,
-                        l.last_name,
+                        l.family_name,
                         l.email,
                         l.contact_id,
                         c.fullname as contact_name,
@@ -223,7 +223,7 @@ class LeadContactMigration
             
             $this->log("Sample of migrated lead-contact pairs:");
             foreach ($samples as $sample) {
-                $this->log("  Lead #{$sample['lead_number']} ({$sample['first_name']} {$sample['last_name']}) -> Contact #{$sample['contact_id']} ({$sample['contact_name']})");
+                $this->log("  Lead #{$sample['lead_number']} ({$sample['first_name']} {$sample['family_name']}) -> Contact #{$sample['contact_id']} ({$sample['contact_name']})");
             }
             
             // Check for potential duplicates

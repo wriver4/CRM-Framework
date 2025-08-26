@@ -8,7 +8,7 @@ class LeadsList extends ActionTable
 {
     protected string $modelClass = Lead::class;
     protected string $tableName = 'leads';
-    protected array $searchableFields = ['first_name', 'last_name', 'email', 'company', 'phone'];
+    protected array $searchableFields = ['first_name', 'family_name', 'email', 'company', 'phone'];
     protected array $filterableFields = ['status', 'source'];
     protected string $defaultOrderBy = 'created_at';
     protected string $defaultOrderDirection = 'DESC';
@@ -156,12 +156,12 @@ class LeadsList extends ActionTable
         // Prepare contact data from lead
         $contactData = [
             'first_name' => $lead['first_name'],
-            'last_name' => $lead['last_name'],
+            'family_name' => $lead['family_name'],
             'email' => $lead['email'],
             'phone' => $lead['phone'] ?? '',
             'company' => $lead['company'] ?? '',
             'position' => $lead['position'] ?? '',
-            'address' => $lead['address'] ?? '',
+            'full_address' => $lead['full_address'] ?? '',
             'city' => $lead['city'] ?? '',
             'state' => $lead['state'] ?? '',
             'zip_code' => $lead['zip_code'] ?? '',
@@ -374,8 +374,8 @@ class LeadsList extends ActionTable
             $errors['first_name'] = 'First name is required';
         }
 
-        if (empty($data['last_name'])) {
-            $errors['last_name'] = 'Last name is required';
+        if (empty($data['family_name'])) {
+            $errors['family_name'] = 'Family name is required';
         }
 
         if (empty($data['email'])) {

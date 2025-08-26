@@ -53,7 +53,7 @@ try {
     $data['lead_source'] = $_POST['lead_source'] ?? '';
     $data['lead_number'] = $_POST['lead_number'] ?? '';
     $data['first_name'] = $_POST['first_name'] ?? '';
-    $data['family_name'] = $_POST['last_name'] ?? '';
+    $data['family_name'] = $_POST['family_name'] ?? '';
     
     // For admin edit, use the provided full_name as-is (don't auto-generate)
     $data['full_name'] = $_POST['full_name'] ?? '';
@@ -108,7 +108,6 @@ try {
     $data['plans_and_pics'] = $_POST['plans_and_pics'] ?? '';
     
     // Additional information
-    $data['notes'] = $_POST['notes'] ?? '';
     $data['get_updates'] = $_POST['get_updates'] ?? '';
     
     // How did you hear about us (handle array)

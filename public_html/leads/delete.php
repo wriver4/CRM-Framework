@@ -32,7 +32,7 @@ require SECTIONOPEN;
     <div class="card-body">
         <div class="row">
             <div class="col-md-6">
-                <p><strong>Name:</strong> <?= htmlspecialchars($first_name . ' ' . $last_name) ?></p>
+                <p><strong>Name:</strong> <?= htmlspecialchars($first_name . ' ' . $family_name) ?></p>
                 <p><strong>Email:</strong> <?= htmlspecialchars($email ?? '-') ?></p>
                 <p><strong>Phone:</strong> <?= htmlspecialchars($cell_phone ?? '-') ?></p>
             </div>

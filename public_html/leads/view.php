@@ -56,7 +56,7 @@ require __DIR__ . '/../templates/section_header.php';
         <div class="row">
           <div class="col-md-6">
             <h6 class="text-muted"><?= $lang['lead_contact_information'] ?? 'Contact Information' ?></h6>
-            <p><strong><?= $lang['lead_name'] ?? 'Name' ?>:</strong> <?= htmlspecialchars($first_name . ' ' . $last_name) ?></p>
+            <p><strong><?= $lang['lead_name'] ?? 'Name' ?>:</strong> <?= htmlspecialchars($first_name . ' ' . $family_name) ?></p>
             <p><strong><?= $lang['email'] ?? 'Email' ?>:</strong>
               <?php if ($email): ?>
               <a href="mailto:<?= htmlspecialchars($email) ?>"><?= htmlspecialchars($email) ?></a>

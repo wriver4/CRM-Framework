@@ -84,9 +84,9 @@ require SECTIONOPEN;
     </div>
     <div class="col">
       <div class="form-group pb-2">
-        <label for="last_name" class="required pb-1"><?= $lang['lead_last_name']; ?></label>
-        <input type="text" name="last_name" maxlength="100" id="last_name" class="form-control" 
-               value="<?= htmlspecialchars($last_name ?? '') ?>" required autocomplete="off">
+        <label for="family_name" class="required pb-1"><?= $lang['lead_family_name']; ?></label>
+        <input type="text" name="family_name" maxlength="100" id="family_name" class="form-control" 
+               value="<?= htmlspecialchars($family_name ?? '') ?>" required autocomplete="off">
       </div>
     </div>
   </div>
@@ -532,10 +532,19 @@ require SECTIONOPEN;
                 <div class="note-text mb-2">
                   <?= nl2br(htmlspecialchars($note['note_text'])) ?>
                 </div>
-                <small class="text-muted">
-                  <i class="fa-solid fa-user fa-sm me-1"></i>
-                  <?= htmlspecialchars($note['full_name'] ?? $note['username'] ?? 'System') ?>
-                </small>
+                <div class="d-flex justify-content-between align-items-end">
+                  <small class="text-muted">
+                    <i class="fa-solid fa-user fa-sm me-1"></i>
+                    <?= htmlspecialchars($note['full_name'] ?? $note['username'] ?? 'System') ?>
+                  </small>
+                  <button type="button" 
+                          class="btn btn-outline-danger btn-sm delete-note-btn" 
+                          data-note-id="<?= $note['id'] ?>" 
+                          data-lead-id="<?= htmlspecialchars($_GET['id'] ?? '') ?>"
+                          title="Delete this note">
+                    <i class="fa-solid fa-trash fa-sm"></i>
+                  </button>
+                </div>
               </div>
             </div>
           <?php endforeach; ?>
@@ -603,6 +612,19 @@ require SECTIONOPEN;
   padding: 12px;
   border-radius: 8px;
   border-left: 3px solid #dee2e6;
+}
+
+.delete-note-btn {
+  opacity: 0.7;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.delete-note-btn:hover {
+  opacity: 1;
+}
+
+.timeline-item:hover .delete-note-btn {
+  opacity: 1;
 }
 </style>
 
@@ -711,6 +733,186 @@ document.addEventListener('DOMContentLoaded', function() {
   // Set initial timezone if not already set
   if (!document.getElementById('timezone').value) {
     updateTimezone();
+  }
+  
+  // Handle note deletion
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.delete-note-btn')) {
+      const button = e.target.closest('.delete-note-btn');
+      const noteId = button.getAttribute('data-note-id');
+      const leadId = button.getAttribute('data-lead-id');
+      
+      // Confirm deletion
+      if (confirm('Are you sure you want to delete this note? This action cannot be undone.')) {
+        deleteNote(noteId, leadId, button);
+      }
+    }
+  });
+  
+  // Function to delete a note via AJAX
+  function deleteNote(noteId, leadId, button) {
+    console.log('Deleting note:', noteId, 'from lead:', leadId);
+    
+    // Disable button and show loading state
+    button.disabled = true;
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<i class="fa-solid fa-spinner fa-spin fa-sm"></i>';
+    
+    // Find the note element before making the request
+    const noteElement = button.closest('.timeline-item');
+    console.log('Found note element:', noteElement);
+    
+    // Create form data
+    const formData = new FormData();
+    formData.append('note_id', noteId);
+    formData.append('lead_id', leadId);
+    
+    // Send AJAX request
+    fetch('/admin/leads/delete_note.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      console.log('Response status:', response.status);
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Authentication required. Please log in again.');
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.text(); // Get as text first to debug
+    })
+    .then(text => {
+      console.log('Raw response:', text);
+      try {
+        const data = JSON.parse(text);
+        console.log('Parsed response:', data);
+        
+        if (data.success) {
+          // Remove the note element immediately
+          if (noteElement) {
+            console.log('Removing note element...');
+            
+            // Add visual feedback immediately
+            noteElement.style.backgroundColor = '#f8d7da';
+            noteElement.style.border = '1px solid #f5c6cb';
+            
+            // Add fade out animation
+            noteElement.style.transition = 'all 0.3s ease-out';
+            noteElement.style.opacity = '0';
+            noteElement.style.transform = 'translateX(-20px)';
+            
+            setTimeout(() => {
+              noteElement.remove();
+              console.log('Note element removed');
+              
+              // Update notes count
+              updateNotesCount();
+              
+              // Check if no notes left
+              const remainingNotes = document.querySelectorAll('.timeline-item');
+              console.log('Remaining notes:', remainingNotes.length);
+              
+              if (remainingNotes.length === 0) {
+                showNoNotesMessage();
+              }
+            }, 300);
+          } else {
+            console.error('Note element not found for removal');
+            // Force page reload if DOM manipulation fails
+            console.log('Forcing page reload due to DOM manipulation failure');
+            location.reload();
+          }
+          
+          // Show success message
+          showAlert('success', 'Note deleted successfully');
+        } else {
+          console.error('Delete failed:', data.message);
+          
+          // Re-enable button and restore content
+          button.disabled = false;
+          button.innerHTML = originalContent;
+          
+          // Show error message
+          showAlert('danger', data.message || 'Failed to delete note');
+        }
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        console.error('Response text:', text);
+        
+        // Re-enable button and restore content
+        button.disabled = false;
+        button.innerHTML = originalContent;
+        
+        // Show error message
+        showAlert('danger', 'Invalid response from server');
+      }
+    })
+    .catch(error => {
+      console.error('Fetch error:', error);
+      
+      // Re-enable button and restore content
+      button.disabled = false;
+      button.innerHTML = originalContent;
+      
+      // Show error message
+      showAlert('danger', 'An error occurred while deleting the note');
+    });
+  }
+  
+  // Function to update notes count
+  function updateNotesCount() {
+    const notesCountElement = document.querySelector('h6.text-muted');
+    if (notesCountElement && notesCountElement.textContent.includes('Notes & Activity')) {
+      const currentCount = parseInt(notesCountElement.textContent.match(/\((\d+)\)/)?.[1] || '0');
+      const newCount = Math.max(0, currentCount - 1);
+      notesCountElement.textContent = `Notes & Activity (${newCount})`;
+      console.log('Updated notes count from', currentCount, 'to', newCount);
+    }
+  }
+  
+  // Function to show "no notes" message
+  function showNoNotesMessage() {
+    const timelineContainer = document.querySelector('.timeline');
+    if (timelineContainer) {
+      timelineContainer.innerHTML = `
+        <div class="text-center py-4">
+          <p class="text-muted mb-0">
+            <i class="fa-solid fa-info-circle me-2"></i>No notes found for this lead.
+          </p>
+        </div>
+      `;
+      console.log('Showed no notes message');
+    }
+  }
+  
+  // Function to show alert messages
+  function showAlert(type, message) {
+    // Remove existing alerts
+    const existingAlerts = document.querySelectorAll('.alert.alert-dismissible');
+    existingAlerts.forEach(alert => alert.remove());
+    
+    // Create new alert
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.setAttribute('role', 'alert');
+    alertDiv.innerHTML = `
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+    
+    // Insert at the top of the form
+    const form = document.querySelector('form');
+    if (form) {
+      form.insertBefore(alertDiv, form.firstChild);
+    }
+    
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+      if (alertDiv.parentNode) {
+        alertDiv.remove();
+      }
+    }, 5000);
   }
 });
 </script>

@@ -7,7 +7,7 @@ This document outlines the complete integration plan for connecting the Lead and
 ## Current State Analysis
 
 ### Leads Table Structure
-- Contains contact information directly: `first_name`, `last_name`, `cell_phone`, `email`, `business_name`
+- Contains contact information directly: `first_name`, `family_name`, `cell_phone`, `email`, `business_name`
 - Has address fields: `form_street_1`, `form_street_2`, `form_city`, `form_state`, `form_postcode`, `form_country`
 - Contains lead-specific data: `lead_source`, `stage`, `services_interested_in`, etc.
 

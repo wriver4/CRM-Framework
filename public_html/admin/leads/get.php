@@ -42,7 +42,7 @@ if (isset($_GET['action'])) {
             break;
             
         default:
-            // Default: Get the last lead number for backward compatibility
+            // Default: Get the last lead number
             $last_lead_number = $leads->get_last_lead_number();
             echo $last_lead_number;
             break;
@@ -96,7 +96,7 @@ if ($dir == 'admin/leads' && $page == 'edit') {
         $lead_source = $result["lead_source"] ?? 1;
         $lead_number = $result["lead_number"] ?? '';
         $first_name = $result["first_name"] ?? '';
-        $last_name = $result["family_name"] ?? '';
+        $family_name = $result["family_name"] ?? '';
         $full_name = $result["full_name"] ?? '';
         $cell_phone = $result["cell_phone"] ?? '';
         $email = $result["email"] ?? '';

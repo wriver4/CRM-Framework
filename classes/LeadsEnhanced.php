@@ -142,7 +142,7 @@ class LeadsEnhanced extends Leads
         $sql = "SELECT 
                     l.*,
                     c.id as contact_id,
-                    c.fullname as contact_fullname,
+                    c.full_name as contact_fullname,
                     c.phones as contact_phones,
                     c.emails as contact_emails,
                     c.p_street_1, c.p_street_2, c.p_city, c.p_state, c.p_postcode, c.p_country,
@@ -183,7 +183,7 @@ class LeadsEnhanced extends Leads
             }
             
             if (isset($filters['search'])) {
-                $conditions[] = "(l.first_name LIKE :search OR l.last_name LIKE :search OR l.email LIKE :search OR c.fullname LIKE :search)";
+                $conditions[] = "(l.first_name LIKE :search OR l.family_name LIKE :search OR l.email LIKE :search OR c.full_name LIKE :search)";
                 $params[':search'] = '%' . $filters['search'] . '%';
             }
             
@@ -195,7 +195,7 @@ class LeadsEnhanced extends Leads
         $sql = "SELECT 
                     l.*,
                     c.id as contact_id,
-                    c.fullname as contact_fullname,
+                    c.full_name as contact_fullname,
                     c.phones as contact_phones,
                     c.emails as contact_emails,
                     c.business_name as contact_business_name
@@ -302,8 +302,8 @@ class LeadsEnhanced extends Leads
         $errors = $this->validate_lead_data($data);
 
         // Additional contact-specific validations
-        if (empty($data['first_name']) && empty($data['last_name'])) {
-            $errors[] = 'Either first name or last name is required for contact creation';
+        if (empty($data['first_name']) && empty($data['family_name'])) {
+            $errors[] = 'Either first name or family name is required for contact creation';
         }
 
         // Validate email format for contact
@@ -331,10 +331,10 @@ class LeadsEnhanced extends Leads
      */
     public function search_leads_by_contact($searchTerm)
     {
-        $sql = "SELECT DISTINCT l.*, c.fullname as contact_name
+        $sql = "SELECT DISTINCT l.*, c.full_name as contact_name
                 FROM leads l
                 LEFT JOIN contacts c ON l.contact_id = c.id
-                WHERE c.fullname LIKE :search 
+                WHERE c.full_name LIKE :search 
                    OR c.personal_email LIKE :search
                    OR c.business_email LIKE :search
                    OR c.cell_phone LIKE :search

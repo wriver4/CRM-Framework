@@ -17,13 +17,13 @@ class Audit extends Database
 
   public function log($user_id, $event, $resource, $useragent, $ip, $location, $data)
   {
-    $sql = "INSERT INTO audit (user_id, event, resource, ip, useragent, location, data) VALUES (:user_id, :event, :resource, :ip, :usergent, :location, :data)";
+    $sql = "INSERT INTO audit (user_id, event, resource, ip, useragent, location, data) VALUES (:user_id, :event, :resource, :ip, :useragent, :location, :data)";
     $stmt = $this->dbcrm()->prepare($sql);
     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt->bindParam(':event', $event, PDO::PARAM_STR);
     $stmt->bindParam(':resource', $resource, PDO::PARAM_STR);
     $stmt->bindParam(':ip', $ip, PDO::PARAM_STR);
-    $stmt->bindParam(':usergent', $useragent, PDO::PARAM_STR);
+    $stmt->bindParam(':useragent', $useragent, PDO::PARAM_STR);
     $stmt->bindParam(':location', $location, PDO::PARAM_INT);
     $stmt->bindParam(':data', $data, PDO::PARAM_STR);
     $stmt->execute();

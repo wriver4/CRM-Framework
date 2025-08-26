@@ -13,7 +13,7 @@ class ContactsList extends ActionTable
     $this->column_names = [
       'action' => $lang['action'],
       'ctype' => $lang['ctype'],
-      'fullname' => $lang['fullname'],
+      'full_name' => $lang['full_name'] ?? $lang['fullname'] ?? 'Full Name',
       'phones' => $lang['phones'],
       'call_order' => $lang['contact_call_order'],
       'emails' => $lang['emails'],

@@ -41,8 +41,8 @@ class ContactsEnhanced extends Database
     {
         // Map lead fields to contact fields
         $first_name = $leadData['first_name'] ?? '';
-        $last_name = $leadData['last_name'] ?? '';
-        $fullname = trim($first_name . ' ' . $last_name);
+        $family_name = $leadData['family_name'] ?? '';
+        $full_name = trim($first_name . ' ' . $family_name);
         
         // Handle phone numbers - store as JSON
         $phones = json_encode([
@@ -63,8 +63,8 @@ class ContactsEnhanced extends Database
             'ctype' => $leadData['ctype'] ?? 1, // Use lead contact type
             'call_order' => 1, // Default primary contact
             'first_name' => $first_name,
-            'family_name' => $last_name,
-            'fullname' => $fullname,
+            'family_name' => $family_name,
+            'full_name' => $full_name,
             'cell_phone' => $leadData['cell_phone'] ?? '',
             'business_phone' => '',
             'alt_phone' => '',
@@ -164,7 +164,7 @@ class ContactsEnhanced extends Database
     public function create_contact($data)
     {
         $sql = "INSERT INTO contacts (
-            prop_id, ctype, call_order, first_name, family_name, fullname, 
+            prop_id, ctype, call_order, first_name, family_name, full_name, 
             cell_phone, business_phone, alt_phone, phones, 
             personal_email, business_email, alt_email, emails, 
             p_street_1, p_street_2, p_city, p_state, p_postcode, p_country, 
@@ -172,7 +172,7 @@ class ContactsEnhanced extends Database
             m_street_1, m_street_2, m_city, m_state, m_postcode, m_country,
             status, created_at, updated_at
         ) VALUES (
-            :prop_id, :ctype, :call_order, :first_name, :family_name, :fullname,
+            :prop_id, :ctype, :call_order, :first_name, :family_name, :full_name,
             :cell_phone, :business_phone, :alt_phone, :phones,
             :personal_email, :business_email, :alt_email, :emails,
             :p_street_1, :p_street_2, :p_city, :p_state, :p_postcode, :p_country,
@@ -207,7 +207,7 @@ class ContactsEnhanced extends Database
         
         $sql = "UPDATE contacts SET 
             prop_id = :prop_id, ctype = :ctype, call_order = :call_order,
-            first_name = :first_name, family_name = :family_name, fullname = :fullname,
+            first_name = :first_name, family_name = :family_name, full_name = :full_name,
             cell_phone = :cell_phone, business_phone = :business_phone, alt_phone = :alt_phone, phones = :phones,
             personal_email = :personal_email, business_email = :business_email, alt_email = :alt_email, emails = :emails,
             p_street_1 = :p_street_1, p_street_2 = :p_street_2, p_city = :p_city, p_state = :p_state, p_postcode = :p_postcode, p_country = :p_country,
@@ -312,7 +312,7 @@ class ContactsEnhanced extends Database
     // Include all existing methods from original Contacts class
     public function get_active_list()
     {
-        $sql = 'SELECT id, ctype, fullname, phones, call_order, emails from contacts WHERE status = 1';
+        $sql = 'SELECT id, ctype, full_name, phones, call_order, emails from contacts WHERE status = 1';
         $stmt = $this->dbcrm()->query($sql);
         $stmt->execute();
         $results = $stmt->fetchAll();
@@ -321,7 +321,7 @@ class ContactsEnhanced extends Database
 
     public function get_list()
     {
-        $sql = 'SELECT id, ctype, fullname, phones, emails from contacts';
+        $sql = 'SELECT id, ctype, full_name, phones, emails from contacts';
         $stmt = $this->dbcrm()->query($sql);
         $stmt->execute();
         $results = $stmt->fetchAll();

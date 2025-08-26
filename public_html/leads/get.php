@@ -39,7 +39,7 @@ if (isset($_GET['action'])) {
             break;
             
         default:
-            // Default: Get the last lead number for backward compatibility
+            // Default: Get the last lead number
             $last_lead_number = $leads->get_last_lead_number();
             echo $last_lead_number;
             break;
@@ -64,7 +64,7 @@ if ($dir == 'leads' && $page == 'view') {
         $result = $result[0]; // get_lead_by_id returns array
         $lead_source = $result["lead_source"];
         $first_name = $result["first_name"];
-        $last_name = $result["family_name"];
+        $family_name = $result["family_name"];
         $cell_phone = $result["cell_phone"];
         $email = $result["email"];
         $ctype = $result["ctype"];
@@ -138,7 +138,7 @@ if ($dir == 'leads' && $page == 'delete') {
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
         $first_name = $result["first_name"];
-        $last_name = $result["family_name"];
+        $family_name = $result["family_name"];
         $email = $result["email"];
         $cell_phone = $result["cell_phone"];
         $stage = $result["stage"];

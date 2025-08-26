@@ -74,12 +74,11 @@ try {
         // Basic lead information
         'lead_source' => (int)($_POST['lead_source'] ?? 1),
         'first_name' => sanitize_input($_POST['first_name'] ?? ''),
-        'last_name' => sanitize_input($_POST['last_name'] ?? ''),
+        'family_name' => sanitize_input($_POST['family_name'] ?? ''),
         'cell_phone' => format_phone_number($_POST['cell_phone'] ?? ''),
         'email' => filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL),
         'business_name' => sanitize_input($_POST['business_name'] ?? ''),
         'ctype' => (int)($_POST['ctype'] ?? 1),
-        'notes' => sanitize_input($_POST['notes'] ?? ''),
         
         // Address information
         'form_street_1' => sanitize_input($_POST['form_street_1'] ?? ''),
@@ -117,32 +116,9 @@ try {
         'stage' => (int)($_POST['stage'] ?? 1),
         'last_edited_by' => $_SESSION['user_id'] ?? 1,
         
-        // Legacy fields (maintain compatibility)
-        'family_name' => sanitize_input($_POST['family_name'] ?? $_POST['last_name'] ?? ''),
-        'fullname' => trim(($_POST['first_name'] ?? '') . ' ' . ($_POST['last_name'] ?? '')),
-        'existing_client' => (int)($_POST['existing_client'] ?? 0),
-        'address' => sanitize_input($_POST['address'] ?? ''),
-        'proposal_sent_date' => $_POST['proposal_sent_date'] ?? null,
-        'scheduled_date' => $_POST['scheduled_date'] ?? null,
-        'lead_lost_notes' => sanitize_input($_POST['lead_lost_notes'] ?? ''),
-        'site_visit_by' => sanitize_input($_POST['site_visit_by'] ?? ''),
-        'referred_to' => sanitize_input($_POST['referred_to'] ?? ''),
-        'lead_notes' => sanitize_input($_POST['lead_notes'] ?? ''),
-        'prospect_notes' => sanitize_input($_POST['prospect_notes'] ?? ''),
-        'lead_lost' => (int)($_POST['lead_lost'] ?? 0),
-        'site_visit_completed' => (int)($_POST['site_visit_completed'] ?? 0),
-        'closer' => sanitize_input($_POST['closer'] ?? ''),
-        'referred_services' => sanitize_input($_POST['referred_services'] ?? ''),
-        'assigned_to' => sanitize_input($_POST['assigned_to'] ?? ''),
-        'referred' => (int)($_POST['referred'] ?? 0),
-        'site_visit_date' => $_POST['site_visit_date'] ?? null,
-        'date_qualified' => $_POST['date_qualified'] ?? null,
-        'contacted_date' => $_POST['contacted_date'] ?? null,
-        'referral_done' => (int)($_POST['referral_done'] ?? 0),
-        'jd_referral_notes' => sanitize_input($_POST['jd_referral_notes'] ?? ''),
-        'closing_notes' => sanitize_input($_POST['closing_notes'] ?? ''),
-        'prospect_lost' => (int)($_POST['prospect_lost'] ?? 0),
-        'to_contracting' => (int)($_POST['to_contracting'] ?? 0)
+        // Additional fields
+        'full_name' => trim(($_POST['first_name'] ?? '') . ' ' . ($_POST['family_name'] ?? '')),
+        'full_address' => sanitize_input($_POST['full_address'] ?? '')
     ];
 
     // Validate required fields
@@ -167,7 +143,15 @@ try {
             
             // Log the update
             $audit = new Audit();
-            $audit->log_action('lead_update', $lead_id, "Lead updated with contact integration", $_SESSION['user_id'] ?? 1);
+            $audit->log(
+                $_SESSION['user_id'] ?? 1,                    // user_id
+                'lead_update',                                 // event
+                "lead_{$lead_id}",                            // resource
+                $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown',     // useragent
+                $_SERVER['REMOTE_ADDR'] ?? 'Unknown',         // ip
+                $lead_id,                                      // location
+                "Lead updated with contact integration"        // data
+            );
             
             header('Location: view.php?id=' . $lead_id);
         } else {
@@ -189,7 +173,15 @@ try {
             
             // Log the creation
             $audit = new Audit();
-            $audit->log_action('lead_create', $result['lead_id'], "Lead created with contact integration (Contact ID: {$result['contact_id']})", $_SESSION['user_id'] ?? 1);
+            $audit->log(
+                $_SESSION['user_id'] ?? 1,                    // user_id
+                'lead_create',                                 // event
+                "lead_{$result['lead_id']}",                  // resource
+                $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown',     // useragent
+                $_SERVER['REMOTE_ADDR'] ?? 'Unknown',         // ip
+                $result['lead_id'],                           // location
+                "Lead created with contact integration (Contact ID: {$result['contact_id']})" // data
+            );
             
             // Clear any preserved form data
             unset($_SESSION['form_data']);

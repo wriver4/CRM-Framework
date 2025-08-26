@@ -325,7 +325,7 @@ $lang = [
   // Lead Form
   'lead_contact_information' => 'Contact Information',
   'lead_first_name' => 'First Name',
-  'lead_last_name' => 'Family Name',
+  'lead_family_name' => 'Family Name',
   'lead_business_name' => 'Business Name',
   'lead_cell_phone' => 'Cell Phone',
   'lead_email' => 'Email',

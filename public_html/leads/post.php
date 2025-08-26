@@ -62,11 +62,10 @@ if (isset($_POST['page']) && $_POST['page'] == 'edit') {
     $data = [
         'lead_source' => $_POST['lead_source'] ?? 1,
         'first_name' => $_POST['first_name'] ?? '',
-        'last_name' => $_POST['last_name'] ?? '',
+        'family_name' => $_POST['family_name'] ?? '',
         'cell_phone' => format_phone_number($_POST['cell_phone'] ?? ''),
         'email' => $_POST['email'] ?? '',
         'ctype' => $_POST['ctype'] ?? 1,
-        'notes' => $_POST['notes'] ?? '',
         'lead_number' => $_POST['lead_number'] ?? '',
         'business_name' => $_POST['business_name'] ?? '',
         'form_street_1' => $_POST['form_street_1'] ?? '',
@@ -106,32 +105,9 @@ if (isset($_POST['page']) && $_POST['page'] == 'edit') {
         'hear_about' => '',
         'hear_about_other' => '',
         
-        // Legacy fields
-        'family_name' => $_POST['last_name'] ?? '',
-        'fullname' => ($_POST['first_name'] ?? '') . ' ' . ($_POST['last_name'] ?? ''),
-        'existing_client' => null,
-        'address' => null,
-        'proposal_sent_date' => null,
-        'scheduled_date' => null,
-        'lead_lost_notes' => null,
-        'site_visit_by' => null,
-        'referred_to' => null,
-        'lead_notes' => null,
-        'prospect_notes' => null,
-        'lead_lost' => null,
-        'site_visit_completed' => null,
-        'closer' => null,
-        'referred_services' => null,
-        'assigned_to' => null,
-        'referred' => null,
-        'site_visit_date' => null,
-        'date_qualified' => null,
-        'contacted_date' => null,
-        'referral_done' => null,
-        'jd_referral_notes' => null,
-        'closing_notes' => null,
-        'prospect_lost' => null,
-        'to_contracting' => null
+        // Additional fields
+        'full_name' => ($_POST['first_name'] ?? '') . ' ' . ($_POST['family_name'] ?? ''),
+        'full_address' => null
     ];
     
     // Validate the data
@@ -183,11 +159,10 @@ try {
     $data = [
         'lead_source' => $_POST['lead_source'] ?? 1,
         'first_name' => $_POST['first_name'] ?? '',
-        'last_name' => $_POST['last_name'] ?? '',
+        'family_name' => $_POST['family_name'] ?? '',
         'cell_phone' => format_phone_number($_POST['cell_phone'] ?? ''),
         'email' => $_POST['email'] ?? '',
         'ctype' => $_POST['ctype'] ?? 1,
-        'notes' => $_POST['notes'] ?? '',
         'lead_number' => $_POST['lead_number'] ?? '',
         'business_name' => $_POST['business_name'] ?? '',
         'form_street_1' => $_POST['form_street_1'] ?? '',
@@ -225,32 +200,9 @@ try {
         'stage' => $_POST['stage'] ?? 1, // Default to stage 1 (Lead)
         'last_edited_by' => $_POST['last_edited_by'] ?? $_SESSION['user_id'] ?? null,
         
-        // Legacy/backward compatibility fields - set to empty/null for new records
-        'family_name' => $_POST['last_name'] ?? '', // Copy last_name to family_name
-        'fullname' => ($_POST['first_name'] ?? '') . ' ' . ($_POST['last_name'] ?? ''),
-        'existing_client' => null,
-        'address' => null,
-        'proposal_sent_date' => null,
-        'scheduled_date' => null,
-        'lead_lost_notes' => null,
-        'site_visit_by' => null,
-        'referred_to' => null,
-        'lead_notes' => null,
-        'prospect_notes' => null,
-        'lead_lost' => null,
-        'site_visit_completed' => null,
-        'closer' => null,
-        'referred_services' => null,
-        'assigned_to' => null,
-        'referred' => null,
-        'site_visit_date' => null,
-        'date_qualified' => null,
-        'contacted_date' => null,
-        'referral_done' => null,
-        'jd_referral_notes' => null,
-        'closing_notes' => null,
-        'prospect_lost' => null,
-        'to_contracting' => null
+        // Additional fields - set to empty/null for new records
+        'full_name' => ($_POST['first_name'] ?? '') . ' ' . ($_POST['family_name'] ?? ''),
+        'full_address' => null
     ];
     
     // Validate the data

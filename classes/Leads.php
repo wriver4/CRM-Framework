@@ -143,35 +143,41 @@ class Leads extends Database {
         }
         // SQL to insert a new lead with updated structure
         $sql = "INSERT INTO leads (
-            lead_source, first_name, last_name, cell_phone, email, ctype, notes, 
+            lead_source, first_name, family_name, cell_phone, email, ctype, notes, 
             lead_number, business_name, form_street_1, form_street_2, form_city, form_state, form_postcode, form_country, timezone, full_address,
             services_interested_in, structure_type, structure_description, structure_other, structure_additional,
             picture_submitted_1, picture_submitted_2, picture_submitted_3,
             plans_submitted_1, plans_submitted_2, plans_submitted_3,
             picture_upload_link, plans_upload_link, plans_and_pics, get_updates, hear_about, hear_about_other, stage, last_edited_by,
             -- Keep existing business fields
-            family_name, fullname, existing_client, address, proposal_sent_date, scheduled_date,
-            lead_lost_notes, site_visit_by, referred_to, lead_notes, prospect_notes, lead_lost,
-            site_visit_completed, closer, referred_services, assigned_to, referred, site_visit_date,
-            date_qualified, contacted_date, referral_done, jd_referral_notes, closing_notes,
-            prospect_lost, to_contracting
+            full_name, full_address
         ) VALUES (
-            :lead_source, :first_name, :last_name, :cell_phone, :email, :ctype, :notes,
+            :lead_source, :first_name, :family_name, :cell_phone, :email, :ctype, :notes,
             :lead_number, :business_name, :form_street_1, :form_street_2, :form_city, :form_state, :form_postcode, :form_country, :timezone, :full_address,
             :services_interested_in, :structure_type, :structure_description, :structure_other, :structure_additional,
             :picture_submitted_1, :picture_submitted_2, :picture_submitted_3,
             :plans_submitted_1, :plans_submitted_2, :plans_submitted_3,
             :picture_upload_link, :plans_upload_link, :plans_and_pics, :get_updates, :hear_about, :hear_about_other, :stage, :last_edited_by,
             -- Keep existing business fields
-            :family_name, :fullname, :existing_client, :address, :proposal_sent_date, :scheduled_date,
-            :lead_lost_notes, :site_visit_by, :referred_to, :lead_notes, :prospect_notes, :lead_lost,
-            :site_visit_completed, :closer, :referred_services, :assigned_to, :referred, :site_visit_date,
-            :date_qualified, :contacted_date, :referral_done, :jd_referral_notes, :closing_notes,
-            :prospect_lost, :to_contracting
+            :full_name, :full_address
         )";
+        // Define valid parameters that exist in the SQL query
+        $validParams = [
+            'lead_source', 'first_name', 'family_name', 'cell_phone', 'email', 'ctype', 'notes',
+            'lead_number', 'business_name', 'form_street_1', 'form_street_2', 'form_city', 
+            'form_state', 'form_postcode', 'form_country', 'timezone', 'full_address',
+            'services_interested_in', 'structure_type', 'structure_description', 'structure_other',
+            'structure_additional', 'picture_submitted_1', 'picture_submitted_2', 'picture_submitted_3',
+            'plans_submitted_1', 'plans_submitted_2', 'plans_submitted_3', 'picture_upload_link',
+            'plans_upload_link', 'plans_and_pics', 'get_updates', 'hear_about', 'hear_about_other',
+            'stage', 'last_edited_by', 'full_name'
+        ];
+        
         $stmt = $this->dbcrm()->prepare($sql);
         foreach ($data as $key => $value) {
-            $stmt->bindParam(':' . $key, $value);
+            if (in_array($key, $validParams)) {
+                $stmt->bindValue(':' . $key, $value);
+            }
         }
         return $stmt->execute();
     }
@@ -220,8 +226,8 @@ class Leads extends Database {
         }
         // SQL to update a lead with new structure
         $sql = "UPDATE leads SET 
-            lead_source = :lead_source, first_name = :first_name, last_name = :last_name, 
-            cell_phone = :cell_phone, email = :email, ctype = :ctype, notes = :notes,
+            lead_source = :lead_source, first_name = :first_name, family_name = :family_name, 
+            cell_phone = :cell_phone, email = :email, ctype = :ctype,
             lead_number = :lead_number, business_name = :business_name, form_street_1 = :form_street_1, form_street_2 = :form_street_2,
             form_city = :form_city, form_state = :form_state, form_postcode = :form_postcode, form_country = :form_country, timezone = :timezone, full_address = :full_address,
             services_interested_in = :services_interested_in, structure_type = :structure_type,
@@ -234,20 +240,27 @@ class Leads extends Database {
             get_updates = :get_updates, hear_about = :hear_about, hear_about_other = :hear_about_other,
             stage = :stage, last_edited_by = :last_edited_by, updated_at = CURRENT_TIMESTAMP,
             -- Keep existing business fields
-            family_name = :family_name, fullname = :fullname, existing_client = :existing_client,
-            address = :address, proposal_sent_date = :proposal_sent_date, scheduled_date = :scheduled_date,
-            lead_lost_notes = :lead_lost_notes, site_visit_by = :site_visit_by, referred_to = :referred_to,
-            lead_notes = :lead_notes, prospect_notes = :prospect_notes, lead_lost = :lead_lost,
-            site_visit_completed = :site_visit_completed, closer = :closer, referred_services = :referred_services,
-            assigned_to = :assigned_to, referred = :referred, site_visit_date = :site_visit_date,
-            date_qualified = :date_qualified, contacted_date = :contacted_date, referral_done = :referral_done,
-            jd_referral_notes = :jd_referral_notes, closing_notes = :closing_notes, prospect_lost = :prospect_lost,
-            to_contracting = :to_contracting
+            full_name = :full_name
         WHERE id = :id";
         $data['id'] = $id;
+        
+        // Define valid parameters that exist in the SQL query
+        $validParams = [
+            'lead_source', 'first_name', 'family_name', 'cell_phone', 'email', 'ctype',
+            'lead_number', 'business_name', 'form_street_1', 'form_street_2', 'form_city', 
+            'form_state', 'form_postcode', 'form_country', 'timezone', 'full_address',
+            'services_interested_in', 'structure_type', 'structure_description', 'structure_other',
+            'structure_additional', 'picture_submitted_1', 'picture_submitted_2', 'picture_submitted_3',
+            'plans_submitted_1', 'plans_submitted_2', 'plans_submitted_3', 'picture_upload_link',
+            'plans_upload_link', 'plans_and_pics', 'get_updates', 'hear_about', 'hear_about_other',
+            'stage', 'last_edited_by', 'full_name', 'id'
+        ];
+        
         $stmt = $this->dbcrm()->prepare($sql);
         foreach ($data as $key => $value) {
-            $stmt->bindParam(':' . $key, $value);
+            if (in_array($key, $validParams)) {
+                $stmt->bindValue(':' . $key, $value);
+            }
         }
         return $stmt->execute();
     }
@@ -281,8 +294,8 @@ class Leads extends Database {
         if (empty($data['first_name'])) {
             $errors[] = 'First name is required';
         }
-        if (empty($data['last_name'])) {
-            $errors[] = 'Last name is required';
+        if (empty($data['family_name'])) {
+            $errors[] = 'Family name is required';
         }
         if (empty($data['email'])) {
             $errors[] = 'Email is required';
@@ -317,8 +330,8 @@ class Leads extends Database {
         if (!empty($data['first_name']) && strlen($data['first_name']) > 100) {
             $errors[] = 'First name too long (max 100 characters)';
         }
-        if (!empty($data['last_name']) && strlen($data['last_name']) > 100) {
-            $errors[] = 'Last name too long (max 100 characters)';
+        if (!empty($data['family_name']) && strlen($data['family_name']) > 100) {
+            $errors[] = 'Family name too long (max 100 characters)';
         }
         if (!empty($data['cell_phone']) && strlen($data['cell_phone']) > 15) {
             $errors[] = 'Phone number too long (max 15 characters)';
@@ -362,7 +375,7 @@ class Leads extends Database {
         
         $stmt = $this->dbcrm()->prepare($sql);
         foreach ($params as $key => $value) {
-            $stmt->bindParam(':' . $key, $value);
+            $stmt->bindValue(':' . $key, $value);
         }
         $stmt->execute();
         return $stmt->fetchAll();
@@ -394,7 +407,7 @@ class Leads extends Database {
         
         $stmt = $this->dbcrm()->prepare($sql);
         foreach ($params as $key => $value) {
-            $stmt->bindParam(':' . $key, $value);
+            $stmt->bindValue(':' . $key, $value);
         }
         $stmt->execute();
         return $stmt->fetchAll();
@@ -417,7 +430,7 @@ class Leads extends Database {
         
         $stmt = $this->dbcrm()->prepare($sql);
         foreach ($params as $key => $value) {
-            $stmt->bindParam(':' . $key, $value);
+            $stmt->bindValue(':' . $key, $value);
         }
         $stmt->execute();
         $result = $stmt->fetch();

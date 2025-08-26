@@ -78,12 +78,12 @@ require SECTIONOPEN;
     </div>
     <div class="col">
       <div class="form-group pb-2">
-        <label for="last_name"
-               class="required pb-1"><?= $lang['lead_last_name']; ?></label>
+        <label for="family_name"
+               class="required pb-1"><?= $lang['lead_family_name']; ?></label>
         <input type="text"
-               name="last_name"
+               name="family_name"
                maxlength="100"
-               id="last_name"
+               id="family_name"
                class="form-control"
                required
                autocomplete="off">
