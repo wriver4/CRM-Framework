@@ -458,10 +458,14 @@ require SECTIONOPEN;
              readonly>
     </div>
     <p></p>
-    <a href="list"
-       class="btn btn-success">
-      <?php echo $lang['back']; ?>
-    </a>
+    <div class="row">
+      <div class="col-auto">
+        <a href="list"
+           class="btn btn-success">
+          <?php echo $lang['back']; ?>
+        </a>
+      </div>
+    </div>
 </form>
 <?php
 require SECTIONCLOSE;

@@ -484,17 +484,25 @@ require SECTIONOPEN;
     <input type="hidden"
            name="page"
            value="<?= $page; ?>">
-    <a href="list"
-       class="btn btn-danger"
-       tabindex="0"
-       role="button"
-       aria-pressed="false"><?= $lang['cancel']; ?></a>
-    <button type="submit"
-            class="btn btn-success"
-            value="Submit"
-            tabindex="0"
-            role="button"
-            aria-pressed="false"><?= $lang['submit_edit']; ?></button>
+    <div class="row">
+      <div class="col-auto">
+        <a href="list"
+           class="btn btn-danger"
+           tabindex="0"
+           role="button"
+           aria-pressed="false"><?= $lang['cancel']; ?>
+        </a>
+      </div>
+      <div class="col-auto">
+        <button type="submit"
+                class="btn btn-success"
+                value="Submit"
+                tabindex="0"
+                role="button"
+                aria-pressed="false"><?= $lang['submit_edit']; ?>
+        </button>
+      </div>
+    </div>
 </form>
 <?php
 require SECTIONCLOSE;

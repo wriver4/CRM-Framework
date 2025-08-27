@@ -111,25 +111,23 @@ class LeadsListTable extends ActionTable
     {
         echo $this->row_nav_open;
 
-        // View button
-        echo
-        $this->row_nav_button_open
-          . $this->row_nav_button_view_class_enabled
-          . $this->row_nav_button_href_view_open
-          . urlencode($value)
-          . $this->row_nav_button_href_close
-          . $this->row_nav_button_view_icon
-          . $this->row_nav_button_close;
+        // View button - using col-6 for 2 buttons to make them square
+        echo '<div class="col-6 py-1"><a type="button" ';
+        echo $this->row_nav_button_view_class_enabled;
+        echo $this->row_nav_button_href_view_open;
+        echo urlencode($value);
+        echo $this->row_nav_button_href_close;
+        echo $this->row_nav_button_view_icon;
+        echo '</a></div>';
 
-        // Regular edit button
-        echo $this->row_nav_button_open;
+        // Edit button - using col-6 for 2 buttons to make them square
+        echo '<div class="col-6 py-1"><a type="button" ';
         echo $this->row_nav_button_edit_class_enabled;
-        echo
-        $this->row_nav_button_href_edit_open
-          . urlencode($value)
-          . $this->row_nav_button_href_close
-          . $this->row_nav_button_edit_icon
-          . $this->row_nav_button_close;
+        echo $this->row_nav_button_href_edit_open;
+        echo urlencode($value);
+        echo $this->row_nav_button_href_close;
+        echo $this->row_nav_button_edit_icon;
+        echo '</a></div>';
 
         echo $this->row_nav_close;
     }
