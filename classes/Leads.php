@@ -193,7 +193,7 @@ class Leads extends Database {
         // SQL to fetch a lead by ID
         $sql = "SELECT * FROM leads WHERE id = :id";
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -269,7 +269,7 @@ class Leads extends Database {
         // SQL to delete a lead
         $sql = "DELETE FROM leads WHERE id = :id";
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 
@@ -445,7 +445,7 @@ class Leads extends Database {
                 WHERE ln.lead_id = :lead_id 
                 ORDER BY n.date_created DESC";
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':lead_id', $lead_id, PDO::PARAM_INT);
+        $stmt->bindValue(':lead_id', $lead_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -454,7 +454,7 @@ class Leads extends Database {
     public function get_previous_lead_id($current_id) {
         $sql = "SELECT id FROM leads WHERE id < :current_id ORDER BY id DESC LIMIT 1";
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':current_id', $current_id, PDO::PARAM_INT);
+        $stmt->bindValue(':current_id', $current_id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch();
         return $result ? $result['id'] : null;
@@ -464,7 +464,7 @@ class Leads extends Database {
     public function get_next_lead_id($current_id) {
         $sql = "SELECT id FROM leads WHERE id > :current_id ORDER BY id ASC LIMIT 1";
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':current_id', $current_id, PDO::PARAM_INT);
+        $stmt->bindValue(':current_id', $current_id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch();
         return $result ? $result['id'] : null;

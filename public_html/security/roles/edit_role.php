@@ -69,8 +69,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $rid = trim($_POST["rid"]);
   $rname = trim($_POST["rname"]);;
   $sql = "UPDATE users SET ";
-    $stmt->bindParam(':rid', $rid, PDO::PARAM_INT);
-    $stmt->bindParam(':rname', $rname, PDO::PARAM_STR);
+    $stmt->bindValue(':rid', $rid, PDO::PARAM_INT);
+    $stmt->bindValue(':rname', $rname, PDO::PARAM_STR);
   if ($stmt->execute()) {
     header("location: list.php");
     exit();

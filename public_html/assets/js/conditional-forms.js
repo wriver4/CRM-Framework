@@ -278,8 +278,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    function showContactIntegrationNotice() {
+        // Create or update contact integration notice
+        let notice = document.getElementById('contact-integration-notice');
+        if (!notice) {
+            notice = document.createElement('div');
+            notice.id = 'contact-integration-notice';
+            notice.className = 'alert alert-info mt-2 mb-3';
+            notice.setAttribute('role', 'alert');
+            
+            // Insert after the contact type field or at the beginning of the form
+            const contactTypeSection = document.getElementById('contact-type-field');
+            const form = document.querySelector('form');
+            
+            if (contactTypeSection) {
+                contactTypeSection.parentNode.insertAdjacentElement('afterend', notice);
+            } else if (form) {
+                const firstFieldset = form.querySelector('.row, .form-field');
+                if (firstFieldset) {
+                    firstFieldset.parentNode.insertBefore(notice, firstFieldset);
+                }
+            }
+        }
+        
+        // Set the notice content based on current language
+        const isSpanish = document.documentElement.lang === 'es' || 
+                         document.querySelector('html[lang="es"]') ||
+                         window.location.href.includes('/es/');
+                         
+        const noticeText = isSpanish ? 
+            '<strong><i class="fa-solid fa-info-circle"></i> Integración de Contactos:</strong> Se creará automáticamente un contacto y se vinculará a este cliente potencial.' :
+            '<strong><i class="fa-solid fa-info-circle"></i> Contact Integration:</strong> A contact will be automatically created and linked to this lead.';
+            
+        notice.innerHTML = noticeText;
+    }
+    
     // Add event listener
     leadSourceSelect.addEventListener('change', updateFormFields);
+    
+    // Show contact integration notice on page load
+    showContactIntegrationNotice();
     
     // Trigger on page load to handle pre-selected values
     updateFormFields();

@@ -33,6 +33,31 @@ class ContactsEnhanced extends Database
     }
 
     /**
+     * Create relationship in leads_contacts bridge table
+     * @param int $leadId
+     * @param int $contactId
+     * @param string $relationshipType
+     * @return bool
+     */
+    public function createLeadContactRelationship($leadId, $contactId, $relationshipType = 'primary')
+    {
+        try {
+            $sql = "INSERT INTO leads_contacts (lead_id, contact_id, relationship_type, status, created_at, updated_at) 
+                    VALUES (:lead_id, :contact_id, :relationship_type, 1, NOW(), NOW())";
+            
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':lead_id', $leadId, PDO::PARAM_INT);
+            $stmt->bindValue(':contact_id', $contactId, PDO::PARAM_INT);
+            $stmt->bindValue(':relationship_type', $relationshipType, PDO::PARAM_STR);
+            
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Bridge table creation error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Extract contact data from lead data
      * @param array $leadData
      * @return array
@@ -122,7 +147,7 @@ class ContactsEnhanced extends Database
                 LIMIT 1";
         
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         
         return $stmt->fetch();
@@ -150,7 +175,7 @@ class ContactsEnhanced extends Database
         
         $stmt = $this->dbcrm()->prepare($sql);
         $searchPhone = '%' . $cleanPhone . '%';
-        $stmt->bindParam(':phone', $searchPhone, PDO::PARAM_STR);
+        $stmt->bindValue(':phone', $searchPhone, PDO::PARAM_STR);
         $stmt->execute();
         
         return $stmt->fetch();
@@ -240,7 +265,7 @@ class ContactsEnhanced extends Database
                 ORDER BY lc.is_primary DESC, c.call_order ASC";
         
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':lead_id', $leadId, PDO::PARAM_INT);
+        $stmt->bindValue(':lead_id', $leadId, PDO::PARAM_INT);
         $stmt->execute();
         
         return $stmt->fetchAll();
@@ -260,7 +285,7 @@ class ContactsEnhanced extends Database
                 LIMIT 1";
         
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':lead_id', $leadId, PDO::PARAM_INT);
+        $stmt->bindValue(':lead_id', $leadId, PDO::PARAM_INT);
         $stmt->execute();
         
         return $stmt->fetch();
@@ -287,10 +312,10 @@ class ContactsEnhanced extends Database
                 is_primary = :is_primary, contact_role = :contact_role";
         
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':lead_id', $leadId, PDO::PARAM_INT);
-        $stmt->bindParam(':contact_id', $contactId, PDO::PARAM_INT);
-        $stmt->bindParam(':is_primary', $isPrimary, PDO::PARAM_BOOL);
-        $stmt->bindParam(':contact_role', $role, PDO::PARAM_STR);
+        $stmt->bindValue(':lead_id', $leadId, PDO::PARAM_INT);
+        $stmt->bindValue(':contact_id', $contactId, PDO::PARAM_INT);
+        $stmt->bindValue(':is_primary', $isPrimary, PDO::PARAM_BOOL);
+        $stmt->bindValue(':contact_role', $role, PDO::PARAM_STR);
         
         return $stmt->execute();
     }
@@ -304,7 +329,7 @@ class ContactsEnhanced extends Database
     {
         $sql = "UPDATE lead_contacts SET is_primary = 0 WHERE lead_id = :lead_id";
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':lead_id', $leadId, PDO::PARAM_INT);
+        $stmt->bindValue(':lead_id', $leadId, PDO::PARAM_INT);
         
         return $stmt->execute();
     }
@@ -332,7 +357,7 @@ class ContactsEnhanced extends Database
     {
         $sql = 'SELECT * from contacts where id = :id';
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch();
         return $result;
@@ -342,7 +367,7 @@ class ContactsEnhanced extends Database
     {
         $sql = 'SELECT * from contacts where prop_id = :prop_id';
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':prop_id', $prop_id, PDO::PARAM_INT);
+        $stmt->bindValue(':prop_id', $prop_id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch();
         return $result;
@@ -361,7 +386,7 @@ class ContactsEnhanced extends Database
     {
         $sql = 'SELECT * from installers where id = :id';
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch();
         return $result;

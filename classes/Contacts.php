@@ -15,7 +15,7 @@ class Contacts extends Database
 
   public function get_active_list()
   {
-    $sql = 'SELECT id, ctype, full_name, phones, call_order, emails from contacts WHERE status = 1';
+    $sql = 'SELECT id, ctype, fullname, phones, call_order, emails from contacts WHERE status = 1';
     $stmt = $this->dbcrm()->query($sql);
     $stmt->execute();
     $results = $stmt->fetchAll();
@@ -24,7 +24,7 @@ class Contacts extends Database
 
   public function get_list()
   {
-    $sql = 'SELECT id, ctype, full_name, phones, emails from contacts';
+    $sql = 'SELECT id, ctype, fullname, phones, emails from contacts';
     $stmt = $this->dbcrm()->query($sql);
     $stmt->execute();
     $results = $stmt->fetchAll();
@@ -35,7 +35,7 @@ class Contacts extends Database
   {
     $sql = 'SELECT * from contacts where id = :id';
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
     return $result;
@@ -45,7 +45,7 @@ class Contacts extends Database
   {
     $sql = 'SELECT * from contacts where prop_id = :prop_id';
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->bindParam(':prop_id', $prop_id, PDO::PARAM_INT);
+    $stmt->bindValue(':prop_id', $prop_id, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
     return $result;
@@ -64,7 +64,7 @@ class Contacts extends Database
   {
     $sql = 'SELECT * from installers where id = :id';
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
     return $result;

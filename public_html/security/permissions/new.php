@@ -36,9 +36,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $sql = "INSERT INTO users (pid, pname) VALUES (:pid, :pname)";
   $stmt = $pdo->prepare($sql);
-  $stmt->bindParam(':pid', $pid, PDO::PARAM_INT);
-  $stmt->bindParam(':pname', $pname, PDO::PARAM_STR);
-  $stmt->bindParam(':pdescription', $pdescription, PDO::PARAM_STR);
+  $stmt->bindValue(':pid', $pid, PDO::PARAM_INT);
+  $stmt->bindValue(':pname', $pname, PDO::PARAM_STR);
+  $stmt->bindValue(':pdescription', $pdescription, PDO::PARAM_STR);
   if ($stmt->execute()) {
     $stmt = null;
     header("location: list.php");

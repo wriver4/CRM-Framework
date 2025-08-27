@@ -152,7 +152,7 @@ class LeadsEnhanced extends Leads
                 WHERE l.id = :id";
         
         $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         
         return $stmt->fetch();
@@ -234,7 +234,7 @@ class LeadsEnhanced extends Leads
             // Get leads without contact_id
             $sql = "SELECT * FROM leads WHERE contact_id IS NULL LIMIT :limit";
             $stmt = $this->dbcrm()->prepare($sql);
-            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
             $stmt->execute();
             
             $leads = $stmt->fetchAll();
@@ -250,8 +250,8 @@ class LeadsEnhanced extends Leads
                         // Update lead with contact_id
                         $updateSql = "UPDATE leads SET contact_id = :contact_id WHERE id = :id";
                         $updateStmt = $this->dbcrm()->prepare($updateSql);
-                        $updateStmt->bindParam(':contact_id', $contactId, PDO::PARAM_INT);
-                        $updateStmt->bindParam(':id', $lead['id'], PDO::PARAM_INT);
+                        $updateStmt->bindValue(':contact_id', $contactId, PDO::PARAM_INT);
+                        $updateStmt->bindValue(':id', $lead['id'], PDO::PARAM_INT);
                         $updateStmt->execute();
 
                         $results['created_contacts']++;
@@ -343,9 +343,47 @@ class LeadsEnhanced extends Leads
         
         $stmt = $this->dbcrm()->prepare($sql);
         $searchParam = '%' . $searchTerm . '%';
-        $stmt->bindParam(':search', $searchParam, PDO::PARAM_STR);
+        $stmt->bindValue(':search', $searchParam, PDO::PARAM_STR);
         $stmt->execute();
         
         return $stmt->fetchAll();
+    }
+
+    /**
+     * Update lead with contact_id
+     * @param int $leadId
+     * @param int $contactId
+     * @return bool
+     */
+    public function updateLeadContactId($leadId, $contactId)
+    {
+        try {
+            $sql = "UPDATE leads SET contact_id = :contact_id, updated_at = NOW() WHERE id = :lead_id";
+            $stmt = $this->dbcrm()->prepare($sql);
+            $stmt->bindValue(':contact_id', $contactId, PDO::PARAM_INT);
+            $stmt->bindValue(':lead_id', $leadId, PDO::PARAM_INT);
+            
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Lead contact ID update error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Create a lead with enhanced data handling
+     * @param array $leadData
+     * @return int|false Lead ID on success, false on failure
+     */
+    public function createLead($leadData)
+    {
+        try {
+            // Use existing create method from parent class
+            $leadId = $this->create($leadData);
+            return $leadId;
+        } catch (Exception $e) {
+            error_log("Lead creation error: " . $e->getMessage());
+            return false;
+        }
     }
 }

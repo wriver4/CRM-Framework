@@ -37,8 +37,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $sql = "INSERT INTO roles (rid, rname) VALUES (:rid, :rname)";
   $stmt = $pdo->prepare($sql);
-  $stmt->bindParam(':rid', $rid, PDO::PARAM_INT);
-  $stmt->bindParam(':rname', $rname, PDO::PARAM_STR);
+  $stmt->bindValue(':rid', $rid, PDO::PARAM_INT);
+  $stmt->bindValue(':rname', $rname, PDO::PARAM_STR);
   if ($stmt->execute()) {
     $stmt = null;
     header("location: list.php");

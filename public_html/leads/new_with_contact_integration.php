@@ -9,7 +9,6 @@ $table_page = false;
 require LANG . '/en.php';
 
 $title = $lang['lead_new'];
-
 $title_icon = '<i class="fa-solid fa-pencil"></i><i class="fa-solid fa-pencil"></i>';
 
 require 'get.php';
@@ -24,15 +23,12 @@ require NAV;
 require SECTIONOPEN;
 ?>
 <p></p>
-<form action="post_contact_integrated.php"
+<form action="post.php"
       method="POST"
       autocomplete="off">
 
   <!-- CSRF Protection -->
   <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token); ?>">
-  
-  <!-- Contact Integration Flag -->
-  <input type="hidden" name="contact_integration" value="1">
 
   <!-- Lead Source -->
   <div class="row">
@@ -170,7 +166,11 @@ require SECTIONOPEN;
     </div>
   </div>
 
-
+  <!-- Contact Integration Information -->
+  <div class="alert alert-info mt-3" role="alert">
+    <h6 class="alert-heading"><i class="fa-solid fa-info-circle"></i> <?= $lang['lead_contact_information'] ?? 'Contact Integration'; ?></h6>
+    <p class="mb-0"><?= $lang['contact_created_success'] ?? 'A contact will be automatically created and linked to this lead.'; ?></p>
+  </div>
 
   
   <!-- Address Fields -->
@@ -230,20 +230,9 @@ require SECTIONOPEN;
                   class="form-select"
                   autocomplete="off">
             <option value=""><?= $lang['select_state']; ?></option>
-            <option value="US-AZ"><?= $lang['US-AZ']; ?></option>
-            <option value="US-CA"><?= $lang['US-CA']; ?></option>
-            <option value="US-CO"><?= $lang['US-CO']; ?></option>
-            <option value="US-ID"><?= $lang['US-ID']; ?></option>
-            <option value="US-MT"><?= $lang['US-MT']; ?></option>
-            <option value="US-NV"><?= $lang['US-NV']; ?></option>
-            <option value="US-NM"><?= $lang['US-NM']; ?></option>
-            <option value="US-OR"><?= $lang['US-OR']; ?></option>
-            <option value="US-TX"><?= $lang['US-TX']; ?></option>
-            <option value="US-UT"><?= $lang['US-UT']; ?></option>
-            <option value="US-WA"><?= $lang['US-WA']; ?></option>
-            <option value="US-WY"><?= $lang['US-WY']; ?></option>
-            <option value="US-VA"><?= $lang['US-VA']; ?></option>
-            <option value="US-SC"><?= $lang['US-SC']; ?></option>
+            <?php
+            $helpers->select_us_state($lang);
+            ?>
           </select>
         </div>
       </div>
@@ -272,15 +261,9 @@ require SECTIONOPEN;
                   id="form_country"
                   class="form-select"
                   autocomplete="off">
-            <option value=""><?= $lang['select_country']; ?></option>
-            <option value="US"
-                    selected><?= $lang['US']; ?></option>
-            <option value="CA"><?= $lang['CA']; ?></option>
-            <option value="MX"><?= $lang['MX']; ?></option>
-            <option value="UK"><?= $lang['UK']; ?></option>
-            <option value="AU"><?= $lang['AU']; ?></option>
-            <option value="NZ"><?= $lang['NZ']; ?></option>
-            <option value="BR"><?= $lang['BR']; ?></option>
+            <?php
+            $helpers->select_country($lang, 'US');
+            ?>
           </select>
         </div>
       </div>
@@ -336,7 +319,6 @@ require SECTIONOPEN;
         </div>
       </div>
     </div>
-
 
     <div class="row">
       <div class="col">
@@ -508,6 +490,7 @@ require SECTIONOPEN;
       </div>
     </div>
   </div>
+  
   <div class="form-field"
        id="file-upload-section">
     <h4><?= $lang['lead_file_upload_links']; ?></h4>
@@ -553,18 +536,14 @@ require SECTIONOPEN;
       </div>
     </div>
   </div>
-  <input type="hidden"
-         name="stage"
-         value="1">
-  <input type="hidden"
-         name="last_edited_by"
-         value="<?= $_SESSION['user_id'] ?? null; ?>">
-  <input type="hidden"
-         name="dir"
-         value="<?= $dir; ?>">
-  <input type="hidden"
-         name="page"
-         value="<?= $page; ?>">
+
+  <!-- Hidden Fields -->
+  <input type="hidden" name="stage" value="1">
+  <input type="hidden" name="last_edited_by" value="<?= $_SESSION['user_id'] ?? null; ?>">
+  <input type="hidden" name="dir" value="<?= $dir; ?>">
+  <input type="hidden" name="page" value="<?= $page; ?>">
+  <input type="hidden" name="contact_integration" value="1">
+
   <p></p>
   <a href="list"
      class="btn btn-danger"
@@ -662,6 +641,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<!-- Include the conditional forms JavaScript -->
+<script src="/assets/js/conditional-forms.js"></script>
+
 <?php
 require SECTIONCLOSE;
 require FOOTER;
+?>

@@ -19,13 +19,13 @@ class Audit extends Database
   {
     $sql = "INSERT INTO audit (user_id, event, resource, ip, useragent, location, data) VALUES (:user_id, :event, :resource, :ip, :useragent, :location, :data)";
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->bindParam(':event', $event, PDO::PARAM_STR);
-    $stmt->bindParam(':resource', $resource, PDO::PARAM_STR);
-    $stmt->bindParam(':ip', $ip, PDO::PARAM_STR);
-    $stmt->bindParam(':useragent', $useragent, PDO::PARAM_STR);
-    $stmt->bindParam(':location', $location, PDO::PARAM_INT);
-    $stmt->bindParam(':data', $data, PDO::PARAM_STR);
+    $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->bindValue(':event', $event, PDO::PARAM_STR);
+    $stmt->bindValue(':resource', $resource, PDO::PARAM_STR);
+    $stmt->bindValue(':ip', $ip, PDO::PARAM_STR);
+    $stmt->bindValue(':useragent', $useragent, PDO::PARAM_STR);
+    $stmt->bindValue(':location', $location, PDO::PARAM_INT);
+    $stmt->bindValue(':data', $data, PDO::PARAM_STR);
     $stmt->execute();
   }
 
@@ -39,7 +39,7 @@ class Audit extends Database
   {
     $sql = "SELECT * FROM audit WHERE user_id = :user_id";
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetchAll();
     return $result;
@@ -68,7 +68,7 @@ class Audit extends Database
   {
     $sql = "SELECT * FROM audit WHERE resource = :resource";
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->bindParam(':resource', $resource, PDO::PARAM_STR);
+    $stmt->bindValue(':resource', $resource, PDO::PARAM_STR);
     $stmt->execute();
     $result = $stmt->fetchAll();
     return $result;
@@ -98,8 +98,8 @@ class Audit extends Database
   {
     $sql = "SELECT * FROM audit WHERE user_id = :user_id AND event IN (:events)";
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->bindParam(':events', $events, PDO::PARAM_STR);
+    $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->bindValue(':events', $events, PDO::PARAM_STR);
     $stmt->execute();
     $result = $stmt->fetchAll();
     return $result;
@@ -131,8 +131,8 @@ class Audit extends Database
   {
     $sql = "SELECT * FROM audit WHERE resource = :resource AND event IN (:events)";
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->bindParam(':resource', $resource, PDO::PARAM_STR);
-    $stmt->bindParam(':events', $events, PDO::PARAM_STR);
+    $stmt->bindValue(':resource', $resource, PDO::PARAM_STR);
+    $stmt->bindValue(':events', $events, PDO::PARAM_STR);
     $stmt->execute();
     $result = $stmt->fetchAll();
     return $result;
@@ -162,7 +162,7 @@ class Audit extends Database
   {
     $sql = "DELETE FROM audit WHERE created_at < :created_at";
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->bindParam(':created_at', $created_at, PDO::PARAM_INT);
+    $stmt->bindValue(':created_at', $created_at, PDO::PARAM_INT);
     $stmt->execute();
     return true;
   }

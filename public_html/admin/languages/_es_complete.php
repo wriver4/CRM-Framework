@@ -34,6 +34,8 @@ $lang = [
   'make_active' => 'Activar',
   // Errors
   'label_no_results' => 'Sin Resultados',
+  // General
+
   // Users
   'users' => "Usuarios",
   'user_new' => "Nuevo Usuario",
@@ -56,6 +58,7 @@ $lang = [
   // Leads
   'leads' => 'Clientes Potenciales',
   'lead_new' => 'Nuevo Cliente Potencial',
+  
   'lead_view' => 'Ver Cliente Potencial',
   'lead_edit' => 'Editar Cliente Potencial',
   'lead_delete' => 'Eliminar Cliente Potencial',
@@ -205,6 +208,7 @@ $lang = [
   'US-WY' => 'Wyoming',
   'US-VA' => 'Virginia',
   'US-SC' => 'Carolina del Sur',
+
   // Logs
   'internal_error_log' => 'Registro de Errores Internos',
   'internal_view' => 'Error Interno',
@@ -216,6 +220,7 @@ $lang = [
   'maintenance' => 'Mantenimiento',
   // Reports
   'reports' => 'Reportes',
+  
   // Lead Form
   'lead_contact_information' => 'Información de Contacto',
   'lead_first_name' => 'Nombre',
@@ -287,6 +292,7 @@ $lang = [
   'lead_update' => 'Actualizar Cliente Potencial',
   'leads_list' => 'Lista de Clientes Potenciales',
   'lead_stage' => 'Etapa',
+  
   // Lead Stage Names (numbered)
   'stage_1' => 'Cliente Potencial',
   'stage_2' => 'Prospecto',
@@ -298,6 +304,7 @@ $lang = [
   'stage_8' => 'Cerrado Perdido',
   'stage_9' => 'Referencia',
   'lead_notes' => 'Notas',
+  
   // Lead Source options
   'lead_source_web_estimate' => 'Estimación Web',
   'lead_source_ltr_form' => 'Formulario LTR',
@@ -305,6 +312,7 @@ $lang = [
   'lead_source_phone_inquiry' => 'Consulta Telefónica',
   'lead_source_cold_call' => 'Llamada en Frío',
   'lead_source_in_person' => 'En Persona',
+  
   // Contact Integration Messages
   'contact_created_success' => 'Contacto creado exitosamente',
   'contact_linked_success' => 'Contacto vinculado exitosamente',

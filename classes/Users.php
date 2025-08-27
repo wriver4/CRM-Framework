@@ -48,11 +48,11 @@ class Users extends Database
 	{
 		$sql = "INSERT INTO users (rid, full_name, username, email, password  ) VALUES (:rid, :full_name, :username, :email, :password)";
 		$stmt = $this->dbcrm()->prepare($sql);
-		$stmt->bindParam(':rid', $rid, PDO::PARAM_INT);
-		$stmt->bindParam(':full_name', $full_name, PDO::PARAM_STR);
-		$stmt->bindParam(':username', $username, PDO::PARAM_STR);
-		$stmt->bindParam(':email', $email, PDO::PARAM_STR);
-		$stmt->bindParam(':password', $password, PDO::PARAM_STR);
+		$stmt->bindValue(':rid', $rid, PDO::PARAM_INT);
+		$stmt->bindValue(':full_name', $full_name, PDO::PARAM_STR);
+		$stmt->bindValue(':username', $username, PDO::PARAM_STR);
+		$stmt->bindValue(':email', $email, PDO::PARAM_STR);
+		$stmt->bindValue(':password', $password, PDO::PARAM_STR);
 		try {
 			$stmt->execute();
 			$stmt = null;
@@ -76,15 +76,15 @@ class Users extends Database
 		}
 		$sql .= "WHERE `id` = :id";
 		$stmt = $this->dbcrm()->prepare($sql);
-		$stmt->bindParam(':id', $id);
-		$stmt->bindParam(':full_name', $full_name);
+		$stmt->bindValue(':id', $id);
+		$stmt->bindValue(':full_name', $full_name);
 		if (!$helper->is_password($password)) {
 			$password = $helper->hash_password($password);
-			$stmt->bindParam(':password', $password);
+			$stmt->bindValue(':password', $password);
 		}
-		$stmt->bindParam(':rid', $rid);
+		$stmt->bindValue(':rid', $rid);
 		if (strlen($email) > 0) {
-			$stmt->bindParam(':email', $email);
+			$stmt->bindValue(':email', $email);
 		}
 		if ($stmt->execute()) {
 			header("location: list");
@@ -98,8 +98,8 @@ class Users extends Database
 	{
 		$sql = "UPDATE users SET status = :status WHERE id = :id";
 		$stmt = $this->dbcrm()->prepare($sql);
-		$stmt->bindParam(':id', $id, PDO::PARAM_INT);
-		$stmt->bindParam(':status', $status, PDO::PARAM_INT);
+		$stmt->bindValue(':id', $id, PDO::PARAM_INT);
+		$stmt->bindValue(':status', $status, PDO::PARAM_INT);
 		if ($stmt->execute()) {
 			$stmt = null;
 			header("location: list");
@@ -113,7 +113,7 @@ class Users extends Database
 	{
 		$sql = 'SELECT u.*, r.rname from users u LEFT JOIN roles r ON u.rid = r.rid WHERE u.id = :id';
 		$stmt = $this->dbcrm()->prepare($sql);
-		$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+		$stmt->bindValue(':id', $id, PDO::PARAM_INT);
 		$stmt->execute();
 		$result = $stmt->fetch();
 		return $result;
@@ -155,7 +155,7 @@ class Users extends Database
 		}
 		$sql = 'SELECT full_name, username FROM users WHERE id = :id';
 		$stmt = $this->dbcrm()->prepare($sql);
-		$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+		$stmt->bindValue(':id', $id, PDO::PARAM_INT);
 		$stmt->execute();
 		$result = $stmt->fetch();
 		if ($result) {
@@ -175,8 +175,8 @@ class Users extends Database
 			$status = 1;
 			$sql = "SELECT * FROM users WHERE username = :username AND status = :status";
 			$stmt = $this->dbcrm()->prepare($sql);
-			$stmt->bindParam(':username', $username);
-			$stmt->bindParam(':status', $status);
+			$stmt->bindValue(':username', $username);
+			$stmt->bindValue(':status', $status);
 			$stmt->execute();
 			$user = $stmt->fetch();
 			$verify = verify_password($password, $user['password']);

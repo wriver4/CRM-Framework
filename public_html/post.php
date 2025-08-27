@@ -18,8 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'public_html' && $_
     $status = 1;
     $sql = "SELECT * FROM users WHERE username= :username AND status= :status";
     $stmt = $dbcrm->prepare($sql);
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-    $stmt->bindParam(':status', $status, PDO::PARAM_INT);
+    $stmt->bindValue(':username', $username, PDO::PARAM_STR);
+    $stmt->bindValue(':status', $status, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch();
 

@@ -29,7 +29,7 @@ require SECTIONOPEN;
                 class="form-select"
                 required
                 autocomplete="off">
-          <?php $helper->select_contact_type($lang); ?></select>
+          <?php $helper->select_contact_type($lang, 1); // Default to Primary Owner ?></select>
       </div>
     </div>
     <div class="col">
