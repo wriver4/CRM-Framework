@@ -1,5 +1,5 @@
 <?php
-require_once '../../classes/Leads.php';
+require_once '../../config/system.php';
 $leads = new Leads();
 $list = $leads->listLeads();
 

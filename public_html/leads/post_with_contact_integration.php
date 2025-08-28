@@ -9,13 +9,9 @@ require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 // Check if user is logged in
 $not->loggedin();
 
-// Include enhanced classes
-require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/classes/LeadsEnhanced.php';
-require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/classes/ContactsEnhanced.php';
-
-// Initialize enhanced classes
-$leadsEnhanced = new LeadsEnhanced();
-$contactsEnhanced = new ContactsEnhanced();
+// Initialize classes (autoloaded)
+$leadsEnhanced = new Leads();
+$contactsEnhanced = new Contacts();
 
 // Function to format phone number with dashes
 function format_phone_number($phone) {

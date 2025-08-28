@@ -30,7 +30,7 @@ class LeadsListTable extends ActionTable
             switch ($column_key) {
                 case 'action':
                     echo '<td>';
-                    $this->row_nav($results['id'] ?? null, $this->row_id = null);
+                    $this->row_nav($results['lead_id'] ?? null, $this->row_id = null);
                     echo '</td>';
                     break;
                 

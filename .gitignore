@@ -9,7 +9,7 @@
 .conf/
 .pki/
 .trash/
-.qodo/
+.zencoder/
 ## dot files
 .bash*
 .cloud*
