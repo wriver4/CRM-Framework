@@ -51,7 +51,7 @@ try {
     
     // Basic lead information
     $data['lead_source'] = $_POST['lead_source'] ?? '';
-    $data['lead_number'] = $_POST['lead_number'] ?? '';
+    $data['lead_id'] = $_POST['lead_id'] ?? '';
     $data['first_name'] = $_POST['first_name'] ?? '';
     $data['family_name'] = $_POST['family_name'] ?? '';
     

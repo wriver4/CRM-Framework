@@ -32,10 +32,10 @@ require SECTIONOPEN;
       <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
           <i class="fa-solid fa-hashtag fa-2x text-primary me-3"></i>
-          <span class="fs-4 fw-bold text-dark"><?= htmlspecialchars($lead_number ?? 'N/A') ?></span>
+          <span class="fs-4 fw-bold text-dark"><?= htmlspecialchars($lead_id ?? 'N/A') ?></span>
           <input type="hidden"
-                 name="lead_number"
-                 value="<?= htmlspecialchars($lead_number ?? '') ?>">
+                 name="lead_id"
+                 value="<?= htmlspecialchars($lead_id ?? '') ?>">
         </div>
         <div class="d-flex align-items-center">
           <i class="fa-solid fa-chart-line fa-2x text-success me-3"></i>
@@ -657,7 +657,7 @@ require SECTIONOPEN;
     <div class="offcanvas-header bg-dark text-white">
       <h5 class="offcanvas-title">
         <i class="fa-solid fa-sticky-note me-2"></i>Activity Timeline - Lead
-        #<?= htmlspecialchars($lead_number ?? '') ?>
+        #<?= htmlspecialchars($lead_id ?? '') ?>
       </h5>
       <button type="button"
               class="btn-close btn-close-white"

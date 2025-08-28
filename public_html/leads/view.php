@@ -117,9 +117,9 @@ require __DIR__ . '/../templates/section_header.php';
             <?php endif; ?>
           </div>
           <div class="col-md-6">
-            <?php if ($lead_number): ?>
-            <p><strong><?= $lang['lead_number'] ?? 'Lead #' ?>:</strong>
-              <span class="badge bg-primary text-white">#<?= htmlspecialchars($lead_number) ?></span>
+            <?php if ($lead_id): ?>
+            <p><strong><?= $lang['lead_id'] ?? 'Lead #' ?>:</strong>
+              <span class="badge bg-primary text-white">#<?= htmlspecialchars($lead_id) ?></span>
             </p>
             <?php endif; ?>
             <p><strong><?= $lang['lead_source'] ?? 'Source' ?>:</strong>

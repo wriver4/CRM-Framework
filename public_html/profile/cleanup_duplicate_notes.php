@@ -27,7 +27,7 @@ $pdo = $database->dbcrm();
 $duplicates_query = "
     SELECT 
         ln.lead_id,
-        l.lead_number,
+        l.lead_id,
         l.full_name as lead_name,
         n.note_text,
         COUNT(DISTINCT n.id) as duplicate_notes_count,
@@ -180,7 +180,7 @@ $total_junction = $pdo->query("SELECT COUNT(*) FROM leads_notes")->fetchColumn()
                     <?php foreach (array_slice($safe_cleanup, 0, 20) as $duplicate): ?>
                     <tr>
                         <td>
-                            <strong>#<?= htmlspecialchars($duplicate['lead_number'] ?? 'N/A') ?></strong><br>
+                            <strong>#<?= htmlspecialchars($duplicate['lead_id'] ?? 'N/A') ?></strong><br>
                             <small class="text-muted"><?= htmlspecialchars($duplicate['lead_name'] ?? 'No Name') ?></small>
                         </td>
                         <td>
@@ -254,7 +254,7 @@ $total_junction = $pdo->query("SELECT COUNT(*) FROM leads_notes")->fetchColumn()
                     <?php foreach ($manual_review as $duplicate): ?>
                     <tr>
                         <td>
-                            <strong>#<?= htmlspecialchars($duplicate['lead_number'] ?? 'N/A') ?></strong><br>
+                            <strong>#<?= htmlspecialchars($duplicate['lead_id'] ?? 'N/A') ?></strong><br>
                             <small class="text-muted"><?= htmlspecialchars($duplicate['lead_name'] ?? 'No Name') ?></small>
                         </td>
                         <td>

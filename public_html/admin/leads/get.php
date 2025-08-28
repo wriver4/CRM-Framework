@@ -12,10 +12,10 @@ $helpers = new Helpers();
 // Handle different GET requests
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
-        case 'lead_number':
-            // Get the last lead number
-            $last_lead_number = $leads->get_last_lead_number();
-            echo $last_lead_number;
+        case 'lead_id':
+            // Get the last lead ID
+            $last_lead_id = $leads->get_last_lead_id();
+            echo $last_lead_id;
             break;
             
         case 'lead_with_user':
@@ -42,14 +42,14 @@ if (isset($_GET['action'])) {
             break;
             
         default:
-            // Default: Get the last lead number
-            $last_lead_number = $leads->get_last_lead_number();
-            echo $last_lead_number;
+            // Default: Get the last lead ID
+            $last_lead_id = $leads->get_last_lead_id();
+            echo $last_lead_id;
             break;
     }
 } else {
-    // Default: Get the last lead number for backward compatibility
-    $last_lead_number = $leads->get_last_lead_number();
+    // Default: Get the last lead ID for backward compatibility
+    $last_lead_id = $leads->get_last_lead_id();
 }
 
 // Handle page-specific logic for admin list
@@ -98,7 +98,7 @@ if ($dir == 'admin/leads' && $page == 'edit') {
         
         // Basic lead info
         $lead_source = $result["lead_source"] ?? 1;
-        $lead_number = $result["lead_number"] ?? '';
+        $lead_id = $result["lead_id"] ?? '';
         $first_name = $result["first_name"] ?? '';
         $family_name = $result["family_name"] ?? '';
         $full_name = $result["full_name"] ?? '';

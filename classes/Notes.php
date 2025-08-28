@@ -225,7 +225,7 @@ class Notes extends Database {
 
     // Get recent notes across all leads (for dashboard/activity feed)
     public function get_recent_notes($limit = 10) {
-        $sql = "SELECT n.*, u.full_name, u.username, l.lead_number
+        $sql = "SELECT n.*, u.full_name, u.username, l.lead_id
                 FROM notes n
                 LEFT JOIN users u ON n.user_id = u.id
                 INNER JOIN leads_notes ln ON n.id = ln.note_id

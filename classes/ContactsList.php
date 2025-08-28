@@ -38,7 +38,8 @@ class ContactsList extends ActionTable
         case 'phones':
           $dphones = json_decode($value);
           echo '<td>';
-          foreach ($dphones as $key => $value) {
+          if ($dphones && is_array($dphones)) {
+            foreach ($dphones as $key => $value) {
             if ($value == '') {
               continue;
             }
@@ -48,13 +49,15 @@ class ContactsList extends ActionTable
               '3' => $this->lang['alt'],
             };
             echo $phone_type . ': <br>'. $value . '<br>';
+            }
           }
           echo '</td>';
           break;
         case 'emails':
           $demails = json_decode($value);
           echo '<td class="contacts-list-email";>';
-          foreach ($demails as $key => $value) {
+          if ($demails && is_array($demails)) {
+            foreach ($demails as $key => $value) {
             if ($value == '') {
               continue;
             }
@@ -64,6 +67,7 @@ class ContactsList extends ActionTable
               '3' => $this->lang['alt'],
             };
             echo $email_type . ': <br>' . $value . '<br>';
+            }
           }
           echo '</td>';
           break;

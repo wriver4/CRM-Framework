@@ -65,9 +65,13 @@ class Contacts extends Database
 
   public function get_contacts_by_lead_id($lead_id)
   {
-    $sql = 'SELECT * FROM contacts WHERE lead_id = :lead_id AND status = 1 ORDER BY id ASC';
+    // Use junction table to get contacts associated with a lead
+    $sql = 'SELECT c.* FROM contacts c 
+            INNER JOIN leads_contacts lc ON c.id = lc.contact_id 
+            WHERE lc.lead_id = :lead_id AND c.status = 1 AND lc.status = 1 
+            ORDER BY lc.relationship_type DESC, c.id ASC';
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->bindValue(':lead_id', $lead_id, PDO::PARAM_STR);
+    $stmt->bindValue(':lead_id', (int)$lead_id, PDO::PARAM_INT);
     $stmt->execute();
     $results = $stmt->fetchAll();
     return $results;

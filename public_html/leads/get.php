@@ -12,10 +12,10 @@ $helpers = new Helpers();
 // Handle different GET requests
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
-        case 'lead_number':
-            // Get the last lead number
-            $last_lead_number = $leads->get_last_lead_number();
-            echo $last_lead_number;
+        case 'lead_id':
+            // Get the last lead ID
+            $last_lead_id = $leads->get_last_lead_id();
+            echo $last_lead_id;
             break;
             
         case 'lead_with_user':
@@ -39,15 +39,15 @@ if (isset($_GET['action'])) {
             break;
             
         default:
-            // Default: Get the last lead number
-            $last_lead_number = $leads->get_last_lead_number();
-            echo $last_lead_number;
+            // Default: Get the last lead ID
+            $last_lead_id = $leads->get_last_lead_id();
+            echo $last_lead_id;
             break;
     }
 } else {
-    // Default: Get the last lead number for backward compatibility
-    $last_lead_number = $leads->get_last_lead_number();
-    // echo $last_lead_number;
+    // Default: Get the last lead ID for backward compatibility
+    $last_lead_id = $leads->get_last_lead_id();
+    // echo $last_lead_id;
 }
 
 // Handle page-specific logic
@@ -68,7 +68,7 @@ if ($dir == 'leads' && $page == 'view') {
         $cell_phone = $result["cell_phone"];
         $email = $result["email"];
         $ctype = $result["ctype"];
-        $lead_number = $result["lead_number"];
+        $lead_id = $result["lead_id"];
         $stage = $result["stage"];
         $structure_type = $result["structure_type"];
         $structure_description = $result["structure_description"];
@@ -95,7 +95,7 @@ if ($dir == 'leads' && $page == 'edit') {
         $cell_phone = $result["cell_phone"];
         $email = $result["email"];
         $ctype = $result["ctype"];
-        $lead_number = $result["lead_number"];
+        $lead_id = $result["lead_id"];
         $form_street_1 = $result["form_street_1"];
         $form_street_2 = $result["form_street_2"];
         $form_city = $result["form_city"];
@@ -130,6 +130,11 @@ if ($dir == 'leads' && $page == 'edit') {
         $updated_at = $result["updated_at"];
         $last_edited_by = $result["last_edited_by"];
     }
+}
+
+if ($dir == 'leads' && $page == 'new') {
+    // Get the last lead ID for the new form
+    $last_lead_id = $leads->get_last_lead_id();
 }
 
 if ($dir == 'leads' && $page == 'delete') {

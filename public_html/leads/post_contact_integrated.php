@@ -49,7 +49,7 @@ try {
     // Input validation and sanitization
     $leadData = [
         // Required fields
-        'lead_number' => trim($_POST['lead_number'] ?? ''),
+        'lead_id' => trim($_POST['lead_id'] ?? ''),
         'first_name' => trim($_POST['first_name'] ?? ''),
         'family_name' => trim($_POST['family_name'] ?? ''),
         'email' => trim($_POST['email'] ?? ''),
@@ -235,11 +235,11 @@ if (isset($_POST['ajax']) ||
 function getLeadSourceValidationConfig($leadSource) {
     return [
         1 => [ // Web Estimate
-            'required' => ['lead_number', 'first_name', 'family_name', 'email', 'cell_phone'],
+            'required' => ['lead_id', 'first_name', 'family_name', 'email', 'cell_phone'],
             'optional' => ['form_street_1', 'form_city', 'form_state', 'form_country']
         ],
         2 => [ // LTR Form
-            'required' => ['lead_number', 'first_name', 'family_name', 'email', 'cell_phone', 'notes'],
+            'required' => ['lead_id', 'first_name', 'family_name', 'email', 'cell_phone', 'notes'],
             'optional' => ['form_street_1', 'form_city', 'form_state']
         ],
         3 => [ // Contact Form
@@ -259,7 +259,7 @@ function getLeadSourceValidationConfig($leadSource) {
             'optional' => ['form_street_1', 'form_city', 'form_state']
         ]
     ][$leadSource] ?? [
-        'required' => ['lead_number', 'first_name', 'family_name', 'email'],
+        'required' => ['lead_id', 'first_name', 'family_name', 'email'],
         'optional' => []
     ];
 }

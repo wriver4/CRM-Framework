@@ -206,7 +206,7 @@ class LeadContactMigration
             // Get sample of migrated data
             $sql = "SELECT 
                         l.id as lead_id,
-                        l.lead_number,
+                        l.lead_id,
                         l.first_name,
                         l.family_name,
                         l.email,
@@ -223,7 +223,7 @@ class LeadContactMigration
             
             $this->log("Sample of migrated lead-contact pairs:");
             foreach ($samples as $sample) {
-                $this->log("  Lead #{$sample['lead_number']} ({$sample['first_name']} {$sample['family_name']}) -> Contact #{$sample['contact_id']} ({$sample['contact_name']})");
+                $this->log("  Lead #{$sample['lead_id']} ({$sample['first_name']} {$sample['family_name']}) -> Contact #{$sample['contact_id']} ({$sample['contact_name']})");
             }
             
             // Check for potential duplicates

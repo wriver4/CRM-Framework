@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POS
   $m_country = htmlentities(trim($_POST['m_country']));
   $sql = "INSERT INTO contacts (lead_id, ctype, first_name, family_name, fullname, cell_phone, business_phone, alt_phone, phones, personal_email, business_email, alt_email, emails, p_street_1, p_street_2, p_city, p_state, p_postcode, p_country, business_name, b_street_1, b_street_2, b_city, b_state, b_postcode, b_country, m_street_1, m_street_2, m_city, m_state, m_postcode, m_country) VALUES (:lead_id, :ctype, :first_name, :family_name, :fullname, :cell_phone, :business_phone, :alt_phone, :phones, :personal_email, :business_email, :alt_email, :emails, :p_street_1, :p_street_2, :p_city, :p_state, :p_postcode, :p_country, :business_name, :b_street_1, :b_street_2, :b_city, :b_state, :b_postcode, :b_country, :m_street_1, :m_street_2, :m_city, :m_state, :m_postcode, :m_country)";
   $stmt = $dbcrm->prepare($sql);
-  $stmt->bindValue(':lead_id', $lead_id, PDO::PARAM_STR);
+  $stmt->bindValue(':lead_id', !empty($lead_id) ? (int)$lead_id : null, PDO::PARAM_INT);
   $stmt->bindValue(':ctype', $ctype, PDO::PARAM_INT);
   $stmt->bindValue(':first_name', $first_name, PDO::PARAM_STR);
   $stmt->bindValue(':family_name', $family_name, PDO::PARAM_STR);
@@ -98,7 +98,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POS
   $stmt->bindValue(':m_postcode', $m_postcode, PDO::PARAM_STR);
   $stmt->bindValue(':m_country', $m_country, PDO::PARAM_STR);
   if ($stmt->execute()) {
+    $contact_id = $dbcrm->lastInsertId();
     $stmt = null;
+    
+    // If contact was created from a lead, also create the relationship in leads_contacts table
+    if (!empty($lead_id) && $contact_id) {
+      $relationship_sql = "INSERT INTO leads_contacts (lead_id, contact_id, relationship_type, status) VALUES (:lead_id, :contact_id, 'primary', 1)";
+      $relationship_stmt = $dbcrm->prepare($relationship_sql);
+      $relationship_stmt->bindValue(':lead_id', (int)$lead_id, PDO::PARAM_INT);
+      $relationship_stmt->bindValue(':contact_id', $contact_id, PDO::PARAM_INT);
+      $relationship_stmt->execute();
+      $relationship_stmt = null;
+    }
+    
     // If contact was created from a lead, redirect back to that lead's edit page
     if (!empty($lead_id)) {
       $_SESSION['success_message'] = "Contact created successfully and associated with Lead #" . $lead_id;

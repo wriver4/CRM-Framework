@@ -40,7 +40,7 @@ require SECTIONOPEN;
     </h5>
   </div>
   <div class="card-body">
-    <p class="mb-0">You are editing lead <strong>#<?= htmlspecialchars($lead_number ?? 'N/A') ?></strong> in admin mode. All fields can be modified.</p>
+    <p class="mb-0">You are editing lead <strong>#<?= htmlspecialchars($lead_id ?? 'N/A') ?></strong> in admin mode. All fields can be modified.</p>
   </div>
 </div>
 
@@ -65,9 +65,9 @@ require SECTIONOPEN;
     </div>
     <div class="col-6">
       <div class="form-group pb-2">
-        <label for="lead_number" class="required pb-1"><?= $lang['lead_number']; ?></label>
-        <input type="text" name="lead_number" id="lead_number" class="form-control" 
-               value="<?= htmlspecialchars($lead_number ?? '') ?>" autocomplete="off" required>
+        <label for="lead_id" class="required pb-1"><?= $lang['lead_id'] ?? 'Lead ID'; ?></label>
+        <input type="text" name="lead_id" id="lead_id" class="form-control" 
+               value="<?= htmlspecialchars($lead_id ?? '') ?>" autocomplete="off" required>
       </div>
     </div>
   </div>
@@ -650,7 +650,7 @@ require SECTIONOPEN;
       <?php endif; ?>
       
       <span class="btn btn-outline-info disabled">
-        Lead <?= htmlspecialchars($lead_number ?? 'N/A') ?>
+        Lead <?= htmlspecialchars($lead_id ?? 'N/A') ?>
       </span>
       
       <?php if (!empty($navigation['next'])): ?>

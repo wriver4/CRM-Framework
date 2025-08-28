@@ -161,9 +161,9 @@ try {
         }
         
     } else {
-        // Generate lead number
-        $last_lead_number = $leadsEnhanced->get_last_lead_number();
-        $data['lead_number'] = $last_lead_number + 1;
+        // Generate lead ID
+        $last_lead_id = $leadsEnhanced->get_last_lead_id();
+        $data['lead_id'] = $last_lead_id + 1;
         
         // Create new lead with contact
         $result = $leadsEnhanced->create_lead_with_contact($data);

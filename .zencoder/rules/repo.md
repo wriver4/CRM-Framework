@@ -332,6 +332,25 @@ No formal testing framework is implemented; testing appears to be done through m
 - **Templates**: `snake_case.php` (e.g., `nav_item_leads.php`)
 - **Assets**: Standard web naming (e.g., `style.css`, `edit-leads.js`)
 
+## Project Preferences
+
+### Database
+- Prefer integers over varchar for ID fields and numeric data
+- Use phpMyAdmin for database migrations and schema changes
+- Always create backup tables before major alterations
+- Use MariaDB 10 compatible syntax
+- Maintain foreign key constraints for data integrity
+
+### PHP Development
+- Always use individual PDO bindValue() calls instead of execute() with parameter arrays
+- Cast to integers in PHP when binding ID parameters
+- Use appropriate PDO parameter types (PDO::PARAM_INT for integers, PDO::PARAM_STR for strings)
+
+### Code Standards
+- Use `int(11)` over `varchar()` for ID fields
+- Implement proper foreign key relationships
+- Follow consistent CRUD operation patterns
+
 ## Key Architectural Patterns
 
 - **MVC Structure**: Controllers in `public_html/`, Models in `classes/`, Views in `templates/`

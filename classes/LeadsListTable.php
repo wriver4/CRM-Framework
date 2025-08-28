@@ -11,7 +11,7 @@ class LeadsListTable extends ActionTable
     {
         $this->column_names = [
             'action' => $lang['action'] ?? 'Action',
-            'lead_number' => $lang['lead_number'] ?? 'Lead #',
+            'lead_id' => $lang['lead_id'] ?? 'Lead #',
             'stage' => $lang['lead_stage'] ?? 'Stage',
             'full_name' => $lang['full_name'] ?? 'Full Name',
             'cell_phone' => $lang['lead_cell_phone'] ?? 'Phone',
@@ -34,9 +34,9 @@ class LeadsListTable extends ActionTable
                     echo '</td>';
                     break;
                 
-                case 'lead_number':
+                case 'lead_id':
                     echo '<td>';
-                    $value = $results['lead_number'] ?? '';
+                    $value = $results['lead_id'] ?? '';
                     echo htmlspecialchars($value ?: '-');
                     echo '</td>';
                     break;

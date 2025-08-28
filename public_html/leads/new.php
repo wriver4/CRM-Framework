@@ -57,13 +57,13 @@ require SECTIONOPEN;
     </div>
     <div class="col-6">
       <div class="form-group pb-2">
-        <label for="lead_number"
-               class="required pb-1"><?= $lang['lead_number']; ?></label>
+        <label for="lead_id"
+               class="required pb-1"><?= $lang['lead_id'] ?? 'Lead ID'; ?></label>
         <input type="text"
-               name="lead_number"
-               id="lead_number"
+               name="lead_id"
+               id="lead_id"
                class="form-control"
-               placeholder="<?= $lang['lead_last_number_placeholder_hint'] . ' ' . $last_lead_number; ?>"
+               placeholder="<?= ($lang['lead_last_number_placeholder_hint'] ?? 'Last lead ID was') . ' ' . $last_lead_id; ?>"
                autocomplete="off"
                required>
       </div>
