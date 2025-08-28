@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POS
   $lead_data = null;
   if (!empty($lead_id)) {
     $leads = new Leads();
-    $result = $leads->get_lead_by_id($lead_id);
+    $result = $leads->get_lead_by_lead_id($lead_id);  // Use lead_id (external number) instead of internal id
     if (!empty($result) && isset($result[0])) {
       $lead_data = $result[0];
       // Note: ctype is NOT inherited - each contact can have different contact type

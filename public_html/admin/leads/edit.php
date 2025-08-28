@@ -72,7 +72,31 @@ require SECTIONOPEN;
     </div>
   </div>
 
-  <h4><?= $lang['lead_contact_information']; ?></h4>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><?= $lang['lead_contact_information']; ?></h4>
+    <?php if (isset($property_contacts) && count($property_contacts) > 1): ?>
+    <div class="d-flex align-items-center">
+      <label for="contact_selector" class="form-label me-2 mb-0">
+        <i class="fa-solid fa-users me-1"></i>Contact:
+      </label>
+      <select name="contact_selector" id="contact_selector" class="form-select form-select-sm" style="min-width: 200px;">
+        <?php foreach ($property_contacts as $contact): ?>
+        <option value="<?= htmlspecialchars($contact['id']) ?>"
+                data-full-name="<?= htmlspecialchars($contact['fullname']) ?>"
+                data-email="<?= htmlspecialchars($contact['personal_email'] ?? '') ?>"
+                data-cell-phone="<?= htmlspecialchars($contact['cell_phone'] ?? '') ?>"
+                <?= ($contact['id'] == $selected_contact_id) ? 'selected' : '' ?>>
+          <?= htmlspecialchars($contact['fullname']) ?>
+          <?php if (!empty($contact['relationship_type'])): ?>
+            (<?= htmlspecialchars($contact['relationship_type']) ?>)
+          <?php endif; ?>
+        </option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+    <?php endif; ?>
+  </div>
+  
   <!-- First Name & Last Name -->
   <div class="row">
     <div class="col">
@@ -693,13 +717,12 @@ require SECTIONOPEN;
             <?php foreach ($lead_contacts as $contact): ?>
               <li>
                 <a class="dropdown-item" href="<?= URL ?>/contacts/view?id=<?= $contact['id'] ?>">
-                  <i class="fa-solid fa-eye me-2"></i><?= htmlspecialchars($contact['fullname']) ?>
-
+                  <i class="fa-solid fa-eye me-2"></i><?= htmlspecialchars($contact['fullname'] ?? 'No Name') ?>
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" href="<?= URL ?>/contacts/edit?id=<?= $contact['id'] ?>">
-                  <i class="fa-solid fa-edit me-2"></i>Edit <?= htmlspecialchars($contact['fullname']) ?>
+                  <i class="fa-solid fa-edit me-2"></i>Edit <?= htmlspecialchars($contact['fullname'] ?? 'No Name') ?>
                 </a>
               </li>
             <?php endforeach; ?>
@@ -960,6 +983,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+
+<!-- Contact Selector JavaScript -->
+<script src="/assets/js/contact-selector.js"></script>
 
 <?php
 require SECTIONCLOSE;

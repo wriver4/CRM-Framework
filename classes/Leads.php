@@ -198,6 +198,15 @@ class Leads extends Database {
         return $stmt->fetchAll();
     }
 
+    public function get_lead_by_lead_id($lead_id) {
+        // SQL to fetch a lead by external lead_id (lead number)
+        $sql = "SELECT * FROM leads WHERE lead_id = :lead_id";
+        $stmt = $this->dbcrm()->prepare($sql);
+        $stmt->bindValue(':lead_id', $lead_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function update_lead($id, $data) {
         // Build full_address if not provided
         if (empty($data['full_address'])) {

@@ -21,7 +21,7 @@ if (isset($_GET['action'])) {
         case 'lead_with_user':
             // Get lead by ID with user information
             if (isset($_GET['id']) && !empty(trim($_GET['id']))) {
-                $lead = $leads->get_lead_by_id(trim($_GET['id']));
+                $lead = $leads->get_lead_by_lead_id(trim($_GET['id']));  // Use lead_id (external number) instead of internal id
                 if ($lead && !empty($lead['last_edited_by'])) {
                     $lead['last_edited_by_name'] = $users->get_name_by_id($lead['last_edited_by']);
                 }
@@ -88,11 +88,22 @@ if ($dir == 'admin/leads' && $page == 'edit') {
         exit;
     }
     $id = trim($_GET["id"]);
-    $result = $leads->get_lead_by_id($id);
+    $result = $leads->get_lead_by_lead_id($id);  // Use lead_id (external number) instead of internal id
     
     // Get contacts for this lead
     $contacts = new Contacts();
     $lead_contacts = $contacts->get_contacts_by_lead_id($id);
+    
+    // Also get property contacts for the contact selector (same data, different variable name for compatibility)
+    $property_contacts = $lead_contacts;
+    $multiple_contacts = count($property_contacts) > 1;
+    
+    // Set default selected contact (first one or primary contact)
+    $selected_contact_id = null;
+    if (!empty($property_contacts)) {
+        $selected_contact_id = $property_contacts[0]['id'];
+    }
+    
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
         

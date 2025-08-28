@@ -43,7 +43,9 @@ try {
                     'date_created' => $note['date_created'],
                     'date_formatted' => date('M j, Y \a\t g:i A', strtotime($note['date_created'])),
                     'user_name' => $note['full_name'] ?? $note['username'] ?? 'System',
-                    'form_source' => $note['form_source']
+                    'form_source' => $note['form_source'],
+                    'contact_id' => $note['contact_id'],
+                    'contact_name' => $note['contact_name'] ?? null
                 ];
             }
             

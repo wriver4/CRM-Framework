@@ -21,7 +21,7 @@ if (isset($_GET['action'])) {
         case 'lead_with_user':
             // Get lead by ID with user information
             if (isset($_GET['id'])) {
-                $lead = $leads->get_lead_by_id($_GET['id']);
+                $lead = $leads->get_lead_by_lead_id($_GET['id']);  // Use lead_id (external number) instead of internal id
                 if ($lead && !empty($lead['last_edited_by'])) {
                     $lead['last_edited_by_name'] = $users->get_name_by_id($lead['last_edited_by']);
                 }
@@ -59,7 +59,7 @@ if ($dir == 'leads' && $page == 'list') {
 
 if ($dir == 'leads' && $page == 'view') {
     $id = trim($_GET["id"]);
-    $result = $leads->get_lead_by_id($id);
+    $result = $leads->get_lead_by_lead_id($id);  // Use lead_id (external number) instead of internal id
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
         $lead_source = $result["lead_source"];
@@ -85,7 +85,7 @@ if ($dir == 'leads' && $page == 'view') {
 
 if ($dir == 'leads' && $page == 'edit') {
     $id = trim($_GET["id"]);
-    $result = $leads->get_lead_by_id($id);
+    $result = $leads->get_lead_by_lead_id($id);  // Use lead_id (external number) instead of internal id
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
         $lead_source = $result["lead_source"];
@@ -130,6 +130,19 @@ if ($dir == 'leads' && $page == 'edit') {
         $updated_at = $result["updated_at"];
         $last_edited_by = $result["last_edited_by"];
     }
+    
+    // Get contacts associated with this lead for the contact dropdown in notes
+    if ($page == 'edit' && isset($id)) {
+        $contacts = new Contacts();
+        $property_contacts = $contacts->get_contacts_by_lead_id($id);
+        $multiple_contacts = count($property_contacts) > 1;
+        
+        // Set default selected contact (first one or primary contact)
+        $selected_contact_id = null;
+        if (!empty($property_contacts)) {
+            $selected_contact_id = $property_contacts[0]['id'];
+        }
+    }
 }
 
 if ($dir == 'leads' && $page == 'new') {
@@ -139,7 +152,7 @@ if ($dir == 'leads' && $page == 'new') {
 
 if ($dir == 'leads' && $page == 'delete') {
     $id = trim($_GET["id"]);
-    $result = $leads->get_lead_by_id($id);
+    $result = $leads->get_lead_by_lead_id($id);  // Use lead_id (external number) instead of internal id
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
         $first_name = $result["first_name"];

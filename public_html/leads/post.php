@@ -130,6 +130,7 @@ if (isset($_POST['page']) && $_POST['page'] == 'edit') {
                 'source' => $_POST['note_source'] ?? 1,
                 'note_text' => trim($_POST['note_text']),
                 'user_id' => $_SESSION['user_id'] ?? null,
+                'contact_id' => !empty($_POST['note_contact_id']) ? (int)$_POST['note_contact_id'] : null,
                 'form_source' => 'leads'
             ];
             

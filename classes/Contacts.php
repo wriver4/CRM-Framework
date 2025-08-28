@@ -63,15 +63,18 @@ class Contacts extends Database
     return [];
   }
 
-  public function get_contacts_by_lead_id($lead_id)
+  public function get_contacts_by_lead_id($lead_number)
   {
     // Use junction table to get contacts associated with a lead
-    $sql = 'SELECT c.* FROM contacts c 
+    // Note: lead_number is the external lead ID (e.g., 1318), not the internal table ID
+    $sql = 'SELECT c.*, lc.relationship_type, c.fullname as full_name 
+            FROM contacts c 
             INNER JOIN leads_contacts lc ON c.id = lc.contact_id 
-            WHERE lc.lead_id = :lead_id AND c.status = 1 AND lc.status = 1 
+            INNER JOIN leads l ON lc.lead_id = l.id
+            WHERE l.lead_id = :lead_number AND c.status = 1 AND lc.status = 1 
             ORDER BY lc.relationship_type DESC, c.id ASC';
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->bindValue(':lead_id', (int)$lead_id, PDO::PARAM_INT);
+    $stmt->bindValue(':lead_number', (int)$lead_number, PDO::PARAM_INT);
     $stmt->execute();
     $results = $stmt->fetchAll();
     return $results;

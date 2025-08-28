@@ -35,7 +35,7 @@ require SECTIONOPEN;
     $lead_id = htmlspecialchars($_GET['lead_id']);
     // Get lead data to pre-populate contact form (but NOT ctype)
     $leads = new Leads();
-    $result = $leads->get_lead_by_id($lead_id);
+    $result = $leads->get_lead_by_lead_id($lead_id);  // Use lead_id (external number) instead of internal id
     if (!empty($result) && isset($result[0])) {
       $lead_data = $result[0];
       $lead_first_name = $lead_data['first_name'] ?? '';

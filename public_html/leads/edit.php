@@ -59,40 +59,35 @@ require SECTIONOPEN;
       <h5 class="mb-0">
         <i class="fa-solid fa-user me-2"></i><?= $lang['lead_contact_information'] ?? 'Contact Information'; ?>
       </h5>
-      <a href="/contacts/new"
-         class="btn btn-success btn-sm"
-         tabindex="0"
-         role="button"
-         aria-pressed="false">
-        <i class="fa-solid fa-address-book"></i>&ensp;<?= $lang['contact_new'] ?? 'New Contact'; ?>
-      </a>
+      <div class="d-flex align-items-center gap-3">
+        <?php if (isset($property_contacts) && count($property_contacts) > 1): ?>
+        <div class="d-flex align-items-center">
+          <label for="contact_selector" class="form-label text-white me-2 mb-0">
+            <i class="fa-solid fa-users me-1"></i>Contact:
+          </label>
+          <select name="contact_selector" id="contact_selector" class="form-select form-select-sm" style="min-width: 200px;">
+            <?php foreach ($property_contacts as $contact): ?>
+            <option value="<?= htmlspecialchars($contact['id']) ?>"
+                    data-full-name="<?= htmlspecialchars($contact['full_name']) ?>"
+                    data-email="<?= htmlspecialchars($contact['email']) ?>"
+                    data-cell-phone="<?= htmlspecialchars($contact['cell_phone']) ?>"
+                    <?= ($contact['id'] == $selected_contact_id) ? 'selected' : '' ?>>
+              <?= htmlspecialchars($contact['full_name']) ?>
+            </option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <?php endif; ?>
+        <a href="/contacts/new"
+           class="btn btn-success btn-sm"
+           tabindex="0"
+           role="button"
+           aria-pressed="false">
+          <i class="fa-solid fa-address-book"></i>&ensp;<?= $lang['contact_new'] ?? 'New Contact'; ?>
+        </a>
+      </div>
     </div>
     <div class="card-body">
-      <!-- Property Contact Selection -->
-      <?php if (isset($multiple_contacts) && $multiple_contacts && count($property_contacts) > 1): ?>
-      <div class="row mb-4">
-        <div class="col-12">
-          <div class="form-group">
-            <label for="selected_contact"
-                   class="form-label fw-bold text-primary">
-              <i
-                 class="fa-solid fa-users me-2"></i><?= $lang['select_property_contact'] ?? 'Select Property Contact'; ?>
-            </label>
-            <select name="selected_contact"
-                    id="selected_contact"
-                    class="form-select form-select-lg">
-              <?php foreach ($property_contacts as $contact): ?>
-              <option value="<?= htmlspecialchars($contact['id']) ?>"
-                      <?= ($contact['id'] == $selected_contact_id) ? 'selected' : '' ?>>
-                <?= htmlspecialchars($contact['full_name']) ?> - <?= htmlspecialchars($contact['email']) ?>
-              </option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-        </div>
-      </div>
-      <hr class="mb-3">
-      <?php endif; ?>
 
       <!-- Full Name, Cell Phone & Email -->
       <div class="row mb-3">
@@ -866,6 +861,8 @@ require SECTIONOPEN;
   <input type="hidden"
          name="current_stage"
          value="<?= htmlspecialchars($stage ?? '') ?>">
+  <!-- Hidden field for selected contact ID (for notes) -->
+  <input type="hidden" name="note_contact_id" id="note_contact_id" value="<?= htmlspecialchars($selected_contact_id ?? '') ?>">
 
   <p></p>
   <a href="list"
@@ -887,6 +884,8 @@ require SECTIONOPEN;
 <script>
 // Notes search and ordering functionality
 document.addEventListener('DOMContentLoaded', function() {
+
+
   // Display user's and client's timezone with conversion
   const userTimezoneElement = document.getElementById('user-timezone');
   const clientTimezoneElement = document.getElementById('client-timezone');
@@ -1088,6 +1087,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // Load notes initially
+  loadNotes();
+
   // Load notes via AJAX
   function loadNotes() {
     if (leadId <= 0) return;
@@ -1164,6 +1166,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <div>
                                 <span class="${note.source_badge} me-2">${note.source_name}</span>
+                                ${note.contact_name ? `<small class="badge bg-info text-white me-2"><i class="fa-solid fa-user me-1"></i>${escapeHtml(note.contact_name)}</small>` : ''}
                                 ${note.form_source && note.form_source !== 'leads' ? `<small class="badge bg-light text-dark">from ${note.form_source}</small>` : ''}
                             </div>
                             <small class="text-muted">${note.date_formatted}</small>
@@ -1260,6 +1263,9 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+
+<!-- Contact Selector JavaScript -->
+<script src="/assets/js/contact-selector.js"></script>
 
 <?php
 require SECTIONCLOSE;

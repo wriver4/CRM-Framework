@@ -48,14 +48,15 @@ class Notes extends Database {
             $pdo->beginTransaction();
             
             // Insert the note
-            $sql = "INSERT INTO notes (source, note_text, user_id, form_source, date_created) 
-                    VALUES (:source, :note_text, :user_id, :form_source, NOW())";
+            $sql = "INSERT INTO notes (source, note_text, user_id, contact_id, form_source, date_created) 
+                    VALUES (:source, :note_text, :user_id, :contact_id, :form_source, NOW())";
             
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 ':source' => $data['source'],
                 ':note_text' => $data['note_text'],
                 ':user_id' => $data['user_id'],
+                ':contact_id' => $data['contact_id'] ?? null,
                 ':form_source' => $data['form_source'] ?? 'leads'
             ]);
             
@@ -82,10 +83,13 @@ class Notes extends Database {
     public function get_notes_by_lead($lead_id, $search = '', $order = 'DESC') {
         $order = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
         
-        $sql = "SELECT n.*, u.full_name, u.username, ln.date_linked
+        $sql = "SELECT n.*, u.full_name, u.username, ln.date_linked,
+                       c.full_name as contact_name, c.first_name as contact_first_name, 
+                       c.family_name as contact_family_name
                 FROM notes n
                 INNER JOIN leads_notes ln ON n.id = ln.note_id
                 LEFT JOIN users u ON n.user_id = u.id 
+                LEFT JOIN contacts c ON n.contact_id = c.id
                 WHERE ln.lead_id = :lead_id";
         
         $params = [':lead_id' => $lead_id];

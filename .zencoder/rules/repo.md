@@ -38,6 +38,11 @@ A PHP-based CRM (Customer Relationship Management) framework providing functiona
 **Database Name**: democrm_democrm
 **Character Set**: utf8mb4
 
+### Database Constraints & Limitations
+- **No information_schema queries**: Due to root@localhost permission issues, avoid using `information_schema` tables in SQL scripts
+- **Use alternative approaches**: Use `SHOW CREATE TABLE`, `SHOW TABLES`, `DESCRIBE table_name` instead
+- **Foreign key management**: Use `SHOW CREATE TABLE` to view constraints before modification
+
 ## Core Components
 **Models**:
 - Database: Base database connection class
