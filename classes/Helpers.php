@@ -188,7 +188,8 @@ class Helpers extends Database
 
   public function get_contact_type($lang, $ctype)
   {
-    $contact_type = $this->get_contact_type_array($lang);
+    // Use standardized lead contact types for consistency
+    $contact_type = $this->get_lead_contact_type_array($lang);
     foreach ($contact_type as $key => $value) {
       if ($key == $ctype) {
         echo $value;
@@ -198,7 +199,8 @@ class Helpers extends Database
 
   public function select_contact_type($lang, $contact_id = null)
   {
-    $contact_type = $this->get_contact_type_array($lang);
+    // Use standardized lead contact types for consistency
+    $contact_type = $this->get_lead_contact_type_array($lang);
     if ($contact_id == null) {
       echo '<option value="" >Select Contact Type</option>';
     }
@@ -733,5 +735,21 @@ public function admin_select_property_id($lang, $prop_id )
     return $country_timezones[$country] ?? 'UTC';
   }
 
+  // Yes/No conversion helpers for multilingual support
+  public function convert_yes_no_to_int($value) {
+    return ($value == 'Yes') ? 1 : 0;
+  }
+
+  public function convert_int_to_yes_no($value) {
+    return ($value == 1) ? 'Yes' : 'No';
+  }
+
+  public function get_yes_no_options($lang, $selected_value = null) {
+    $display_value = $this->convert_int_to_yes_no($selected_value);
+    return [
+      'no_option' => '<option value="No"' . ($display_value == 'No' ? ' selected' : '') . '>' . $lang['lead_no'] . '</option>',
+      'yes_option' => '<option value="Yes"' . ($display_value == 'Yes' ? ' selected' : '') . '>' . $lang['lead_yes'] . '</option>'
+    ];
+  }
 
 }

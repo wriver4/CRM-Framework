@@ -15,7 +15,7 @@ class Contacts extends Database
 
   public function get_active_list()
   {
-    $sql = 'SELECT id, ctype, fullname, phones, call_order, emails from contacts WHERE status = 1';
+    $sql = 'SELECT id, ctype, fullname, phones, emails from contacts WHERE status = 1';
     $stmt = $this->dbcrm()->query($sql);
     $stmt->execute();
     $results = $stmt->fetchAll();
@@ -53,20 +53,23 @@ class Contacts extends Database
 
   public function get_installer_nickname()
   {
-    $sql = "SELECT b_nickname from installers";
-    $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-    return $result;
+    // Installer functionality removed - return empty array to prevent errors
+    return [];
   }
 
   public function get_installer_by_id($id)
   {
-    $sql = 'SELECT * from installers where id = :id';
+    // Installer functionality removed - return empty array to prevent errors
+    return [];
+  }
+
+  public function get_contacts_by_lead_id($lead_id)
+  {
+    $sql = 'SELECT * FROM contacts WHERE lead_id = :lead_id AND status = 1 ORDER BY id ASC';
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    $stmt->bindValue(':lead_id', $lead_id, PDO::PARAM_STR);
     $stmt->execute();
-    $result = $stmt->fetch();
-    return $result;
+    $results = $stmt->fetchAll();
+    return $results;
   }
 }

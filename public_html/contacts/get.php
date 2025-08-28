@@ -17,7 +17,6 @@ if ($dir == 'contacts' && $page == 'edit') {
   $id = trim($_GET["id"]);
   $result = $contacts->get_by_id($id);
   $ctype = (int) $result['ctype'];
-  $call_order = (int) $result['call_order'];
   $first_name = $result['first_name'];
   $family_name = $result['family_name'];
   $cell_phone = $result['cell_phone'];

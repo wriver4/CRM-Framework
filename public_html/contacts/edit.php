@@ -34,33 +34,6 @@ require SECTIONOPEN;
                  readonly>
         </div>
       </div>
-      <div class="col">
-        <div class="form-group pb-2">
-          <label for="call-order"
-                 class="pb-1"><?= $lang['contact_call_order']; ?></label>
-          <input type="number"
-                 name="call_order"
-                 step="1"
-                 min="1"
-                 max="10"
-                 id="call-order"
-                 class="form-control "
-                 autocomplete="off">
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group pt-lg-4 float-end">
-          <label> </label>
-          <button type="button"
-                  class="btn btn-info"
-                  data-bs-toggle="modal"
-                  data-bs-target="#call-order-list"
-                  tabindex="0"
-                  role="button"
-                  aria-pressed="false"><?= $lang['contact_current_order_list_button'];?></button>
-          <?php require 'call_order_list.php'; ?>
-        </div>
-      </div>
     </div>
     <div class="row">
       <div class="col">

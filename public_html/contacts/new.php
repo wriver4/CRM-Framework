@@ -19,6 +19,38 @@ require SECTIONOPEN;
 <form action="post.php"
       method="POST"
       autocomplete="off">
+  
+  <!-- Hidden fields for form processing -->
+  <input type="hidden" name="dir" value="contacts">
+  <input type="hidden" name="page" value="new">
+  
+  <!-- Hidden field for lead_id if coming from leads -->
+  <?php 
+  $default_ctype = 1; // Default to Primary Owner - each contact can have different type
+  $lead_first_name = '';
+  $lead_family_name = '';
+  $lead_cell_phone = '';
+  $lead_email = '';
+  if (isset($_GET['lead_id']) && !empty($_GET['lead_id'])): 
+    $lead_id = htmlspecialchars($_GET['lead_id']);
+    // Get lead data to pre-populate contact form (but NOT ctype)
+    $leads = new Leads();
+    $result = $leads->get_lead_by_id($lead_id);
+    if (!empty($result) && isset($result[0])) {
+      $lead_data = $result[0];
+      $lead_first_name = $lead_data['first_name'] ?? '';
+      $lead_family_name = $lead_data['family_name'] ?? '';
+      $lead_cell_phone = $lead_data['cell_phone'] ?? '';
+      $lead_email = $lead_data['email'] ?? '';
+    }
+  ?>
+    <input type="hidden" name="lead_id" value="<?= $lead_id ?>">
+    <div class="alert alert-info mb-3">
+      <i class="fa-solid fa-info-circle me-2"></i>
+      Creating contact for Lead #<?= $lead_id ?>
+    </div>
+  <?php endif; ?>
+  
   <div class="row">
     <div class="col">
       <div class="form-group pb-2">
@@ -29,34 +61,14 @@ require SECTIONOPEN;
                 class="form-select"
                 required
                 autocomplete="off">
-          <?php $helper->select_contact_type($lang, 1); // Default to Primary Owner ?></select>
-      </div>
-    </div>
-    <div class="col">
-      <div class="form-group pb-2">
-        <label for="call-order"
-               class="pb-1"><?= $lang['contact_call_order']; ?></label>
-        <input type="number"
-               name="call_order"
-               step="1"
-               min="1"
-               max="10"
-               id="call-order"
-               class="form-control "
-               autocomplete="off">
-      </div>
-    </div>
-    <div class="col">
-      <div class="form-group pt-lg-4 float-end">
-        <label> </label>
-        <button type="button"
-                class="btn btn-info"
-                data-bs-toggle="modal"
-                data-bs-target="#call-order-list"
-                tabindex="0"
-                role="button"
-                aria-pressed="false"><?= $lang['contact_current_order_list_button'];?></button>
-        <?php require 'call_order_list.php'; ?>
+          <?php 
+          // Use standardized lead contact types for consistency
+          $contact_types = $helper->get_lead_contact_type_array($lang);
+          foreach ($contact_types as $key => $value) {
+            $selected = ($key == $default_ctype) ? ' selected' : '';
+            echo '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
+          }
+          ?></select>
       </div>
     </div>
   </div>
@@ -70,6 +82,7 @@ require SECTIONOPEN;
                maxlength="100"
                id="first_name"
                class="form-control"
+               value="<?= htmlspecialchars($lead_first_name) ?>"
                required
                autocomplete="off">
       </div>
@@ -83,6 +96,7 @@ require SECTIONOPEN;
                maxlength="100"
                id="family_name"
                class="form-control"
+               value="<?= htmlspecialchars($lead_family_name) ?>"
                required
                autocomplete="off">
       </div>
@@ -99,6 +113,7 @@ require SECTIONOPEN;
                maxlength="100"
                id="cell_phone"
                class="form-control"
+               value="<?= htmlspecialchars($lead_cell_phone) ?>"
                required
                placeholder="<?= $lang['tel_pattern_us']; ?>"
                autocomplete="off">
@@ -144,6 +159,7 @@ require SECTIONOPEN;
                maxlength="250"
                id="personal_email"
                class="form-control"
+               value="<?= htmlspecialchars($lead_email) ?>"
                autocomplete="off">
       </div>
     </div>

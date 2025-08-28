@@ -15,7 +15,6 @@ class ContactsList extends ActionTable
       'ctype' => $lang['ctype'],
       'full_name' => $lang['full_name'] ?? $lang['fullname'] ?? 'Full Name',
       'phones' => $lang['phones'],
-      'call_order' => $lang['contact_call_order'],
       'emails' => $lang['emails'],
     ];
     $this->lang = $lang;

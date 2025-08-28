@@ -105,10 +105,13 @@ try {
     $data['plans_submitted_3'] = $_POST['plans_submitted_3'] ?? '';
     $data['picture_upload_link'] = $_POST['picture_upload_link'] ?? '';
     $data['plans_upload_link'] = $_POST['plans_upload_link'] ?? '';
-    $data['plans_and_pics'] = $_POST['plans_and_pics'] ?? '';
+    
+    // Convert plans_and_pics from Yes/No to 1/0 for database storage
+    $data['plans_and_pics'] = $helpers->convert_yes_no_to_int($_POST['plans_and_pics'] ?? '');
     
     // Additional information
-    $data['get_updates'] = $_POST['get_updates'] ?? '';
+    // Convert get_updates from Yes/No to 1/0 for database storage
+    $data['get_updates'] = $helpers->convert_yes_no_to_int($_POST['get_updates'] ?? '');
     
     // How did you hear about us (handle array)
     if (isset($_POST['hear_about']) && is_array($_POST['hear_about'])) {

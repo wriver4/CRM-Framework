@@ -89,6 +89,10 @@ if ($dir == 'admin/leads' && $page == 'edit') {
     }
     $id = trim($_GET["id"]);
     $result = $leads->get_lead_by_id($id);
+    
+    // Get contacts for this lead
+    $contacts = new Contacts();
+    $lead_contacts = $contacts->get_contacts_by_lead_id($id);
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
         

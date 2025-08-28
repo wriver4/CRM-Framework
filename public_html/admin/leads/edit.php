@@ -393,8 +393,11 @@ require SECTIONOPEN;
       <div class="form-group pb-2">
         <label for="get_updates" class="pb-1"><?= $lang['lead_get_updates']; ?></label>
         <select name="get_updates" id="get_updates" class="form-select" autocomplete="off">
-          <option value="No" <?= ($get_updates ?? 'Yes') == 'No' ? 'selected' : '' ?>><?= $lang['lead_no']; ?></option>
-          <option value="Yes" <?= ($get_updates ?? 'Yes') == 'Yes' ? 'selected' : '' ?>><?= $lang['lead_yes']; ?></option>
+          <?php 
+          $options = $helpers->get_yes_no_options($lang, $get_updates);
+          echo $options['no_option'];
+          echo $options['yes_option'];
+          ?>
         </select>
       </div>
     </div>
@@ -457,8 +460,11 @@ require SECTIONOPEN;
       <div class="form-group pb-2">
         <label for="plans_and_pics" class="pb-1"><?= $lang['lead_plans_and_pictures_uploaded']; ?></label>
         <select name="plans_and_pics" id="plans_and_pics" class="form-select" autocomplete="off">
-          <option value="No" <?= ($plans_and_pics ?? 'No') == 'No' ? 'selected' : '' ?>><?= $lang['no'] ?? 'No'; ?></option>
-          <option value="Yes" <?= ($plans_and_pics ?? 'No') == 'Yes' ? 'selected' : '' ?>><?= $lang['yes'] ?? 'Yes'; ?></option>
+          <?php 
+          $options = $helpers->get_yes_no_options($lang, $plans_and_pics);
+          echo $options['no_option'];
+          echo $options['yes_option'];
+          ?>
         </select>
       </div>
     </div>
@@ -668,6 +674,44 @@ require SECTIONOPEN;
          class="btn btn-info" role="button" tabindex="0">
         <i class="fa-solid fa-eye me-1"></i>View Lead
       </a>
+      
+      <!-- Contact Management Button/Dropdown -->
+      <?php if (empty($lead_contacts)): ?>
+        <!-- No contacts - simple button -->
+        <a href="<?= URL ?>/contacts/new?lead_id=<?= htmlspecialchars($_GET['id'] ?? '') ?>" 
+           class="btn btn-primary" role="button" tabindex="0">
+          <i class="fa-solid fa-user-plus me-1"></i>Create Contact
+        </a>
+      <?php else: ?>
+        <!-- Has contacts - dropdown -->
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-users me-1"></i>Contacts (<?= count($lead_contacts) ?>)
+          </button>
+          <ul class="dropdown-menu">
+            <li><h6 class="dropdown-header">Existing Contacts</h6></li>
+            <?php foreach ($lead_contacts as $contact): ?>
+              <li>
+                <a class="dropdown-item" href="<?= URL ?>/contacts/view?id=<?= $contact['id'] ?>">
+                  <i class="fa-solid fa-eye me-2"></i><?= htmlspecialchars($contact['fullname']) ?>
+
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="<?= URL ?>/contacts/edit?id=<?= $contact['id'] ?>">
+                  <i class="fa-solid fa-edit me-2"></i>Edit <?= htmlspecialchars($contact['fullname']) ?>
+                </a>
+              </li>
+            <?php endforeach; ?>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item" href="<?= URL ?>/contacts/new?lead_id=<?= htmlspecialchars($_GET['id'] ?? '') ?>">
+                <i class="fa-solid fa-user-plus me-2"></i>Add New Contact
+              </a>
+            </li>
+          </ul>
+        </div>
+      <?php endif; ?>
       <button type="submit" class="btn btn-success" role="button" value="submit" tabindex="0">
         <i class="fa-solid fa-save me-1"></i>Update Lead
       </button>

@@ -86,7 +86,6 @@ class ContactsEnhanced extends Database
         return [
             'prop_id' => null, // Will be set when property is created
             'ctype' => $leadData['ctype'] ?? 1, // Use lead contact type
-            'call_order' => 1, // Default primary contact
             'first_name' => $first_name,
             'family_name' => $family_name,
             'full_name' => $full_name,
@@ -189,7 +188,7 @@ class ContactsEnhanced extends Database
     public function create_contact($data)
     {
         $sql = "INSERT INTO contacts (
-            prop_id, ctype, call_order, first_name, family_name, full_name, 
+            prop_id, ctype, first_name, family_name, full_name, 
             cell_phone, business_phone, alt_phone, phones, 
             personal_email, business_email, alt_email, emails, 
             p_street_1, p_street_2, p_city, p_state, p_postcode, p_country, 
@@ -197,7 +196,7 @@ class ContactsEnhanced extends Database
             m_street_1, m_street_2, m_city, m_state, m_postcode, m_country,
             status, created_at, updated_at
         ) VALUES (
-            :prop_id, :ctype, :call_order, :first_name, :family_name, :full_name,
+            :prop_id, :ctype, :first_name, :family_name, :full_name,
             :cell_phone, :business_phone, :alt_phone, :phones,
             :personal_email, :business_email, :alt_email, :emails,
             :p_street_1, :p_street_2, :p_city, :p_state, :p_postcode, :p_country,
@@ -231,7 +230,7 @@ class ContactsEnhanced extends Database
         $data['updated_at'] = date('Y-m-d H:i:s');
         
         $sql = "UPDATE contacts SET 
-            prop_id = :prop_id, ctype = :ctype, call_order = :call_order,
+            prop_id = :prop_id, ctype = :ctype,
             first_name = :first_name, family_name = :family_name, full_name = :full_name,
             cell_phone = :cell_phone, business_phone = :business_phone, alt_phone = :alt_phone, phones = :phones,
             personal_email = :personal_email, business_email = :business_email, alt_email = :alt_email, emails = :emails,
@@ -262,7 +261,7 @@ class ContactsEnhanced extends Database
                 FROM contacts c
                 INNER JOIN lead_contacts lc ON c.id = lc.contact_id
                 WHERE lc.lead_id = :lead_id
-                ORDER BY lc.is_primary DESC, c.call_order ASC";
+                ORDER BY lc.is_primary DESC, c.id ASC";
         
         $stmt = $this->dbcrm()->prepare($sql);
         $stmt->bindValue(':lead_id', $leadId, PDO::PARAM_INT);
@@ -337,7 +336,7 @@ class ContactsEnhanced extends Database
     // Include all existing methods from original Contacts class
     public function get_active_list()
     {
-        $sql = 'SELECT id, ctype, full_name, phones, call_order, emails from contacts WHERE status = 1';
+        $sql = 'SELECT id, ctype, full_name, phones, emails from contacts WHERE status = 1';
         $stmt = $this->dbcrm()->query($sql);
         $stmt->execute();
         $results = $stmt->fetchAll();
@@ -375,20 +374,13 @@ class ContactsEnhanced extends Database
 
     public function get_installer_nickname()
     {
-        $sql = "SELECT b_nickname from installers";
-        $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-        return $result;
+        // Installer functionality removed - return empty array to prevent errors
+        return [];
     }
 
     public function get_installer_by_id($id)
     {
-        $sql = 'SELECT * from installers where id = :id';
-        $stmt = $this->dbcrm()->prepare($sql);
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $result = $stmt->fetch();
-        return $result;
+        // Installer functionality removed - return empty array to prevent errors
+        return [];
     }
 }
