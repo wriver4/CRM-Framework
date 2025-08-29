@@ -60,4 +60,3 @@ if ($_POST) {
 // If we get here, something went wrong
 header("Location: compare_notes.php?error=1");
 exit;
-?>

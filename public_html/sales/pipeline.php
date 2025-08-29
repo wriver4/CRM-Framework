@@ -4,4 +4,3 @@ $sales = new Sales();
 $pipeline = $sales->listDeals();
 
 // Render sales pipeline
-?>

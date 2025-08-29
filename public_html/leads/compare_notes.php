@@ -282,4 +282,3 @@ document.querySelector('button[name="action"][value="clear_lead_lost_notes"]').a
 <?php
 require SECTIONCLOSE;
 require FOOTER;
-?>

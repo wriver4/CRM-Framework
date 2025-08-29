@@ -26,4 +26,3 @@ require LISTOPEN;
 require 'get.php';
 require LISTCLOSE;
 require FOOTER;
-?>

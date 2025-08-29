@@ -90,6 +90,10 @@ No formal testing framework is implemented; testing is done through manual execu
 
 ```
 .
+├── archive/                         # Archived files
+│   └── leads/                       # Archived lead files
+│       ├── post.php                 # Original lead processing (archived)
+│       └── post_with_contact_integration.php # Contact integration version (archived)
 ├── classes/                         # Core framework classes
 │   ├── ActionTable.php              # Extended table with action buttons
 │   ├── Audit.php                    # Audit logging functionality
@@ -216,8 +220,7 @@ No formal testing framework is implemented; testing is done through manual execu
 │   │   ├── list.php                 # Lead listing
 │   │   ├── new.php                  # New lead creation
 │   │   ├── notes_ajax.php           # AJAX notes handling
-│   │   ├── post.php                 # Lead form processing
-│   │   ├── post_with_contact_integration.php # Lead processing with contact integration
+│   │   ├── post.php                 # Lead form processing with contact integration
 │   │   └── view.php                 # Lead viewing
 │   ├── reports/                     # Reporting system
 │   │   ├── contacts/                # Contact reports
@@ -351,6 +354,7 @@ The following are excluded from version control:
 - Use `int(11)` over `varchar()` for ID fields
 - Implement proper foreign key relationships
 - Follow consistent CRUD operation patterns
+- **Never use closing PHP tags (`?>`)** at the end of PHP-only files - this is bad practice and can cause whitespace issues
 
 ## Key Architectural Patterns
 

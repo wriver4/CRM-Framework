@@ -1,8 +1,17 @@
 <?php
+/**
+ * Enhanced Lead Creation with Contact Integration
+ * This file handles lead creation with automatic contact creation/linking
+ */
+
 require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 
 // Check if user is logged in
 $not->loggedin();
+
+// Initialize classes (autoloaded)
+$leadsEnhanced = new Leads();
+$contactsEnhanced = new Contacts();
 
 // Function to format phone number with dashes
 function format_phone_number($phone) {
@@ -27,6 +36,11 @@ function format_phone_number($phone) {
     return $phone;
 }
 
+// Function to sanitize input data
+function sanitize_input($data) {
+    return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+}
+
 // Check if this is a POST request
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: list.php');
@@ -35,10 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Handle different actions
 if (isset($_POST['action']) && $_POST['action'] == 'delete') {
-    // Handle delete action
+    // Handle delete action (existing functionality)
     $id = $_POST['id'] ?? null;
     if ($id) {
-        $result = $leads->delete_lead($id);
+        $result = $leadsEnhanced->delete_lead($id);
         if ($result) {
             $_SESSION['success_message'] = 'Lead deleted successfully';
         } else {
@@ -49,195 +63,145 @@ if (isset($_POST['action']) && $_POST['action'] == 'delete') {
     exit;
 }
 
-// Handle edit action
-if (isset($_POST['page']) && $_POST['page'] == 'edit') {
-    $id = $_POST['id'] ?? null;
-    if (!$id) {
-        $_SESSION['error_message'] = 'Invalid lead ID';
-        header('Location: list.php');
-        exit;
-    }
-    
-    // Prepare update data
+// Handle lead creation/update
+try {
+    // Collect and sanitize form data
     $data = [
-        'lead_source' => $_POST['lead_source'] ?? 1,
-        'first_name' => $_POST['first_name'] ?? '',
-        'family_name' => $_POST['family_name'] ?? '',
+        // Basic lead information
+        'lead_source' => (int)($_POST['lead_source'] ?? 1),
+        'first_name' => sanitize_input($_POST['first_name'] ?? ''),
+        'family_name' => sanitize_input($_POST['family_name'] ?? ''),
         'cell_phone' => format_phone_number($_POST['cell_phone'] ?? ''),
-        'email' => $_POST['email'] ?? '',
-        'ctype' => $_POST['ctype'] ?? 1,
-        'lead_id' => $_POST['lead_id'] ?? '',
-        'business_name' => $_POST['business_name'] ?? '',
-        'form_street_1' => $_POST['form_street_1'] ?? '',
-        'form_street_2' => $_POST['form_street_2'] ?? '',
-        'form_city' => $_POST['form_city'] ?? '',
-        'form_state' => $_POST['form_state'] ?? '',
-        'form_postcode' => $_POST['form_postcode'] ?? '',
-        'form_country' => $_POST['form_country'] ?? 'US',
-        'timezone' => $_POST['timezone'] ?? null,
-        'full_address' => trim(implode('', array_filter([
-            ($_POST['form_street_1'] ?? '') ? ($_POST['form_street_1'] . ', ') : '',
-            ($_POST['form_street_2'] ?? '') ? ($_POST['form_street_2'] . ', ') : '',
-            ($_POST['form_city'] ?? '') ? ($_POST['form_city'] . ', ') : '',
-            ($_POST['form_state'] ?? '') ? ($_POST['form_state'] . ' ') : '',
-            $_POST['form_postcode'] ?? '',
-            ($_POST['form_country'] ?? 'US') !== 'US' ? (', ' . $_POST['form_country']) : ''
-        ]))),
-        'structure_type' => $_POST['structure_type'] ?? 1,
-        'stage' => $_POST['stage'] ?? 1, // Default to stage 1 (Lead)
-        'last_edited_by' => $_POST['last_edited_by'] ?? $_SESSION['user_id'] ?? null,
+        'email' => filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL),
+        'business_name' => sanitize_input($_POST['business_name'] ?? ''),
+        'ctype' => (int)($_POST['ctype'] ?? 1),
         
-        // Set other fields to maintain existing values or defaults
-        'services_interested_in' => '',
-        'structure_description' => '',
-        'structure_other' => '',
-        'structure_additional' => '',
-        'picture_submitted_1' => '',
-        'picture_submitted_2' => '',
-        'picture_submitted_3' => '',
-        'plans_submitted_1' => '',
-        'plans_submitted_2' => '',
-        'plans_submitted_3' => '',
-        'picture_upload_link' => '',
-        'plans_upload_link' => '',
-        'plans_and_pics' => 0,
-        'get_updates' => 1,
-        'hear_about' => '',
-        'hear_about_other' => '',
+        // Address information
+        'form_street_1' => sanitize_input($_POST['form_street_1'] ?? ''),
+        'form_street_2' => sanitize_input($_POST['form_street_2'] ?? ''),
+        'form_city' => sanitize_input($_POST['form_city'] ?? ''),
+        'form_state' => sanitize_input($_POST['form_state'] ?? ''),
+        'form_postcode' => sanitize_input($_POST['form_postcode'] ?? ''),
+        'form_country' => sanitize_input($_POST['form_country'] ?? 'US'),
+        'timezone' => sanitize_input($_POST['timezone'] ?? ''),
+        
+        // Project information
+        'services_interested_in' => sanitize_input($_POST['services_interested_in'] ?? ''),
+        'structure_type' => (int)($_POST['structure_type'] ?? 1),
+        'structure_description' => sanitize_input($_POST['structure_description'] ?? ''),
+        'structure_other' => sanitize_input($_POST['structure_other'] ?? ''),
+        'structure_additional' => sanitize_input($_POST['structure_additional'] ?? ''),
+        
+        // File uploads
+        'picture_submitted_1' => sanitize_input($_POST['picture_submitted_1'] ?? ''),
+        'picture_submitted_2' => sanitize_input($_POST['picture_submitted_2'] ?? ''),
+        'picture_submitted_3' => sanitize_input($_POST['picture_submitted_3'] ?? ''),
+        'plans_submitted_1' => sanitize_input($_POST['plans_submitted_1'] ?? ''),
+        'plans_submitted_2' => sanitize_input($_POST['plans_submitted_2'] ?? ''),
+        'plans_submitted_3' => sanitize_input($_POST['plans_submitted_3'] ?? ''),
+        'picture_upload_link' => sanitize_input($_POST['picture_upload_link'] ?? ''),
+        'plans_upload_link' => sanitize_input($_POST['plans_upload_link'] ?? ''),
+        'plans_and_pics' => sanitize_input($_POST['plans_and_pics'] ?? ''),
+        
+        // Marketing information
+        'get_updates' => isset($_POST['get_updates']) ? 1 : 0,
+        'hear_about' => sanitize_input($_POST['hear_about'] ?? ''),
+        'hear_about_other' => sanitize_input($_POST['hear_about_other'] ?? ''),
+        
+        // Lead management
+        'stage' => (int)($_POST['stage'] ?? 1),
+        'last_edited_by' => $_SESSION['user_id'] ?? 1,
         
         // Additional fields
-        'full_name' => ($_POST['first_name'] ?? '') . ' ' . ($_POST['family_name'] ?? ''),
-        'full_address' => null
+        'full_name' => trim(($_POST['first_name'] ?? '') . ' ' . ($_POST['family_name'] ?? '')),
+        'full_address' => sanitize_input($_POST['full_address'] ?? '')
     ];
+
+    // Validate required fields
+    $validation_errors = $leadsEnhanced->validate_lead_with_contact_data($data);
     
-    // Validate the data
-    $validation_errors = $leads->validate_lead_data($data);
     if (!empty($validation_errors)) {
-        $_SESSION['form_errors'] = $validation_errors;
-        $_SESSION['form_data'] = $_POST;
-        header('Location: edit.php?id=' . $id);
+        $_SESSION['error_message'] = 'Validation errors: ' . implode(', ', $validation_errors);
+        $_SESSION['form_data'] = $_POST; // Preserve form data
+        header('Location: new.php');
         exit;
     }
+
+    // Check if this is an update or create operation
+    $lead_id = $_POST['id'] ?? null;
     
-    // Update the lead
-    $result = $leads->update_lead($id, $data);
-    
-    if ($result) {
-        // Handle note creation if note_text is provided
-        if (!empty(trim($_POST['note_text'] ?? ''))) {
-            $notes = new Notes();
-            $note_data = [
-                'source' => $_POST['note_source'] ?? 1,
-                'note_text' => trim($_POST['note_text']),
-                'user_id' => $_SESSION['user_id'] ?? null,
-                'contact_id' => !empty($_POST['note_contact_id']) ? (int)$_POST['note_contact_id'] : null,
-                'form_source' => 'leads'
-            ];
+    if ($lead_id) {
+        // Update existing lead
+        $result = $leadsEnhanced->update_lead_with_contact($lead_id, $data);
+        
+        if ($result['success']) {
+            $_SESSION['success_message'] = 'Lead and contact updated successfully';
             
-            $note_validation = $notes->validate_note_data($note_data);
-            if (empty($note_validation)) {
-                $notes->create_note_for_lead($id, $note_data);
-            }
+            // Log the update
+            $audit = new Audit();
+            $audit->log(
+                $_SESSION['user_id'] ?? 1,                    // user_id
+                'lead_update',                                 // event
+                "lead_{$lead_id}",                            // resource
+                $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown',     // useragent
+                $_SERVER['REMOTE_ADDR'] ?? 'Unknown',         // ip
+                $lead_id,                                      // location
+                "Lead updated with contact integration"        // data
+            );
+            
+            header('Location: view.php?id=' . $lead_id);
+        } else {
+            $_SESSION['error_message'] = $result['message'] . (isset($result['error']) ? ': ' . $result['error'] : '');
+            $_SESSION['form_data'] = $_POST;
+            header('Location: edit.php?id=' . $lead_id);
         }
         
-        $_SESSION['success_message'] = 'Lead updated successfully';
-        header('Location: view.php?id=' . $id);
-        exit;
     } else {
-        $_SESSION['error_message'] = 'Error updating lead. Please try again.';
-        $_SESSION['form_data'] = $_POST;
-        header('Location: edit.php?id=' . $id);
-        exit;
-    }
-}
-
-// Create instances
-$leads = new Leads();
-$users = new Users();
-
-try {
-    // Prepare data for insertion
-    $data = [
-        'lead_source' => $_POST['lead_source'] ?? 1,
-        'first_name' => $_POST['first_name'] ?? '',
-        'family_name' => $_POST['family_name'] ?? '',
-        'cell_phone' => format_phone_number($_POST['cell_phone'] ?? ''),
-        'email' => $_POST['email'] ?? '',
-        'ctype' => $_POST['ctype'] ?? 1,
-        'lead_id' => $_POST['lead_id'] ?? '',
-        'business_name' => $_POST['business_name'] ?? '',
-        'form_street_1' => $_POST['form_street_1'] ?? '',
-        'form_street_2' => $_POST['form_street_2'] ?? '',
-        'form_city' => $_POST['form_city'] ?? '',
-        'form_state' => $_POST['form_state'] ?? '',
-        'form_postcode' => $_POST['form_postcode'] ?? '',
-        'form_country' => $_POST['form_country'] ?? 'US',
-        'timezone' => $_POST['timezone'] ?? null,
-        'full_address' => trim(implode('', array_filter([
-            ($_POST['form_street_1'] ?? '') ? ($_POST['form_street_1'] . ', ') : '',
-            ($_POST['form_street_2'] ?? '') ? ($_POST['form_street_2'] . ', ') : '',
-            ($_POST['form_city'] ?? '') ? ($_POST['form_city'] . ', ') : '',
-            ($_POST['form_state'] ?? '') ? ($_POST['form_state'] . ' ') : '',
-            $_POST['form_postcode'] ?? '',
-            ($_POST['form_country'] ?? 'US') !== 'US' ? (', ' . $_POST['form_country']) : ''
-        ]))),
-        'services_interested_in' => is_array($_POST['services_interested_in']) ? implode(',', $_POST['services_interested_in']) : '',
-        'structure_type' => $_POST['structure_type'] ?? 1,
-        'structure_description' => is_array($_POST['structure_description']) ? implode(',', $_POST['structure_description']) : '',
-        'structure_other' => $_POST['structure_other'] ?? '',
-        'structure_additional' => $_POST['structure_additional'] ?? '',
-        'picture_submitted_1' => $_POST['picture_submitted_1'] ?? '',
-        'picture_submitted_2' => $_POST['picture_submitted_2'] ?? '',
-        'picture_submitted_3' => $_POST['picture_submitted_3'] ?? '',
-        'plans_submitted_1' => $_POST['plans_submitted_1'] ?? '',
-        'plans_submitted_2' => $_POST['plans_submitted_2'] ?? '',
-        'plans_submitted_3' => $_POST['plans_submitted_3'] ?? '',
-        'picture_upload_link' => $_POST['picture_upload_link'] ?? '',
-        'plans_upload_link' => $_POST['plans_upload_link'] ?? '',
-        'plans_and_pics' => ($_POST['plans_and_pics'] == 'Yes') ? 1 : 0,
-        'get_updates' => ($_POST['get_updates'] == 'Yes') ? 1 : 0,
-        'hear_about' => is_array($_POST['hear_about']) ? implode(',', $_POST['hear_about']) : '',
-        'hear_about_other' => $_POST['hear_about_other'] ?? '',
-        'stage' => $_POST['stage'] ?? 1, // Default to stage 1 (Lead)
-        'last_edited_by' => $_POST['last_edited_by'] ?? $_SESSION['user_id'] ?? null,
+        // Generate lead ID
+        $last_lead_id = $leadsEnhanced->get_last_lead_id();
+        $data['lead_id'] = $last_lead_id + 1;
         
-        // Additional fields - set to empty/null for new records
-        'full_name' => ($_POST['first_name'] ?? '') . ' ' . ($_POST['family_name'] ?? ''),
-        'full_address' => null
-    ];
-    
-    // Validate the data
-    $validation_errors = $leads->validate_lead_data($data);
-    if (!empty($validation_errors)) {
-        // Handle validation errors - you might want to redirect back with error messages
-        $_SESSION['form_errors'] = $validation_errors;
-        $_SESSION['form_data'] = $_POST;
-        header('Location: new.php');
-        exit;
+        // Create new lead with contact
+        $result = $leadsEnhanced->create_lead_with_contact($data);
+        
+        if ($result['success']) {
+            $_SESSION['success_message'] = 'Lead and contact created successfully';
+            
+            // Log the creation
+            $audit = new Audit();
+            $audit->log(
+                $_SESSION['user_id'] ?? 1,                    // user_id
+                'lead_create',                                 // event
+                "lead_{$result['lead_id']}",                  // resource
+                $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown',     // useragent
+                $_SERVER['REMOTE_ADDR'] ?? 'Unknown',         // ip
+                $result['lead_id'],                           // location
+                "Lead created with contact integration (Contact ID: {$result['contact_id']})" // data
+            );
+            
+            // Clear any preserved form data
+            unset($_SESSION['form_data']);
+            
+            header('Location: view.php?id=' . $result['lead_id']);
+        } else {
+            $_SESSION['error_message'] = $result['message'] . (isset($result['error']) ? ': ' . $result['error'] : '');
+            $_SESSION['form_data'] = $_POST; // Preserve form data
+            header('Location: new.php');
+        }
     }
-    
-    // Create the lead
-    $result = $leads->create_lead($data);
-    
-    if ($result) {
-        // Success - redirect to list or success page
-        $_SESSION['success_message'] = 'Lead created successfully';
-        header('Location: list.php'); // Assuming you have a list.php
-        exit;
-    } else {
-        // Error creating lead
-        $_SESSION['error_message'] = 'Error creating lead. Please try again.';
-        $_SESSION['form_data'] = $_POST;
-        header('Location: new.php');
-        exit;
-    }
-    
+
 } catch (Exception $e) {
-    // Handle any exceptions
-    error_log('Lead creation error: ' . $e->getMessage());
+    // Log the error
+    error_log("Lead creation/update error: " . $e->getMessage());
+    
     $_SESSION['error_message'] = 'An unexpected error occurred. Please try again.';
-    $_SESSION['form_data'] = $_POST;
-    header('Location: new.php');
-    exit;
+    $_SESSION['form_data'] = $_POST; // Preserve form data
+    
+    if (isset($_POST['id'])) {
+        header('Location: edit.php?id=' . $_POST['id']);
+    } else {
+        header('Location: new.php');
+    }
 }
-?>
+
+exit;

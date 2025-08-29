@@ -84,4 +84,3 @@ require SECTIONOPEN;
 <?php
 require SECTIONCLOSE;
 require FOOTER;
-?>

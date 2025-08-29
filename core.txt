@@ -116,7 +116,6 @@ public_html/leads/view.php
 public_html/leads/notes_ajax.php
 public_html/leads/compare_notes.php
 public_html/leads/compare_notes_save.php
-public_html/leads/post_with_contact_integration.php
 public_html/leads/communications/list.php
 public_html/leads/communications/log.php
 

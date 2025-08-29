@@ -24,7 +24,7 @@ require NAV;
 require SECTIONOPEN;
 ?>
 <p></p>
-<form action="post_contact_integrated.php"
+<form action="post.php"
       method="POST"
       autocomplete="off">
 

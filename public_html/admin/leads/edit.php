@@ -990,4 +990,3 @@ document.addEventListener('DOMContentLoaded', function() {
 <?php
 require SECTIONCLOSE;
 require FOOTER;
-?>

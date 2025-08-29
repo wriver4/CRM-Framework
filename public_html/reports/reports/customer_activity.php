@@ -4,4 +4,3 @@ $communications = new Communications();
 $activity = $communications->listCommunications($leadId);
 
 // Render lead activity report
-?>

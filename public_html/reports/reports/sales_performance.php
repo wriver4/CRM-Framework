@@ -4,4 +4,3 @@ $sales = new Sales();
 $performance = $sales->listDeals();
 
 // Render sales performance report
-?>

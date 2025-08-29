@@ -198,4 +198,3 @@ if ($dir == 'admin/leads' && $page == 'edit') {
         exit;
     }
 }
-?>

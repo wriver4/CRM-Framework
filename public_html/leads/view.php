@@ -653,4 +653,3 @@ function copyToClipboard(text, button) {
 <?php
 require SECTIONCLOSE;
 require FOOTER;
-?>

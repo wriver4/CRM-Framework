@@ -1,3 +1,15 @@
 {
-  "vscode-mysql.enableTelemetry": false
+  "playwright.reuseBrowser": true,
+  "playwright.showTrace": true,
+  "playwright.testDir": "./tests/playwright",
+  "playwright.configFile": "./playwright.config.js",
+  "files.associations": {
+    "*.spec.js": "javascript",
+    "*.test.js": "javascript"
+  },
+  "terminal.integrated.env.linux": {
+    "PLAYWRIGHT_BROWSERS_PATH": "${workspaceFolder}/node_modules/.cache/ms-playwright"
+  },
+  "testing.automaticallyOpenPeekView": "never",
+  "testing.openTesting": "neverOpen"
 }
