@@ -81,11 +81,10 @@ A PHP-based CRM (Customer Relationship Management) framework providing functiona
 **Path Constants**: Defined in config/system.php
 
 ## Testing
-**Testing Files**: 
-- scripts/test_migration.php
-- public_html/admin/test_notes_migration.php
+**Testing Directory**: `tests/`
+**Lead Tests**: `tests/leads/` - Contains debugging and testing utilities for lead functionality
 
-No formal testing framework is implemented; testing appears to be done through manual execution of test scripts.
+No formal testing framework is implemented; testing is done through manual execution of test scripts and debugging utilities.
 
 ## Directory Structure
 
@@ -105,7 +104,6 @@ No formal testing framework is implemented; testing appears to be done through m
 │   ├── InternalErrors.php           # Internal error handling
 │   ├── Leads.php                    # Lead management
 │   ├── LeadsListTable.php           # Leads list table display
-│   ├── LeadsList_orginal.php        # Original leads list (backup)
 │   ├── Logit.php                    # Logging utilities
 │   ├── Nonce.php                    # CSRF protection
 │   ├── Notes.php                    # Notes functionality
@@ -128,9 +126,10 @@ No formal testing framework is implemented; testing appears to be done through m
 │   ├── ftpconfig.php                # FTP configuration
 │   ├── helpers.php                  # Helper configuration
 │   └── system.php                   # System configuration
-├── examples/                        # Example implementations
-│   └── notes_integration_examples.php # Notes system examples
 ├── logs/                            # Application logs
+│   ├── delete_note_errors.log       # Note deletion error logs
+│   ├── minimal_test.log             # Minimal test logs
+│   └── php_errors.log               # PHP error logs
 ├── public_html/                     # Web-accessible files
 │   ├── admin/                       # Administrative tools
 │   │   ├── languages/               # Language files (multilingual support)
@@ -139,24 +138,18 @@ No formal testing framework is implemented; testing appears to be done through m
 │   │   │   │   ├── es.php           # Spanish login translations
 │   │   │   │   └── template.php     # Translation template
 │   │   │   ├── en.php               # English translations
-│   │   │   └── _es.php              # Spanish translations
+│   │   │   ├── _es.php              # Spanish translations
+│   │   │   └── _es_complete.php     # Complete Spanish translations
 │   │   ├── leads/                   # Admin lead management
+│   │   │   ├── delete_note.php      # Note deletion handler
 │   │   │   ├── edit.php             # Admin lead editing
 │   │   │   ├── get.php              # Admin lead retrieval
 │   │   │   ├── list.php             # Admin lead listing
 │   │   │   └── post.php             # Admin lead processing
-│   │   ├── logs/                    # Admin log viewers
-│   │   │   ├── audit.php            # Audit log viewer
-│   │   │   ├── internal.php         # Internal log viewer
-│   │   │   └── phperror.php         # PHP error log viewer
-│   │   ├── original/                # Original/backup files
-│   │   │   ├── leads/               # Original lead files
-│   │   │   │   ├── import_csv.php   # CSV import functionality
-│   │   │   │   └── upload_form.php  # Upload form
-│   │   │   ├── logo.svg             # Original logo
-│   │   │   └── waveGUARD-wildfire-mitigation-solutions-logo-v.2_LR.png
-│   │   ├── run_notes_migration.php  # Notes migration runner
-│   │   └── test_notes_migration.php # Notes migration tester
+│   │   └── logs/                    # Admin log viewers
+│   │       ├── audit.php            # Audit log viewer
+│   │       ├── internal.php         # Internal log viewer
+│   │       └── phperror.php         # PHP error log viewer
 │   ├── assets/                      # Static assets
 │   │   ├── css/                     # Stylesheets
 │   │   │   ├── webfonts/            # Font Awesome fonts
@@ -164,8 +157,6 @@ No formal testing framework is implemented; testing appears to be done through m
 │   │   │   │   ├── fa-regular-400.woff2
 │   │   │   │   ├── fa-solid-900.woff2
 │   │   │   │   └── fa-v4compatibility.woff2
-│   │   │   ├── old ms.min/          # Old CSS files
-│   │   │   │   └── bootstrap.min.css
 │   │   │   ├── all.css              # Font Awesome CSS
 │   │   │   ├── bootstrap.min.css    # Bootstrap framework
 │   │   │   ├── forms.css            # Form styling
@@ -195,6 +186,7 @@ No formal testing framework is implemented; testing appears to be done through m
 │   │       │   ├── edit.js          # User edit scripts
 │   │       │   └── new.js           # User creation scripts
 │   │       ├── conditional-forms.js # Dynamic form behavior
+│   │       ├── contact-selector.js  # Contact selection functionality
 │   │       ├── countdown.js         # Countdown functionality
 │   │       ├── edit-leads.js        # Lead editing scripts
 │   │       ├── general.js           # General utilities
@@ -203,7 +195,6 @@ No formal testing framework is implemented; testing appears to be done through m
 │   │       ├── validator.min.js     # Form validation
 │   │       └── validator.min.js.map # Source map
 │   ├── contacts/                    # Contact management
-│   │   ├── call_order_list.php      # Call order listing
 │   │   ├── delete.php               # Contact deletion
 │   │   ├── edit.php                 # Contact editing
 │   │   ├── get.php                  # Contact retrieval
@@ -222,11 +213,11 @@ No formal testing framework is implemented; testing appears to be done through m
 │   │   ├── delete.php               # Lead deletion
 │   │   ├── edit.php                 # Lead editing
 │   │   ├── get.php                  # Lead retrieval
-│   │   ├── leads notes.txt          # Notes documentation
 │   │   ├── list.php                 # Lead listing
 │   │   ├── new.php                  # New lead creation
 │   │   ├── notes_ajax.php           # AJAX notes handling
 │   │   ├── post.php                 # Lead form processing
+│   │   ├── post_with_contact_integration.php # Lead processing with contact integration
 │   │   └── view.php                 # Lead viewing
 │   ├── reports/                     # Reporting system
 │   │   ├── contacts/                # Contact reports
@@ -289,6 +280,7 @@ No formal testing framework is implemented; testing appears to be done through m
 │   │   ├── new.php                  # New user creation
 │   │   ├── post.php                 # User form processing
 │   │   └── view.php                 # User viewing
+│   ├── profile/                     # User profile management
 │   ├── dashboard.php                # Main dashboard
 │   ├── index.html                   # Static index page
 │   ├── index.php                    # Application entry point
@@ -299,24 +291,20 @@ No formal testing framework is implemented; testing appears to be done through m
 │   ├── php.ini                      # PHP configuration
 │   ├── post.php                     # General form processor
 │   └── README.md                    # Public HTML documentation
-├── scripts/                         # Utility scripts
-│   ├── migrate_notes.php            # Notes migration script
-│   └── test_migration.php           # Migration testing
 ├── sql/                            # Database scripts
-│   ├── add_timezone_fields.sql      # Timezone field additions
-│   ├── clean_and_parse_leads_address.sql # Address parsing
-│   ├── create_leads_notes_table.sql # Notes table creation
-│   ├── democrm_democrm.sql          # Main database schema
-│   ├── fix_form_country.sql         # Country field fixes
-│   ├── leads.sql                    # Leads table schema
-│   ├── leads_comparison.sql         # Leads comparison queries
-│   ├── notes.sql                    # Notes table schema
-│   ├── parse_contacts_address.sql   # Contact address parsing
-│   ├── parse_leads_address.sql      # Lead address parsing
-│   ├── parse_postcode_state.sql     # Postcode/state parsing
-│   ├── update_contacts_timezone.sql # Contact timezone updates
-│   └── update_leads_timezone.sql    # Lead timezone updates
-├── vendor/                          # Composer dependencies
+│   └── democrm_democrm.sql          # Main database schema
+├── tests/                           # Test files and debugging utilities
+│   ├── leads/                       # Lead-related tests
+│   │   ├── debug_delete_note.php    # Debug note deletion
+│   │   ├── delete_note_fixed.php    # Fixed note deletion
+│   │   ├── minimal_delete.php       # Minimal deletion test
+│   │   ├── simple_test.php          # Simple test file
+│   │   ├── test_delete_simple.php   # Simple deletion test
+│   │   ├── test_endpoint.php        # Endpoint testing
+│   │   ├── test_minimal.html        # Minimal test HTML
+│   │   └── test_note_delete.php     # Note deletion test
+│   └── README.md                    # Test documentation
+├── vendor/                          # Composer dependencies (ignored in git)
 │   ├── composer/                    # Composer files
 │   ├── filp/                        # Whoops error handling
 │   ├── monolog/                     # Monolog logging
@@ -326,9 +314,17 @@ No formal testing framework is implemented; testing appears to be done through m
 ├── .htaccess                        # Apache configuration
 ├── composer.json                    # Composer dependencies
 ├── composer.lock                    # Dependency lock file
-├── project_context.txt              # Project context documentation
 └── README.md                        # Project documentation
 ```
+
+### Ignored Files and Directories (per .gitignore)
+The following are excluded from version control:
+- `.vscode/` (except specific settings files)
+- `.conf/`, `.pki/`, `.trash/`, `.zencoder/` (dot folders)
+- `.bash*`, `.cloud*` (dot files)
+- `cwp_stats/`, `backupcwp/`, `tmp/`, `ssl/`, `ftp/`, `Archive/` (system folders)
+- `error.log`, `php_errors.log`, `request.log`, `request_2.log` (log files)
+- `conf.json`, `passwd` (configuration files)
 
 ## File Naming Conventions
 
