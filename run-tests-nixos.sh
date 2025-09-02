@@ -27,8 +27,12 @@ check_playwright() {
         echo -e "${GREEN}✅ Playwright found in PATH${NC}"
         playwright --version
         return 0
+    elif command -v npx &> /dev/null; then
+        echo -e "${GREEN}✅ Playwright found via npx${NC}"
+        npx playwright --version
+        return 0
     else
-        echo -e "${RED}❌ Playwright not found in PATH${NC}"
+        echo -e "${RED}❌ Playwright not found in PATH or via npx${NC}"
         return 1
     fi
 }
@@ -47,9 +51,12 @@ run_tests() {
     echo -e "${BLUE}📋 Test configuration: $config_file${NC}"
     echo -e "${BLUE}📋 Test arguments: $test_args${NC}"
     
-    if check_playwright; then
+    if command -v playwright &> /dev/null; then
         echo -e "${GREEN}🚀 Running tests with system Playwright...${NC}"
         playwright test --config="$config_file" $test_args
+    elif command -v npx &> /dev/null; then
+        echo -e "${GREEN}🚀 Running tests with npx Playwright...${NC}"
+        npx playwright test --config="$config_file" $test_args
     else
         echo -e "${YELLOW}🚀 Running tests with nix-shell...${NC}"
         run_with_nix_shell $test_args
@@ -74,15 +81,20 @@ case "${1:-test}" in
         run_tests --debug "${@:2}"
         ;;
     "report")
-        if check_playwright; then
+        if command -v playwright &> /dev/null; then
             playwright show-report
+        elif command -v npx &> /dev/null; then
+            npx playwright show-report
         else
             nix-shell -p playwright-driver playwright-test --run "playwright show-report"
         fi
         ;;
     "install")
-        if check_playwright; then
+        if command -v playwright &> /dev/null; then
             playwright install
+        elif command -v npx &> /dev/null; then
+            echo -e "${GREEN}🚀 Installing browsers with npx Playwright...${NC}"
+            npx playwright install
         else
             nix-shell -p playwright-driver playwright-test --run "playwright install"
         fi

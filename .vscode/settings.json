@@ -11,5 +11,6 @@
     "PLAYWRIGHT_BROWSERS_PATH": "${workspaceFolder}/node_modules/.cache/ms-playwright"
   },
   "testing.automaticallyOpenPeekView": "never",
-  "testing.openTesting": "neverOpen"
+  "testing.openTesting": "neverOpen",
+  "testing.automaticallyOpenTestResults": "neverOpen"
 }

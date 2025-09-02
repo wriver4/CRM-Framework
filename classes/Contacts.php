@@ -257,11 +257,11 @@ class Contacts extends Database
      */
     public function get_contacts_by_lead_id($leadId)
     {
-        $sql = "SELECT c.*, lc.is_primary, lc.contact_role 
+        $sql = "SELECT c.*, lc.relationship_type, lc.status 
                 FROM contacts c
-                INNER JOIN lead_contacts lc ON c.id = lc.contact_id
-                WHERE lc.lead_id = :lead_id
-                ORDER BY lc.is_primary DESC, c.id ASC";
+                INNER JOIN leads_contacts lc ON c.id = lc.contact_id
+                WHERE lc.lead_id = :lead_id AND lc.status = 1
+                ORDER BY lc.relationship_type = 'primary' DESC, c.id ASC";
         
         $stmt = $this->dbcrm()->prepare($sql);
         $stmt->bindValue(':lead_id', $leadId, PDO::PARAM_INT);
@@ -305,16 +305,17 @@ class Contacts extends Database
             $this->unset_primary_contacts_for_lead($leadId);
         }
         
-        $sql = "INSERT INTO lead_contacts (lead_id, contact_id, is_primary, contact_role)
-                VALUES (:lead_id, :contact_id, :is_primary, :contact_role)
+        $relationship_type = $isPrimary ? 'primary' : $role;
+        
+        $sql = "INSERT INTO leads_contacts (lead_id, contact_id, relationship_type, status)
+                VALUES (:lead_id, :contact_id, :relationship_type, 1)
                 ON DUPLICATE KEY UPDATE 
-                is_primary = :is_primary, contact_role = :contact_role";
+                relationship_type = :relationship_type, status = 1";
         
         $stmt = $this->dbcrm()->prepare($sql);
         $stmt->bindValue(':lead_id', $leadId, PDO::PARAM_INT);
         $stmt->bindValue(':contact_id', $contactId, PDO::PARAM_INT);
-        $stmt->bindValue(':is_primary', $isPrimary, PDO::PARAM_BOOL);
-        $stmt->bindValue(':contact_role', $role, PDO::PARAM_STR);
+        $stmt->bindValue(':relationship_type', $relationship_type, PDO::PARAM_STR);
         
         return $stmt->execute();
     }
@@ -326,7 +327,7 @@ class Contacts extends Database
      */
     private function unset_primary_contacts_for_lead($leadId)
     {
-        $sql = "UPDATE lead_contacts SET is_primary = 0 WHERE lead_id = :lead_id";
+        $sql = "UPDATE leads_contacts SET relationship_type = 'secondary' WHERE lead_id = :lead_id AND relationship_type = 'primary'";
         $stmt = $this->dbcrm()->prepare($sql);
         $stmt->bindValue(':lead_id', $leadId, PDO::PARAM_INT);
         

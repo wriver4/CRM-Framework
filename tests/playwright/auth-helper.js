@@ -1,6 +1,8 @@
 // Authentication helper for CRM tests
 // This file contains utilities for handling login/logout in tests
 
+const { DEFAULT_TEST_USER } = require('./test-credentials');
+
 /**
  * Attempt to login to the CRM system
  * @param {import('@playwright/test').Page} page 
@@ -8,7 +10,7 @@
  * @param {string} password 
  * @returns {Promise<boolean>} true if login successful
  */
-async function login (page, username = 'testuser', password = 'testpass') {
+async function login (page, username = DEFAULT_TEST_USER.username, password = DEFAULT_TEST_USER.password) {
   try {
     await page.goto('/login.php');
     await page.waitForLoadState('networkidle');

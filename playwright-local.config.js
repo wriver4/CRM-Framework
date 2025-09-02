@@ -24,7 +24,7 @@ module.exports = defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL - Replace with your actual remote CRM URL */
-    baseURL: 'https://your-crm-domain.com', // Update this with your actual domain
+    baseURL: 'https://democrm.waveguardco.net', // Updated with actual CRM domain
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',

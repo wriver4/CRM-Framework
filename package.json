@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/wriver4/CRM-Framework/issues"
   },
-  "homepage": "https://github.com/wriver4/CRM-Framework#readme"
+  "homepage": "https://github.com/wriver4/CRM-Framework#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
 }

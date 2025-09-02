@@ -530,7 +530,7 @@ class Leads extends Database
             $leadId = $this->dbcrm()->lastInsertId();
 
             // 5. If using many-to-many relationship, link contact to lead
-            if ($this->table_exists('lead_contacts')) {
+            if ($this->table_exists('leads_contacts')) {
                 $this->contacts->link_contact_to_lead($leadId, $contactId, true, 'primary');
             }
 

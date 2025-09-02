@@ -5,12 +5,22 @@
             "MarkWeisser\\Waveguard\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/phpunit/"
+        }
+    },
     "require-dev": {
         "filp/whoops": "^2.18",
-        "monolog/monolog": "^3.9"
+        "monolog/monolog": "^3.9",
+        "phpunit/phpunit": "^10.5"
     },
     "require": {
         "monolog/monolog": "^3.9",
         "filp/whoops": "^2.18"
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage"
     }
 }

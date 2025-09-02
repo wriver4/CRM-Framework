@@ -8,6 +8,80 @@ alwaysApply: true
 ## Summary
 A PHP-based CRM (Customer Relationship Management) framework providing functionality for managing leads, contacts, users, and sales pipelines. The application follows a traditional PHP web application structure with database connectivity, user management, and table display functionality. The application is multilingual with language files stored in arrays in the admin/languages folder, and helper classes to support iternationalization. The application also includes a reporting module that generates various types of reports based on different criteria. It includes features like CRUD operations, role-based access control, and audit trails. It uses Boostrap 5 and Bootstrap Icons for frontend design as well as Font awesome for icons. There are other javascript tools used such validator.js and  jquery and datatable.js.
 
+## Server & Access Configuration
+
+### SSH Configuration
+This project is hosted on a remote server accessible via SSH with certificate-based authentication.
+
+**SSH Config Entry** (in `~/.ssh/config`):
+```
+Host wswg
+    HostName 159.203.116.150
+    Port 222
+    User root
+    IdentityFile ~/.ssh/wswg_key
+    IdentitiesOnly yes
+```
+
+**SSH Key Setup:**
+```bash
+# Generate SSH key pair (if not already done)
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/wswg_key -C "your-email@example.com"
+
+# Copy public key to server (replace with your actual public key)
+# Public key content should be added to server's ~/.ssh/authorized_keys
+cat ~/.ssh/wswg_key.pub
+```
+
+**Public Key for Server Setup:**
+```
+# Copy this public key to the server's ~/.ssh/authorized_keys file
+# Replace with your actual public key content:
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtBZ5F327lNczQ76KxK1ibJ8wl/cMh1R8DvZh/uB3LP mark@king
+```
+
+**Access Commands:**
+```bash
+# SSH to server (no password required with key)
+ssh wswg
+
+# Copy files from server
+scp wswg:/path/to/file ./local/path
+
+# Copy files to server  
+scp ./local/file wswg:/path/to/destination
+
+# Run commands on server
+ssh wswg "command to run"
+```
+
+**Troubleshooting SSH:**
+```bash
+# Test SSH connection
+ssh -v wswg
+
+# Check key permissions (should be 600)
+chmod 600 ~/.ssh/wswg_key
+chmod 644 ~/.ssh/wswg_key.pub
+
+# Add key to SSH agent
+ssh-add ~/.ssh/wswg_key
+```
+
+### SSL Certificates
+The project uses SSL certificates located in the `ssl/` directory:
+- `ssl/autossl/` - Auto SSL certificates
+- `ssl/commercial/` - Commercial SSL certificates
+
+**Live URL:** https://democrm.waveguardco.net
+
+### Multi-Project Server Notes
+This server hosts multiple projects. When working with this repository:
+- Always use absolute paths when referencing files
+- Be aware of shared resources and dependencies
+- Check ownership/permissions if encountering access issues
+- Use the SSH alias `wswg` for consistent access
+
 ## Structure
 - **classes/**: Core framework classes for database, security, and business logic
 - **config/**: Configuration files for system settings
@@ -38,14 +112,164 @@ A PHP-based CRM (Customer Relationship Management) framework providing functiona
 **Database Name**: democrm_democrm
 **Character Set**: utf8mb4
 
+### Database Class Architecture
+
+The `Database` class differs from standard database implementations in several key ways:
+
+**Unique Characteristics:**
+- **Singleton Pattern with Static Connection**: Uses a static `$DBCRM` variable to maintain a single database connection across all instances
+- **Embedded Configuration**: Database credentials are hardcoded in the constructor rather than using external config files
+- **Direct PDO Access**: The `dbcrm()` method returns the PDO instance directly for use by extending classes
+- **Inheritance-Based**: All model classes extend `Database` to inherit the connection method
+
+**Connection Details:**
+```php
+// Database credentials (embedded in Database.php)
+$this->crm_host = 'localhost';
+$this->crm_database = 'democrm_democrm';
+$this->crm_username = 'democrm_democrm';
+$this->crm_password = 'b3J2sy5T4JNm60';
+```
+
+**PDO Configuration:**
+- **Error Mode**: `PDO::ERRMODE_EXCEPTION` - Throws exceptions on errors
+- **Fetch Mode**: `PDO::FETCH_ASSOC` - Returns associative arrays by default
+- **Prepared Statements**: `PDO::ATTR_EMULATE_PREPARES => false` - Uses native prepared statements
+
+**Usage Pattern:**
+```php
+class ExampleModel extends Database {
+    public function getData() {
+        $pdo = $this->dbcrm(); // Get PDO instance
+        $stmt = $pdo->prepare("SELECT * FROM table");
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+}
+```
+
 ### Database Constraints & Limitations
 - **No information_schema queries**: Due to root@localhost permission issues, avoid using `information_schema` tables in SQL scripts
 - **Use alternative approaches**: Use `SHOW CREATE TABLE`, `SHOW TABLES`, `DESCRIBE table_name` instead
 - **Foreign key management**: Use `SHOW CREATE TABLE` to view constraints before modification
+- **Single Database**: The system is designed for a single database connection only
+
+## Multilingual System
+
+The application features a comprehensive multilingual system supporting multiple languages with centralized translation management.
+
+### Language Architecture
+
+**Language Files Location**: `public_html/admin/languages/`
+
+**Supported Languages**:
+- **English** (`en.php`) - Primary language
+- **Spanish** (`es.php`, `_es_complete.php`) - Complete Spanish translations
+- **Login-specific translations** (`login/en.php`, `login/es.php`) - Specialized login translations
+
+**Language File Structure**:
+```php
+<?php
+$lang = [
+    // Navbar translations
+    'navbar_tooltip_title' => "Home",
+    'navbar_contacts' => "Contacts",
+    'navbar_leads_new' => "New Lead Entry",
+    
+    // Form elements
+    'full_name' => 'Full Name',
+    'username' => 'Username',
+    'password' => 'Password',
+    
+    // Role translations
+    'role_id_1' => 'Administrator',
+    'role_id_2' => 'Manager',
+    
+    // System states
+    'state_id_1' => 'Active',
+    'state_id_2' => 'Inactive',
+    
+    // Lead-specific translations
+    'lead_service_wildfire_spray' => 'Exterior Wildfire Spray System',
+    'lead_structure_rambler' => 'Rambler - One Story',
+    
+    // Geographic translations
+    'US-CA' => 'California',
+    'US-TX' => 'Texas',
+];
+```
+
+### Helpers Class - Multilingual Support
+
+The `Helpers` class (`classes/Helpers.php`) extends `Database` and provides comprehensive multilingual support utilities:
+
+**Key Multilingual Methods**:
+
+1. **Role Management**:
+   - `get_role_array($lang)` - Returns role ID to translated name mapping
+   - `select_role($lang, $rid)` - Generates HTML select options for roles
+
+2. **System States**:
+   - `get_system_state_array($lang)` - System state translations
+   - `select_system_state($lang, $state_id)` - HTML select for system states
+
+3. **Contact Types**:
+   - `get_contact_type_array($lang)` - Contact type translations
+   - `select_contact_type($lang, $contact_id)` - HTML select for contact types
+
+4. **Geographic Data**:
+   - `get_us_states_array($lang)` - US state translations
+   - `get_countries_array($lang)` - Country translations
+   - `select_us_state($lang, $state)` - HTML select for US states
+
+5. **Lead-Specific Data**:
+   - `get_lead_services_array($lang)` - Lead service translations
+   - `get_lead_structure_description_array($lang)` - Structure descriptions
+   - `get_lead_hear_about_array($lang)` - "How did you hear about us" options
+   - `get_lead_source_array($lang)` - Lead source translations
+
+**Usage Pattern**:
+```php
+// Load language file
+$lang = include 'public_html/admin/languages/en.php';
+
+// Use Helpers class for multilingual data
+$helpers = new Helpers();
+$roles = $helpers->get_role_array($lang);
+$helpers->select_role($lang, $current_role_id);
+```
+
+**Multilingual Features**:
+- **Centralized translations**: All text stored in language arrays
+- **Dynamic HTML generation**: Form elements generated with proper translations
+- **Consistent data structures**: Standardized array formats across all multilingual data
+- **Template integration**: Language variables passed to templates for rendering
+
+### Language File Organization
+
+**Main Language Files**:
+- `en.php` - Complete English translations
+- `_es_complete.php` - Complete Spanish translations
+- `_es.php` - Partial Spanish translations (legacy)
+
+**Specialized Language Files**:
+- `login/en.php` - Login-specific English translations
+- `login/es.php` - Login-specific Spanish translations
+- `login/template.php` - Translation template for new languages
+
+**Translation Categories**:
+- Navigation and UI elements
+- Form labels and placeholders
+- System states and roles
+- Geographic data (states, countries)
+- Lead management terminology
+- Error messages and notifications
+- Button labels and actions
 
 ## Core Components
 **Models**:
-- Database: Base database connection class
+- Database: Base database connection class with singleton pattern
+- Helpers: Multilingual support and utility functions
 - Users: User management
 - Leads: Lead management
 - Contacts: Contact management
@@ -55,9 +279,11 @@ A PHP-based CRM (Customer Relationship Management) framework providing functiona
 **Views**:
 - Templates system with header, footer, navigation components
 - Table display classes (ViewTable, Table)
+- Multilingual form components
 
 **Controllers**:
 - Module-specific controllers in public_html directories (users/, leads/, contacts/)
+- Language-aware form processing
 
 ## Error Handling
 **Framework**: Whoops (^2.18)
@@ -81,10 +307,137 @@ A PHP-based CRM (Customer Relationship Management) framework providing functiona
 **Path Constants**: Defined in config/system.php
 
 ## Testing
-**Testing Directory**: `tests/`
-**Lead Tests**: `tests/leads/` - Contains debugging and testing utilities for lead functionality
 
-No formal testing framework is implemented; testing is done through manual execution of test scripts and debugging utilities.
+The project includes two comprehensive testing systems: **Playwright** for end-to-end web interface testing and **PHPUnit** for unit, integration, and feature testing.
+
+### Testing Directory Structure
+
+```
+tests/
+├── bootstrap.php                    # PHPUnit bootstrap configuration
+├── README.md                        # Testing documentation
+├── check_users.php                  # User verification utility
+├── create_test_users.php            # Test user creation utility
+├── test_summary.php                 # Test results summary
+├── verify_test_login.php            # Login verification utility
+├── web_test.sh                      # Web testing shell script
+├── playwright/                      # Playwright E2E tests
+│   ├── accessibility.spec.js        # Accessibility testing
+│   ├── auth-helper.js               # Authentication helper utilities
+│   ├── authenticated-tests.spec.js  # Tests requiring authentication
+│   ├── example.spec.js              # Example test patterns
+│   ├── login.spec.js                # Login functionality tests
+│   ├── navigation.spec.js           # Navigation testing
+│   ├── remote-crm.spec.js           # Remote CRM specific tests
+│   ├── responsive.spec.js           # Responsive design tests
+│   └── test-credentials.js          # Test credential management
+├── phpunit/                         # PHPUnit structured tests
+│   ├── TestCase.php                 # Base test case class
+│   ├── Unit/                        # Unit tests
+│   │   ├── HelpersTest.php          # Helpers class unit tests
+│   │   └── SimpleTest.php           # Simple unit test examples
+│   ├── Integration/                 # Integration tests
+│   │   └── DatabaseTest.php         # Database integration tests
+│   ├── Feature/                     # Feature tests
+│   │   └── LoginTest.php            # Login feature tests
+│   └── Remote/                      # Remote server tests
+│       └── RemoteServerTest.php     # Remote server connectivity tests
+└── leads/                           # Lead-specific debugging utilities
+    ├── debug_delete_note.php        # Note deletion debugging
+    ├── delete_note_fixed.php        # Fixed note deletion implementation
+    ├── minimal_delete.php           # Minimal deletion test
+    ├── simple_test.php              # Simple lead test
+    ├── test_classes_only.php        # Class-only testing
+    ├── test_delete_simple.php       # Simple deletion test
+    ├── test_endpoint.php            # Endpoint testing
+    ├── test_minimal.html            # Minimal HTML test
+    ├── test_note_delete.php         # Note deletion test
+    └── test_note_delete_fixed.php   # Fixed note deletion test
+```
+
+### 1. Playwright Testing System
+
+**Purpose**: End-to-end web interface testing across multiple browsers and devices.
+
+**Configuration Files:**
+- `playwright.config.js` - Main configuration for remote testing
+- `playwright-local.config.js` - Local testing configuration (if exists)
+- `run-tests-nixos.sh` - Test runner script for NixOS
+
+**Key Features:**
+- **Multi-browser testing**: Chrome, Firefox, Safari, Mobile Chrome, Mobile Safari
+- **Remote testing**: Configured to test against `https://democrm.waveguardco.net`
+- **Authentication helpers**: Reusable login utilities in `auth-helper.js`
+- **Responsive testing**: Mobile and desktop viewport testing
+- **Accessibility testing**: WCAG compliance verification
+- **Visual regression**: Screenshot and video capture on failures
+
+**Running Playwright Tests:**
+```bash
+# On server (NixOS)
+./run-tests-nixos.sh test
+
+# Local development
+npm install @playwright/test
+npx playwright test
+
+# Copy configuration from server
+scp wswg:/home/democrm/playwright-local.config.js ./playwright.config.js
+scp wswg:/home/democrm/tests/playwright/*.js ./tests/
+```
+
+### 2. PHPUnit Testing System
+
+**Purpose**: Unit, integration, and feature testing of PHP classes and functionality.
+
+**Configuration Files:**
+- `phpunit.xml` - PHPUnit configuration with test suites
+- `tests/bootstrap.php` - Bootstrap file with autoloading and environment setup
+
+**Test Suites:**
+- **Unit Tests** (`tests/phpunit/Unit/`): Test individual classes and methods
+- **Integration Tests** (`tests/phpunit/Integration/`): Test component interactions
+- **Feature Tests** (`tests/phpunit/Feature/`): Test complete user workflows
+- **Remote Tests** (`tests/phpunit/Remote/`): Test remote server connectivity
+
+**Key Features:**
+- **Environment isolation**: Testing environment variables
+- **Custom TestCase base class**: Shared testing utilities
+- **Database testing**: Integration with live database
+- **Remote server testing**: Connectivity and functionality verification
+- **Multilingual testing**: Helper class internationalization testing
+
+**Running PHPUnit Tests:**
+```bash
+# Run all test suites
+./vendor/bin/phpunit
+
+# Run specific test suite
+./vendor/bin/phpunit --testsuite Unit
+./vendor/bin/phpunit --testsuite Integration
+./vendor/bin/phpunit --testsuite Feature
+
+# Run specific test file
+./vendor/bin/phpunit tests/phpunit/Unit/HelpersTest.php
+```
+
+### 3. Manual Testing Utilities
+
+**Lead Testing Utilities** (`tests/leads/`):
+- Debugging utilities for lead functionality
+- Note deletion testing and fixes
+- Endpoint testing utilities
+- Minimal test implementations for troubleshooting
+
+**User Management Utilities**:
+- `create_test_users.php` - Creates test users for testing
+- `check_users.php` - Verifies user accounts
+- `verify_test_login.php` - Tests login functionality
+
+**Test Environment Setup:**
+- Environment variables configured in `phpunit.xml`
+- Bootstrap file handles autoloading and test environment setup
+- Base URL configured for remote testing: `https://democrm.waveguardco.net`
 
 ## Directory Structure
 
@@ -356,10 +709,44 @@ The following are excluded from version control:
 - Follow consistent CRUD operation patterns
 - **Never use closing PHP tags (`?>`)** at the end of PHP-only files - this is bad practice and can cause whitespace issues
 
+### File Operations
+- **File Ownership**: 
+  - **Local Machine**: Files should be owned by `mark:users` user and group
+  - **Remote Server**: Files should be owned by `democrm:democrm` user and group
+- After creating files:
+  - Local: Run `chown mark:users filename` if needed
+  - Remote: Run `chown democrm:democrm filename` if needed
+- Use `chmod 644` for regular files and `chmod 755` for executable files
+- Ensure proper permissions for web server access
+
 ## Key Architectural Patterns
 
-- **MVC Structure**: Controllers in `public_html/`, Models in `classes/`, Views in `templates/`
-- **Entity Organization**: Each entity (leads, contacts, users) has its own directory
-- **CRUD Operations**: Consistent `list.php`, `new.php`, `edit.php`, `view.php`, `delete.php` pattern
-- **Security Layer**: Centralized in `classes/Security.php` and `classes/Nonce.php`
-- **Database Layer**: All models extend `classes/Database.php`
+**Note**: This is **NOT** a traditional MVC framework. It follows a more direct, procedural approach with object-oriented components.
+
+### Architecture Overview
+- **Direct File Structure**: Controllers are individual PHP files in `public_html/` directories
+- **Class-Based Models**: Business logic classes in `classes/` directory extending `Database`
+- **Template System**: Reusable HTML components in `templates/` directory
+- **Multilingual Support**: Centralized language files with `Helpers` class integration
+
+### Core Patterns
+- **Entity Organization**: Each entity (leads, contacts, users) has its own directory with consistent file naming
+- **CRUD Operations**: Standardized `list.php`, `new.php`, `edit.php`, `view.php`, `delete.php` pattern
+- **Database Inheritance**: All models extend `classes/Database.php` for connection access
+- **Security Layer**: Centralized authentication in `classes/Security.php` and CSRF protection via `classes/Nonce.php`
+- **Multilingual Integration**: `Helpers` class provides translation-aware form generation and data handling
+
+### File Processing Flow
+1. **Request Routing**: Direct file access (e.g., `/leads/list.php`)
+2. **Authentication**: Security checks via `Security` class
+3. **Language Loading**: Include appropriate language file from `admin/languages/`
+4. **Data Processing**: Use model classes extending `Database`
+5. **Template Rendering**: Include template components with language variables
+6. **Response**: Direct HTML output with multilingual content
+
+### Unique Characteristics
+- **No Framework Dependencies**: Pure PHP with minimal external libraries
+- **Direct Database Access**: PDO connections through inheritance rather than dependency injection
+- **Template Inclusion**: PHP `include` statements rather than template engines
+- **Language Arrays**: Simple PHP arrays for translations rather than complex i18n systems
+- **Static Connections**: Singleton database pattern for connection reuse

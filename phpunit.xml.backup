@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.0/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         cacheDirectory=".phpunit.cache"
+         testdox="true">
+  <testsuites>
+    <testsuite name="Unit">
+      <directory>tests/phpunit/Unit</directory>
+    </testsuite>
+    <testsuite name="Integration">
+      <directory>tests/phpunit/Integration</directory>
+    </testsuite>
+    <testsuite name="Feature">
+      <directory>tests/phpunit/Feature</directory>
+    </testsuite>
+  </testsuites>
+  <source>
+    <include>
+      <directory>classes</directory>
+      <directory>public_html</directory>
+    </include>
+    <exclude>
+      <directory>vendor</directory>
+      <directory>tests</directory>
+      <directory>logs</directory>
+      <directory>public_html/assets</directory>
+      <directory>public_html/templates</directory>
+    </exclude>
+  </source>
+  <coverage>
+    <report>
+      <html outputDirectory="coverage-html"/>
+      <text outputFile="coverage.txt"/>
+      <clover outputFile="coverage.xml"/>
+    </report>
+  </coverage>
+  <logging>
+    <junit outputFile="phpunit-report.xml"/>
+  </logging>
+  <php>
+    <!-- Environment variables for testing -->
+    <env name="APP_ENV" value="testing"/>
+    <env name="DB_HOST" value="localhost"/>
+    <env name="DB_NAME" value="democrm_democrm"/>
+    <env name="BASE_URL" value="https://democrm.waveguardco.net"/>
+    <!-- Disable error reporting for cleaner test output -->
+    <ini name="error_reporting" value="E_ALL"/>
+    <ini name="display_errors" value="1"/>
+    <ini name="display_startup_errors" value="1"/>
+    <!-- Memory limit for tests -->
+    <ini name="memory_limit" value="512M"/>
+  </php>
+</phpunit>
