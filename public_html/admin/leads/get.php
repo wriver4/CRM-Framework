@@ -56,27 +56,8 @@ if (isset($_GET['action'])) {
 if ($dir == 'admin' && $subdir == 'leads' && $page == 'list') {
     $results = $leads->get_all_active();
     
-    // Create admin-specific leads list table - exactly like regular but only edit button
-    class AdminLeadsListTable extends LeadsList {
-        public function row_nav($value, $rid)
-        {
-            echo $this->row_nav_open;
-
-            // Only edit button - no view, no delete
-            echo $this->row_nav_button_open;
-            echo $this->row_nav_button_edit_class_enabled;
-            echo
-            $this->row_nav_button_href_edit_open
-              . urlencode($value)
-              . $this->row_nav_button_href_close
-              . $this->row_nav_button_edit_icon
-              . $this->row_nav_button_close;
-
-            echo $this->row_nav_close;
-        }
-    }
-    
-    $list = new AdminLeadsListTable($results, $lang);
+    // Create admin-specific leads list - only shows edit button
+    $list = new AdminLeadsList($results, $lang);
     $list->create_table();
 }
 

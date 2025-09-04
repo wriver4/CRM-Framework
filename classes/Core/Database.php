@@ -62,6 +62,8 @@
 
 class Database
 {
+    protected $sqlLogger;
+
     public function __construct()
     {
         // server database connection information
@@ -76,6 +78,9 @@ class Database
             \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
             \PDO::ATTR_EMULATE_PREPARES   => false,
         ];
+        
+        // Initialize SQL logger
+        $this->sqlLogger = new SqlErrorLogger();
     }
     public function dbcrm()
     {
@@ -93,5 +98,118 @@ class Database
             $DBCRM = $pdo;
         }
         return $DBCRM;
+    }
+
+    /**
+     * Execute prepared statement with comprehensive logging
+     */
+    protected function executeWithLogging($stmt, $sql, $parameters = [], $context = [])
+    {
+        $startTime = microtime(true);
+        
+        try {
+            // Log parameter mismatch if detected
+            $this->validateParameters($sql, $parameters);
+            
+            $result = $stmt->execute();
+            $executionTime = round((microtime(true) - $startTime) * 1000, 2);
+            
+            // Log successful execution (only if debug mode is enabled)
+            $this->sqlLogger->logSqlExecution($sql, $parameters, $executionTime, true);
+            
+            return $result;
+            
+        } catch (PDOException $e) {
+            $executionTime = round((microtime(true) - $startTime) * 1000, 2);
+            
+            // Log the SQL error with full context
+            $errorContext = array_merge($context, [
+                'sql' => $sql,
+                'parameters' => $parameters,
+                'execution_time_ms' => $executionTime,
+                'pdo_error_code' => $e->getCode(),
+                'pdo_error_info' => $e->errorInfo ?? null
+            ]);
+            
+            $this->sqlLogger->logSqlError($e->getMessage(), $errorContext);
+            
+            // Log failed execution
+            $this->sqlLogger->logSqlExecution($sql, $parameters, $executionTime, false);
+            
+            // Re-throw the exception
+            throw $e;
+        }
+    }
+
+    /**
+     * Prepare and execute SQL with logging
+     */
+    protected function prepareAndExecute($sql, $parameters = [], $context = [])
+    {
+        try {
+            $stmt = $this->dbcrm()->prepare($sql);
+            
+            // Bind parameters
+            foreach ($parameters as $key => $value) {
+                $paramName = is_numeric($key) ? $key + 1 : $key;
+                if (!is_numeric($key) && !str_starts_with($key, ':')) {
+                    $paramName = ':' . $key;
+                }
+                $stmt->bindValue($paramName, $value);
+            }
+            
+            return $this->executeWithLogging($stmt, $sql, $parameters, $context);
+            
+        } catch (PDOException $e) {
+            // Additional logging for prepare failures
+            $this->sqlLogger->logSqlError("SQL Prepare failed: " . $e->getMessage(), [
+                'sql' => $sql,
+                'parameters' => $parameters,
+                'context' => $context
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * Validate SQL parameters against query
+     */
+    private function validateParameters($sql, $parameters)
+    {
+        // Extract named parameters from SQL
+        preg_match_all('/:(\w+)/', $sql, $matches);
+        $expectedParams = $matches[1] ?? [];
+        
+        if (!empty($expectedParams)) {
+            $providedKeys = [];
+            foreach (array_keys($parameters) as $key) {
+                if (is_string($key)) {
+                    $providedKeys[] = str_starts_with($key, ':') ? substr($key, 1) : $key;
+                }
+            }
+            
+            $missing = array_diff($expectedParams, $providedKeys);
+            $extra = array_diff($providedKeys, $expectedParams);
+            
+            if (!empty($missing) || !empty($extra)) {
+                $this->sqlLogger->logParameterMismatch($sql, $parameters, $expectedParams);
+            }
+        }
+    }
+
+    /**
+     * Log form submission error
+     */
+    protected function logFormError($formName, $error, $formData = [])
+    {
+        $this->sqlLogger->logFormError($formName, $error, $formData);
+    }
+
+    /**
+     * Get SQL logger instance
+     */
+    public function getSqlLogger()
+    {
+        return $this->sqlLogger;
     }
 }

@@ -60,7 +60,7 @@ try {
     
     $data['cell_phone'] = format_phone_number($_POST['cell_phone'] ?? '');
     $data['email'] = $_POST['email'] ?? '';
-    $data['ctype'] = $_POST['ctype'] ?? '';
+    $data['contact_type'] = $_POST['ctype'] ?? '';  // Map ctype form field to contact_type database column
     $data['business_name'] = $_POST['business_name'] ?? '';
     $data['project_name'] = $_POST['project_name'] ?? '';
     
@@ -144,6 +144,16 @@ try {
     }
     
 } catch (Exception $e) {
+    // Enhanced error logging with form context
+    $errorLogger = new SqlErrorLogger();
+    $errorLogger->logFormError('admin_leads_edit', $e->getMessage(), [
+        'lead_id' => $id,
+        'user_id' => $_SESSION['user_id'] ?? 'anonymous',
+        'form_data_keys' => array_keys($_POST),
+        'error_type' => get_class($e),
+        'error_code' => $e->getCode()
+    ]);
+    
     $_SESSION['error_message'] = 'Error updating lead: ' . $e->getMessage();
     header('Location: edit.php?id=' . $id);
 }

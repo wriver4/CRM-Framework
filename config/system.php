@@ -41,6 +41,14 @@ spl_autoload_register(function ($class_name) {
 // 2. Composer's autoloader for vendor packages.
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// --- DEBUG CONFIGURATION ---
+// SQL debugging - set to true to enable detailed SQL execution logging
+// WARNING: This will log all SQL queries and parameters - only enable for debugging
+define('DEBUG_SQL', false);
+
+// Enable SQL error logging (always enabled for error tracking)
+define('ENABLE_SQL_ERROR_LOGGING', true);
+
 // Determine if the connection is secure. The `HTTP_X_FORWARDED_PROTO`
 // check is important for applications behind a reverse proxy or load balancer.
 $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')

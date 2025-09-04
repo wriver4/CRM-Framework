@@ -218,37 +218,41 @@ class Leads extends Database
     }
 
     public function update_lead($id, $data) {
-        // Build full_address if not provided
-        if (empty($data['full_address'])) {
-            $street1 = trim($data['form_street_1'] ?? '');
-            $street2 = trim($data['form_street_2'] ?? '');
-            $city = trim($data['form_city'] ?? '');
-            $state = trim($data['form_state'] ?? '');
-            $postcode = trim($data['form_postcode'] ?? '');
-            $country = trim($data['form_country'] ?? '');
+        try {
+            // Build full_address if not provided
+            if (empty($data['full_address'])) {
+                $street1 = trim($data['form_street_1'] ?? '');
+                $street2 = trim($data['form_street_2'] ?? '');
+                $city = trim($data['form_city'] ?? '');
+                $state = trim($data['form_state'] ?? '');
+                $postcode = trim($data['form_postcode'] ?? '');
+                $country = trim($data['form_country'] ?? '');
 
-            $line1 = trim(implode(' ', array_filter([$street1, $street2], fn($v) => $v !== '')));
+                $line1 = trim(implode(' ', array_filter([$street1, $street2], fn($v) => $v !== '')));
 
-            $cityPart = $city;
-            if ($city !== '' && ($state !== '' || $postcode !== '')) {
-                $cityPart .= ',';
+                $cityPart = $city;
+                if ($city !== '' && ($state !== '' || $postcode !== '')) {
+                    $cityPart .= ',';
+                }
+                $statePost = trim($state . ($postcode !== '' ? ' ' . $postcode : ''));
+                $line2 = trim(implode(' ', array_filter([$cityPart, $statePost], fn($v) => $v !== '')));
+
+                $lines = [];
+                if ($line1 !== '') { $lines[] = $line1; }
+                if ($line2 !== '') { $lines[] = $line2; }
+                if ($country !== '') { $lines[] = $country; }
+
+                $data['full_address'] = implode("\n", $lines);
             }
-            $statePost = trim($state . ($postcode !== '' ? ' ' . $postcode : ''));
-            $line2 = trim(implode(' ', array_filter([$cityPart, $statePost], fn($v) => $v !== '')));
 
-            $lines = [];
-            if ($line1 !== '') { $lines[] = $line1; }
-            if ($line2 !== '') { $lines[] = $line2; }
-            if ($country !== '') { $lines[] = $country; }
-
-            $data['full_address'] = implode("\n", $lines);
-        }
-        // SQL to update a lead with new structure
+            // SQL to update a lead with new structure
         $sql = "UPDATE leads SET 
             lead_source = :lead_source, first_name = :first_name, family_name = :family_name, 
             cell_phone = :cell_phone, email = :email, contact_type = :contact_type,
-            lead_id = :lead_id, business_name = :business_name, form_street_1 = :form_street_1, form_street_2 = :form_street_2,
-            form_city = :form_city, form_state = :form_state, form_postcode = :form_postcode, form_country = :form_country, timezone = :timezone, full_address = :full_address,
+            lead_id = :lead_id, business_name = :business_name, project_name = :project_name,
+            form_street_1 = :form_street_1, form_street_2 = :form_street_2,
+            form_city = :form_city, form_state = :form_state, form_postcode = :form_postcode, 
+            form_country = :form_country, timezone = :timezone, full_address = :full_address,
             services_interested_in = :services_interested_in, structure_type = :structure_type,
             structure_description = :structure_description, structure_other = :structure_other,
             structure_additional = :structure_additional, picture_submitted_1 = :picture_submitted_1,
@@ -258,30 +262,66 @@ class Leads extends Database
             plans_upload_link = :plans_upload_link, plans_and_pics = :plans_and_pics,
             get_updates = :get_updates, hear_about = :hear_about, hear_about_other = :hear_about_other,
             stage = :stage, last_edited_by = :last_edited_by, updated_at = CURRENT_TIMESTAMP,
-            -- Keep existing business fields
-            full_name = :full_name, contact_id = :contact_id
+            full_name = :full_name
         WHERE id = :id";
         $data['id'] = $id;
         
         // Define valid parameters that exist in the SQL query
         $validParams = [
             'lead_source', 'first_name', 'family_name', 'cell_phone', 'email', 'contact_type',
-            'lead_id', 'business_name', 'form_street_1', 'form_street_2', 'form_city', 
+            'lead_id', 'business_name', 'project_name', 'form_street_1', 'form_street_2', 'form_city', 
             'form_state', 'form_postcode', 'form_country', 'timezone', 'full_address',
             'services_interested_in', 'structure_type', 'structure_description', 'structure_other',
             'structure_additional', 'picture_submitted_1', 'picture_submitted_2', 'picture_submitted_3',
             'plans_submitted_1', 'plans_submitted_2', 'plans_submitted_3', 'picture_upload_link',
             'plans_upload_link', 'plans_and_pics', 'get_updates', 'hear_about', 'hear_about_other',
-            'stage', 'last_edited_by', 'full_name', 'contact_id', 'id'
+            'stage', 'last_edited_by', 'full_name', 'id'
         ];
         
-        $stmt = $this->dbcrm()->prepare($sql);
-        foreach ($data as $key => $value) {
-            if (in_array($key, $validParams)) {
-                $stmt->bindValue(':' . $key, $value);
+            // Prepare parameters for logging
+            $logParameters = [];
+            foreach ($validParams as $param) {
+                if (isset($data[$param])) {
+                    $logParameters[$param] = $data[$param];
+                } else {
+                    // Provide default values for missing parameters
+                    switch ($param) {
+                        case 'lead_source':
+                        case 'contact_type':
+                        case 'structure_type':
+                            $logParameters[$param] = 1;
+                            break;
+                        case 'stage':
+                            $logParameters[$param] = '1';
+                            break;
+                        case 'plans_and_pics':
+                        case 'get_updates':
+                            $logParameters[$param] = 0;
+                            break;
+                        case 'form_country':
+                            $logParameters[$param] = 'US';
+                            break;
+                        default:
+                            $logParameters[$param] = null;
+                            break;
+                    }
+                }
             }
+            
+            // Use the new logging system
+            $context = [
+                'operation' => 'update_lead',
+                'lead_id' => $id,
+                'form_source' => 'admin_leads_edit'
+            ];
+            
+            return $this->prepareAndExecute($sql, $logParameters, $context);
+            
+        } catch (Exception $e) {
+            // Log the error with form context
+            $this->logFormError('admin_leads_edit', $e->getMessage(), $data);
+            throw $e;
         }
-        return $stmt->execute();
     }
 
     public function delete_lead($id) {
