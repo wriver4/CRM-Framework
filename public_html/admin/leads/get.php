@@ -57,7 +57,7 @@ if ($dir == 'admin' && $subdir == 'leads' && $page == 'list') {
     $results = $leads->get_all_active();
     
     // Create admin-specific leads list table - exactly like regular but only edit button
-    class AdminLeadsListTable extends LeadsListTable {
+    class AdminLeadsListTable extends LeadsList {
         public function row_nav($value, $rid)
         {
             echo $this->row_nav_open;
@@ -106,6 +106,7 @@ if ($dir == 'admin/leads' && $page == 'edit') {
     
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
+        $internal_id = $result["id"]; // Internal database ID for notes system
         
         // Basic lead info
         $lead_source = $result["lead_source"] ?? 1;
@@ -173,7 +174,7 @@ if ($dir == 'admin/leads' && $page == 'edit') {
         $hear_about_other = $result["hear_about_other"] ?? '';
         
         // Get notes from leads_notes bridge table
-        $lead_notes = $leads->get_lead_notes($id);
+        $lead_notes = $leads->get_lead_notes($internal_id);
         
         // Get navigation info (previous/next leads)
         $navigation = $leads->get_lead_navigation($id);

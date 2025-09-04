@@ -3,7 +3,7 @@ require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 $not->loggedin();
 $contacts = new Contacts();
 if ($dir == 'contacts' && $page == 'list') {
-  $results = $contacts->get_active_list();
+  $results = $contacts->get_list();
   $list = new ContactsList($results, $lang);
   $list->create_table();
 }
@@ -16,7 +16,7 @@ if ($dir == 'contacts' && $page == 'view') {
 if ($dir == 'contacts' && $page == 'edit') {
   $id = trim($_GET["id"]);
   $result = $contacts->get_by_id($id);
-  $ctype = (int) $result['ctype'];
+  $contact_type = (int) $result['contact_type'];
   $first_name = $result['first_name'];
   $family_name = $result['family_name'];
   $cell_phone = $result['cell_phone'];

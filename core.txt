@@ -15,38 +15,48 @@ config/ftpconfig.php
 config/helpers.php
 
 ## Core Classes Directory
-classes/ActionTable.php
-classes/Audit.php
-classes/AuditList.php
-classes/Communications.php
-classes/Contacts.php
-classes/ContactsList.php
-classes/ContactsEnhanced.php
-classes/Database.php
-classes/EditDeleteTable.php
-classes/FormComponents.php
-classes/Helpers.php
-classes/InternalErrors.php
-classes/Leads.php
-classes/LeadsEnhanced.php
-classes/LeadsListTable.php
-classes/Logit.php
-classes/Nonce.php
-classes/Notes.php
-classes/Permissions.php
-classes/PermissionsList.php
-classes/PhpErrorLog.php
-classes/Roles.php
-classes/RolesList.php
-classes/RolesPermissions.php
-classes/RolesPermissionsList.php
-classes/Sales.php
-classes/Security.php
-classes/Sessions.php
-classes/Table.php
-classes/Users.php
-classes/UsersList.php
-classes/ViewTable.php
+
+### Core System Classes
+classes/Core/Database.php
+classes/Core/Security.php
+classes/Core/Sessions.php
+classes/Core/Nonce.php
+
+### Base Table Classes (Foundation)
+classes/Core/Table.php
+classes/Core/ViewTable.php
+classes/Core/EditDeleteTable.php
+classes/Core/ActionTable.php
+
+### Model Classes (Business Logic)
+classes/Models/Users.php
+classes/Models/Leads.php
+classes/Models/Contacts.php
+classes/Models/Notes.php
+classes/Models/Roles.php
+classes/Models/Permissions.php
+classes/Models/RolesPermissions.php
+classes/Models/Sales.php
+classes/Models/Communications.php
+
+### View Classes (Table Implementations)
+classes/Views/UsersList.php
+classes/Views/LeadsList.php
+classes/Views/ContactsList.php
+classes/Views/RolesList.php
+classes/Views/PermissionsList.php
+classes/Views/RolesPermissionsList.php
+
+### Utility Classes
+classes/Utilities/Helpers.php
+classes/Utilities/FormComponents.php
+
+### Logging Classes
+classes/Logging/Audit.php
+classes/Logging/AuditList.php
+classes/Logging/InternalErrors.php
+classes/Logging/Logit.php
+classes/Logging/PhpErrorLog.php
 
 ## Public HTML - Main Entry Points
 public_html/.htaccess

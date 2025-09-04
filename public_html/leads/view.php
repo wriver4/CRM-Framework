@@ -74,7 +74,7 @@ require __DIR__ . '/../templates/section_header.php';
             <p><strong><?= $lang['lead_contact_type'] ?? 'Contact Type' ?>:</strong>
               <?php 
                             $contact_types = $leads->get_lead_contact_type_array();
-                            echo $contact_types[$ctype] ?? $ctype ?? '-';
+                            echo $contact_types[$contact_type] ?? $contact_type ?? '-';
                             ?>
             </p>
             <?php if (!empty($picture_upload_link) || !empty($plans_upload_link)): ?>

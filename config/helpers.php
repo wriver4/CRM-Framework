@@ -6,58 +6,93 @@
  */
 
 /**
- * 	available options:
- *   geoplugin_request	"100.7.14.189"
- *   geoplugin_status	200
- *   geoplugin_delay	"1ms"
- *   geoplugin_credit	"Some of the returned data includes GeoLite data created by MaxMind, available from <a href='http://www.maxmind.com'>http://www.maxmind.com</a>."
- *   geoplugin_city	"Richmond"
- *   geoplugin_region	"Virginia"
- *   geoplugin_regionCode	"VA"
- *   geoplugin_regionName	"Virginia"
- *   geoplugin_areaCode	""
- *   geoplugin_dmaCode	"556"
- *   geoplugin_countryCode	"US"
- *   geoplugin_countryName	"United States"
- *   geoplugin_inEU	0
- *   geoplugin_euVATrate	false
- *   geoplugin_continentCode	"NA"
- *   geoplugin_continentName	"North America"
- *   geoplugin_latitude	"37.4365"
- *   geoplugin_longitude	"-77.4807"
- *   geoplugin_locationAccuracyRadius	"5"
- *   geoplugin_timezone	"America/New_York"
- *   geoplugin_currencyCode	"USD"
- *   geoplugin_currencySymbol	"$"
- *   geoplugin_currencySymbol_UTF8	"$"
- *   geoplugin_currencyConverter	0
+ * IP Geolocation Helper Functions
+ * 
+ * Uses free geolocation services to determine country from IP address.
+ * Services used:
+ * - ip-api.com (free tier: 1000 requests/month)
+ * - freeiplookupapi.com (free service)
  */
 
 function get_client_ip()
 {
-    $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? filter_var(($_SERVER['HTTP_CLIENT_IP']), FILTER_VALIDATE_IP) : '';
-    $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP) : '';
-    $ip = isset($_SERVER['REMOTE_ADDR']) ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) : '';
-    return $ip;
+    // Check for IP from shared internet
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = filter_var($_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP);
+        if ($ip !== false) return $ip;
+    }
+    
+    // Check for IP passed from proxy
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        // Can contain multiple IPs, get the first one
+        $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        $ip = filter_var(trim($ips[0]), FILTER_VALIDATE_IP);
+        if ($ip !== false) return $ip;
+    }
+    
+    // Check for IP from remote address
+    if (!empty($_SERVER['REMOTE_ADDR'])) {
+        $ip = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
+        if ($ip !== false) return $ip;
+    }
+    
+    return '';
 }
 function country_by_ip()
 {
     $ip = get_client_ip();
-    if ($ip != '') {
-        $source = json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $ip));
-
-        if ($source && $source->geoplugin_countryName != null) {
-            $result = [
-                'countryCode' => $source->geoplugin_countryCode
-            ];
-            $result = $result['countryCode'];
-        } else {
-            $result = 'Unknown';
-        }
-    } else {
-        $result = 'Unknown';
+    if ($ip == '' || $ip == '127.0.0.1' || $ip == '::1') {
+        return 'Unknown';
     }
-    return $result;
+    
+    // List of free geolocation services to try (in order of preference)
+    $services = [
+        [
+            'url' => "http://ip-api.com/json/" . $ip . "?fields=countryCode",
+            'parser' => function($data) {
+                $source = json_decode($data);
+                return ($source && isset($source->countryCode) && $source->countryCode != null) 
+                    ? $source->countryCode : null;
+            }
+        ],
+        [
+            'url' => "https://freeiplookupapi.com/json/" . $ip,
+            'parser' => function($data) {
+                $source = json_decode($data);
+                return ($source && isset($source->countryCode) && $source->countryCode != null) 
+                    ? $source->countryCode : null;
+            }
+        ]
+    ];
+    
+    // Create a context with timeout and user agent
+    $context = stream_context_create([
+        'http' => [
+            'timeout' => 3, // 3 second timeout per service
+            'user_agent' => 'Mozilla/5.0 (compatible; CRM-App/1.0)',
+            'ignore_errors' => true
+        ]
+    ]);
+    
+    // Try each service in order
+    foreach ($services as $service) {
+        try {
+            $response = @file_get_contents($service['url'], false, $context);
+            
+            if ($response !== false) {
+                $countryCode = $service['parser']($response);
+                if ($countryCode !== null) {
+                    return $countryCode;
+                }
+            }
+        } catch (Exception $e) {
+            // Continue to next service
+            continue;
+        }
+    }
+    
+    // If all services fail, return 'Unknown'
+    return 'Unknown';
 }
 
 

@@ -74,7 +74,7 @@ try {
         'cell_phone' => format_phone_number($_POST['cell_phone'] ?? ''),
         'email' => filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL),
         'business_name' => sanitize_input($_POST['business_name'] ?? ''),
-        'ctype' => (int)($_POST['ctype'] ?? 1),
+        'contact_type' => (int)($_POST['contact_type'] ?? 1),
         
         // Address information
         'form_street_1' => sanitize_input($_POST['form_street_1'] ?? ''),
@@ -178,6 +178,53 @@ try {
                 $result['lead_id'],                           // location
                 "Lead created with contact integration (Contact ID: {$result['contact_id']})" // data
             );
+            
+            // phpList Integration - Add subscriber if they opted in for updates
+            if ($data['get_updates'] == 1 && !empty($data['email'])) {
+                try {
+                    $phpListSubscribers = new PhpListSubscribers();
+                    
+                    // Check if phpList sync is enabled
+                    if ($phpListSubscribers->isSyncEnabled()) {
+                        // Prepare lead data for phpList integration
+                        $leadDataForPhpList = array_merge($data, [
+                            'contact_id' => $result['contact_id']
+                        ]);
+                        
+                        // Create phpList subscriber record
+                        $subscriberId = $phpListSubscribers->createSubscriberFromLead($result['lead_id'], $leadDataForPhpList);
+                        
+                        if ($subscriberId) {
+                            // Log successful phpList subscriber creation
+                            $audit->log(
+                                $_SESSION['user_id'] ?? 1,
+                                'phplist_subscriber_created',
+                                "phplist_subscriber_{$subscriberId}",
+                                $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown',
+                                $_SERVER['REMOTE_ADDR'] ?? 'Unknown',
+                                $result['lead_id'],
+                                "phpList subscriber created for lead {$result['lead_id']} (Subscriber ID: {$subscriberId})"
+                            );
+                        } else {
+                            // Log phpList subscriber creation failure
+                            error_log("Failed to create phpList subscriber for lead {$result['lead_id']}");
+                        }
+                    }
+                } catch (Exception $e) {
+                    // Log phpList integration error but don't fail the lead creation
+                    error_log("phpList integration error for lead {$result['lead_id']}: " . $e->getMessage());
+                    
+                    $audit->log(
+                        $_SESSION['user_id'] ?? 1,
+                        'phplist_integration_error',
+                        "lead_{$result['lead_id']}",
+                        $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown',
+                        $_SERVER['REMOTE_ADDR'] ?? 'Unknown',
+                        $result['lead_id'],
+                        "phpList integration failed: " . $e->getMessage()
+                    );
+                }
+            }
             
             // Clear any preserved form data
             unset($_SESSION['form_data']);

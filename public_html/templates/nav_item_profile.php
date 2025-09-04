@@ -5,7 +5,7 @@
      aria-expanded="false"
      tabindex="-1">
     <i class="fa fa-user"
-       aria-hidden="true"></i>&ensp; <?php echo $_SESSION['full_name']; ?></a>
+       aria-hidden="true"></i>&ensp; <?php echo $_SESSION['full_name'] ?? 'User'; ?></a>
   <ul class="dropdown-menu text-small"
       aria-labelledby="dropdownMenuLink">
     <?php // if (in_array(8, $_SESSION['permissions'])) : ?>

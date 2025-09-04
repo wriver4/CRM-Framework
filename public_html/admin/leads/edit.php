@@ -82,11 +82,11 @@ require SECTIONOPEN;
       <select name="contact_selector" id="contact_selector" class="form-select form-select-sm" style="min-width: 200px;">
         <?php foreach ($property_contacts as $contact): ?>
         <option value="<?= htmlspecialchars($contact['id']) ?>"
-                data-full-name="<?= htmlspecialchars($contact['fullname']) ?>"
+                data-full-name="<?= htmlspecialchars($contact['full_name']) ?>"
                 data-email="<?= htmlspecialchars($contact['personal_email'] ?? '') ?>"
                 data-cell-phone="<?= htmlspecialchars($contact['cell_phone'] ?? '') ?>"
                 <?= ($contact['id'] == $selected_contact_id) ? 'selected' : '' ?>>
-          <?= htmlspecialchars($contact['fullname']) ?>
+          <?= htmlspecialchars($contact['full_name']) ?>
           <?php if (!empty($contact['relationship_type'])): ?>
             (<?= htmlspecialchars($contact['relationship_type']) ?>)
           <?php endif; ?>
@@ -374,7 +374,7 @@ require SECTIONOPEN;
   </div>
 
   <!-- Pictures & Plans Submitted -->
-  <h4><?= $lang['lead_pictures_submitted'] ?? 'Pictures & Plans'; ?></h4>
+  <h4><?= $lang['lead_client_submitted'] ?? 'Client Submitted'; ?></h4>
   <div class="row">
     <div class="col-6">
       <div class="form-group pb-2">
@@ -435,13 +435,15 @@ require SECTIONOPEN;
         <?php
         $hear_about_options = $helpers->get_lead_hear_about_array($lang);
         $selected_hear_about = !empty($hear_about) ? explode(',', $hear_about) : [];
-        $hear_ids = ['hear_mass_mailing', 'hear_tv_radio', 'hear_internet', 'hear_neighbor', 'hear_trade_show', 'hear_other'];
+        $hear_ids = ['hear_mass_mailing', 'hear_tv_radio', 'hear_internet', 'hear_neighbor', 'hear_trade_show', 'hear_insurance', 'hear_referral', 'hear_other'];
         $i = 0;
         foreach ($hear_about_options as $key => $value) {
           $checked = in_array($key, $selected_hear_about) ? ' checked' : '';
           echo '<div class="form-check pb-2">';
-          echo '<input class="form-check-input" type="checkbox" name="hear_about[]" value="' . $key . '" id="' . $hear_ids[$i] . '"' . $checked . '>';
-          echo '<label class="form-check-label" for="' . $hear_ids[$i] . '">' . $value . '</label>';
+          // Use the key directly as ID if we run out of predefined IDs
+          $id = isset($hear_ids[$i]) ? $hear_ids[$i] : 'hear_' . $key;
+          echo '<input class="form-check-input" type="checkbox" name="hear_about[]" value="' . $key . '" id="' . $id . '"' . $checked . '>';
+          echo '<label class="form-check-label" for="' . $id . '">' . $value . '</label>';
           echo '</div>';
           $i++;
         }
@@ -570,7 +572,7 @@ require SECTIONOPEN;
                   <button type="button" 
                           class="btn btn-outline-danger btn-sm delete-note-btn" 
                           data-note-id="<?= $note['id'] ?>" 
-                          data-lead-id="<?= htmlspecialchars($_GET['id'] ?? '') ?>"
+                          data-lead-id="<?= htmlspecialchars($internal_id ?? '') ?>"
                           title="Delete this note">
                     <i class="fa-solid fa-trash fa-sm"></i>
                   </button>
@@ -717,12 +719,12 @@ require SECTIONOPEN;
             <?php foreach ($lead_contacts as $contact): ?>
               <li>
                 <a class="dropdown-item" href="<?= URL ?>/contacts/view?id=<?= $contact['id'] ?>">
-                  <i class="fa-solid fa-eye me-2"></i><?= htmlspecialchars($contact['fullname'] ?? 'No Name') ?>
+                  <i class="fa-solid fa-eye me-2"></i><?= htmlspecialchars($contact['full_name'] ?? 'No Name') ?>
                 </a>
               </li>
               <li>
                 <a class="dropdown-item" href="<?= URL ?>/contacts/edit?id=<?= $contact['id'] ?>">
-                  <i class="fa-solid fa-edit me-2"></i>Edit <?= htmlspecialchars($contact['fullname'] ?? 'No Name') ?>
+                  <i class="fa-solid fa-edit me-2"></i>Edit <?= htmlspecialchars($contact['full_name'] ?? 'No Name') ?>
                 </a>
               </li>
             <?php endforeach; ?>

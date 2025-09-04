@@ -4,9 +4,13 @@
   $curYear = date('Y');
   echo $copyYear != $curYear ? '-' . $curYear : '';
   echo "&nbsp;";
-  echo $lang['copyright'];
+  // Ensure $lang is an array and has the required key
+  if (!is_array($lang)) {
+    $lang = ['copyright' => 'Copyright', 'all_rights_reserved' => 'All rights reserved'];
+  }
+  echo isset($lang['copyright']) ? $lang['copyright'] : 'Copyright';
   ?>&nbsp;waveGUARD&TRADE;&nbsp;Corporation.&nbsp;
-  <?= $lang['all_rights_reserved']; ?>
+  <?= isset($lang['all_rights_reserved']) ? $lang['all_rights_reserved'] : 'All rights reserved'; ?>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"

@@ -53,7 +53,7 @@ if (isset($_GET['action'])) {
 // Handle page-specific logic
 if ($dir == 'leads' && $page == 'list') {
     $results = $leads->get_all_active();
-    $list = new LeadsListTable($results, $lang);
+    $list = new LeadsList($results, $lang);
     $list->create_table();
 }
 
@@ -67,7 +67,7 @@ if ($dir == 'leads' && $page == 'view') {
         $family_name = $result["family_name"];
         $cell_phone = $result["cell_phone"];
         $email = $result["email"];
-        $ctype = $result["ctype"];
+        $contact_type = $result["contact_type"];
         $lead_id = $result["lead_id"];
         $stage = $result["stage"];
         $structure_type = $result["structure_type"];
@@ -88,13 +88,14 @@ if ($dir == 'leads' && $page == 'edit') {
     $result = $leads->get_lead_by_lead_id($id);  // Use lead_id (external number) instead of internal id
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
+        $internal_id = $result["id"]; // Internal database ID for notes system
         $lead_source = $result["lead_source"];
         $full_name = $result["full_name"];
         $business_name = $result["business_name"];
         $project_name = $result["project_name"];
         $cell_phone = $result["cell_phone"];
         $email = $result["email"];
-        $ctype = $result["ctype"];
+        $contact_type = $result["contact_type"];
         $lead_id = $result["lead_id"];
         $form_street_1 = $result["form_street_1"];
         $form_street_2 = $result["form_street_2"];

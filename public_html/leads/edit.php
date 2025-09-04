@@ -133,14 +133,14 @@ require SECTIONOPEN;
             <label class="form-label fw-bold text-muted"><?= $lang['lead_contact_type'] ?? 'Contact Type'; ?></label>
             <?php
             $contact_types = $leads->get_lead_contact_type_array();
-            $contact_type_display = $contact_types[$ctype] ?? '-';
+            $contact_type_display = $contact_types[$contact_type] ?? '-';
             ?>
             <div class="bg-light p-2 rounded border">
               <i class="fa-solid fa-tag text-warning me-2"></i><?= htmlspecialchars($contact_type_display) ?>
             </div>
             <input type="hidden"
-                   name="ctype"
-                   value="<?= htmlspecialchars($ctype ?? '') ?>">
+                   name="contact_type"
+                   value="<?= htmlspecialchars($contact_type ?? '') ?>">
           </div>
         </div>
         <div class="col">
@@ -263,28 +263,47 @@ require SECTIONOPEN;
       }
   }
   ?>
-  <?php if ($services_display): ?>
   <div class="card mb-4">
-    <div class="card-header bg-success text-white">
-      <h5 class="mb-0">
+    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center" 
+         style="cursor: pointer;"
+         data-bs-toggle="collapse"
+         data-bs-target="#servicesInterestedCollapse"
+         aria-expanded="false"
+         aria-controls="servicesInterestedCollapse">
+      <h5 class="mb-0 d-flex align-items-center">
         <i class="fa-solid fa-cogs me-2"></i><?= $lang['lead_services_interested_in'] ?? 'Services Interested In'; ?>
       </h5>
+      <i class="fa-solid fa-chevron-down collapse-icon"
+         style="transition: transform 0.3s ease; cursor: pointer;"></i>
     </div>
-    <div class="card-body">
-      <div class="bg-light p-3 rounded border">
-        <div class="d-flex align-items-center">
-          <i class="fa-solid fa-tools text-success me-3 fa-lg"></i>
-          <div class="services-content">
-            <?= htmlspecialchars($services_display) ?>
+    <div class="collapse"
+         id="servicesInterestedCollapse">
+      <div class="card-body">
+        <?php if ($services_display): ?>
+        <div class="bg-light p-3 rounded border">
+          <div class="d-flex align-items-center">
+            <i class="fa-solid fa-tools text-success me-3 fa-lg"></i>
+            <div class="services-content">
+              <?= htmlspecialchars($services_display) ?>
+            </div>
           </div>
         </div>
+        <?php else: ?>
+        <div class="bg-light p-3 rounded border">
+          <div class="d-flex align-items-center">
+            <i class="fa-solid fa-tools text-muted me-3 fa-lg"></i>
+            <div class="services-content text-muted">
+              <em>No services selected</em>
+            </div>
+          </div>
+        </div>
+        <?php endif; ?>
+        <input type="hidden"
+               name="services_interested_in"
+               value="<?= htmlspecialchars($services_interested_in ?? '') ?>">
       </div>
-      <input type="hidden"
-             name="services_interested_in"
-             value="<?= htmlspecialchars($services_interested_in ?? '') ?>">
     </div>
   </div>
-  <?php endif; ?>
 
   <!-- Structure Information -->
   <?php
@@ -304,21 +323,17 @@ require SECTIONOPEN;
   ?>
   <?php if ($has_structure_content): ?>
   <div class="card mb-4">
-    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
-      <h5 class="mb-0">
-        <button class="btn p-0 text-start text-dark border-0 bg-transparent d-flex align-items-center w-100"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#structureInformationCollapse"
-                aria-expanded="false"
-                aria-controls="structureInformationCollapse"
-                style="box-shadow: none;">
-          <i
-             class="fa-solid fa-building me-2"></i><?= $lang['lead_structure_information'] ?? 'Structure Information'; ?>
-        </button>
+    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center" 
+         style="cursor: pointer;"
+         data-bs-toggle="collapse"
+         data-bs-target="#structureInformationCollapse"
+         aria-expanded="false"
+         aria-controls="structureInformationCollapse">
+      <h5 class="mb-0 d-flex align-items-center">
+        <i class="fa-solid fa-building me-2"></i><?= $lang['lead_structure_information'] ?? 'Structure Information'; ?>
       </h5>
       <i class="fa-solid fa-chevron-up collapse-icon"
-         style="transition: transform 0.3s ease;"></i>
+         style="transition: transform 0.3s ease; cursor: pointer;"></i>
     </div>
     <div class="collapse"
          id="structureInformationCollapse">
@@ -403,7 +418,7 @@ require SECTIONOPEN;
 
   <!-- File Upload Links -->
   <div class="card mb-4">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="cursor: pointer;">
       <h5 class="mb-0">
         <button class="btn p-0 text-start text-white border-0 bg-transparent d-flex align-items-center w-100"
                 type="button"
@@ -411,12 +426,12 @@ require SECTIONOPEN;
                 data-bs-target="#fileUploadLinksCollapse"
                 aria-expanded="false"
                 aria-controls="fileUploadLinksCollapse"
-                style="box-shadow: none;">
+                style="box-shadow: none; cursor: pointer;">
           <i class="fa-solid fa-upload me-2"></i><?= $lang['lead_file_upload_links'] ?? 'File Upload Links'; ?>
         </button>
       </h5>
       <i class="fa-solid fa-chevron-up collapse-icon"
-         style="transition: transform 0.3s ease;"></i>
+         style="transition: transform 0.3s ease; cursor: pointer;"></i>
     </div>
     <div class="collapse"
          id="fileUploadLinksCollapse">
@@ -428,25 +443,15 @@ require SECTIONOPEN;
               <label
                      class="form-label fw-bold text-muted"><?= $lang['lead_plans_upload_link'] ?? 'Plans Upload Link'; ?></label>
               <div class="bg-light p-3 rounded border">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="d-flex align-items-center flex-grow-1">
-                    <i class="fa-solid fa-file-alt text-info me-3 fa-lg"></i>
-                    <div class="upload-link-content">
-                      <?php if (!empty($plans_upload_link)): ?>
-                      <span class="text-break"><?= htmlspecialchars($plans_upload_link) ?></span>
-                      <?php else: ?>
-                      <em class="text-muted">No plans upload link provided</em>
-                      <?php endif; ?>
-                    </div>
+                <div class="d-flex align-items-center">
+                  <i class="fa-solid fa-file-alt text-info me-3 fa-lg"></i>
+                  <div class="upload-link-content">
+                    <?php if (!empty($plans_upload_link)): ?>
+                    <span class="text-break"><?= htmlspecialchars($plans_upload_link) ?></span>
+                    <?php else: ?>
+                    <em class="text-muted">No plans upload link provided</em>
+                    <?php endif; ?>
                   </div>
-                  <?php if (!empty($plans_upload_link)): ?>
-                  <button type="button"
-                          class="btn btn-sm btn-outline-secondary ms-2"
-                          onclick="copyToClipboard('<?= htmlspecialchars($plans_upload_link, ENT_QUOTES) ?>', this)"
-                          title="Copy link">
-                    <i class="fa-solid fa-copy"></i>
-                  </button>
-                  <?php endif; ?>
                 </div>
               </div>
               <input type="hidden"
@@ -463,25 +468,15 @@ require SECTIONOPEN;
               <label
                      class="form-label fw-bold text-muted"><?= $lang['lead_pictures_upload_link'] ?? 'Pictures Upload Link'; ?></label>
               <div class="bg-light p-3 rounded border">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="d-flex align-items-center flex-grow-1">
-                    <i class="fa-solid fa-image text-primary me-3 fa-lg"></i>
-                    <div class="upload-link-content">
-                      <?php if (!empty($picture_upload_link)): ?>
-                      <span class="text-break"><?= htmlspecialchars($picture_upload_link) ?></span>
-                      <?php else: ?>
-                      <em class="text-muted">No pictures upload link provided</em>
-                      <?php endif; ?>
-                    </div>
+                <div class="d-flex align-items-center">
+                  <i class="fa-solid fa-image text-primary me-3 fa-lg"></i>
+                  <div class="upload-link-content">
+                    <?php if (!empty($picture_upload_link)): ?>
+                    <span class="text-break"><?= htmlspecialchars($picture_upload_link) ?></span>
+                    <?php else: ?>
+                    <em class="text-muted">No pictures upload link provided</em>
+                    <?php endif; ?>
                   </div>
-                  <?php if (!empty($picture_upload_link)): ?>
-                  <button type="button"
-                          class="btn btn-sm btn-outline-secondary ms-2"
-                          onclick="copyToClipboard('<?= htmlspecialchars($picture_upload_link, ENT_QUOTES) ?>', this)"
-                          title="Copy link">
-                    <i class="fa-solid fa-copy"></i>
-                  </button>
-                  <?php endif; ?>
                 </div>
               </div>
               <input type="hidden"
@@ -1059,7 +1054,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const notesCount = document.getElementById('notes-count-header');
   const totalNotes = document.getElementById('total-notes-header');
 
-  const leadId = <?= $id ?? 0 ?>;
+  const leadId = <?= $internal_id ?? 0 ?>;
   let searchTimeout;
 
   // Search functionality
@@ -1226,41 +1221,40 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Handle collapse chevron rotation
-  document.addEventListener('DOMContentLoaded', function() {
-    // Handle structure information collapse
-    const structureCollapse = document.getElementById('structureInformationCollapse');
-    const structureIcon = structureCollapse?.previousElementSibling?.querySelector('.collapse-icon');
+  // Handle structure information collapse
+  const structureCollapse = document.getElementById('structureInformationCollapse');
+  const structureIcon = structureCollapse?.previousElementSibling?.querySelector('.collapse-icon');
 
-    if (structureCollapse && structureIcon) {
-      // Set initial state (collapsed = rotated)
+  if (structureCollapse && structureIcon) {
+    // Set initial state (collapsed = rotated)
+    structureIcon.style.transform = 'rotate(180deg)';
+
+    structureCollapse.addEventListener('show.bs.collapse', function() {
+      structureIcon.style.transform = 'rotate(0deg)';
+    });
+
+    structureCollapse.addEventListener('hide.bs.collapse', function() {
       structureIcon.style.transform = 'rotate(180deg)';
+    });
+  }
 
-      structureCollapse.addEventListener('show.bs.collapse', function() {
-        structureIcon.style.transform = 'rotate(0deg)';
-      });
+  // Handle file upload links collapse
+  const uploadCollapse = document.getElementById('fileUploadLinksCollapse');
+  const uploadIcon = uploadCollapse?.previousElementSibling?.querySelector('.collapse-icon');
 
-      structureCollapse.addEventListener('hide.bs.collapse', function() {
-        structureIcon.style.transform = 'rotate(180deg)';
-      });
-    }
+  if (uploadCollapse && uploadIcon) {
+    // Set initial state (collapsed = rotated)
+    uploadIcon.style.transform = 'rotate(180deg)';
 
-    // Handle file upload links collapse
-    const uploadCollapse = document.getElementById('fileUploadLinksCollapse');
-    const uploadIcon = uploadCollapse?.previousElementSibling?.querySelector('.collapse-icon');
+    uploadCollapse.addEventListener('show.bs.collapse', function() {
+      uploadIcon.style.transform = 'rotate(0deg)';
+    });
 
-    if (uploadCollapse && uploadIcon) {
-      // Set initial state (collapsed = rotated)
+    uploadCollapse.addEventListener('hide.bs.collapse', function() {
       uploadIcon.style.transform = 'rotate(180deg)';
+    });
+  }
 
-      uploadCollapse.addEventListener('show.bs.collapse', function() {
-        uploadIcon.style.transform = 'rotate(0deg)';
-      });
-
-      uploadCollapse.addEventListener('hide.bs.collapse', function() {
-        uploadIcon.style.transform = 'rotate(180deg)';
-      });
-    }
-  });
 });
 </script>
 

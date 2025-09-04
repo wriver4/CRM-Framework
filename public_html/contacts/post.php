@@ -8,7 +8,7 @@ $not->loggedin();
 $contacts = new Contacts();
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POST['page'] == 'new') {
   $lead_id = isset($_POST['lead_id']) ? htmlentities(trim($_POST['lead_id'])) : '';
-  $ctype = htmlentities(trim($_POST['ctype']));
+  $contact_type = htmlentities(trim($_POST['contact_type']));
   
   // If creating contact from a lead, get lead data for address pre-population if needed
   $lead_data = null;
@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POS
     $result = $leads->get_lead_by_lead_id($lead_id);  // Use lead_id (external number) instead of internal id
     if (!empty($result) && isset($result[0])) {
       $lead_data = $result[0];
-      // Note: ctype is NOT inherited - each contact can have different contact type
+      // Note: contact_type is NOT inherited - each contact can have different contact type
     }
   }
   
@@ -63,10 +63,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POS
   $m_state = htmlentities(trim($_POST['m_state']));
   $m_postcode = htmlentities(trim($_POST['m_postcode']));
   $m_country = htmlentities(trim($_POST['m_country']));
-  $sql = "INSERT INTO contacts (lead_id, ctype, first_name, family_name, fullname, cell_phone, business_phone, alt_phone, phones, personal_email, business_email, alt_email, emails, p_street_1, p_street_2, p_city, p_state, p_postcode, p_country, business_name, b_street_1, b_street_2, b_city, b_state, b_postcode, b_country, m_street_1, m_street_2, m_city, m_state, m_postcode, m_country) VALUES (:lead_id, :ctype, :first_name, :family_name, :fullname, :cell_phone, :business_phone, :alt_phone, :phones, :personal_email, :business_email, :alt_email, :emails, :p_street_1, :p_street_2, :p_city, :p_state, :p_postcode, :p_country, :business_name, :b_street_1, :b_street_2, :b_city, :b_state, :b_postcode, :b_country, :m_street_1, :m_street_2, :m_city, :m_state, :m_postcode, :m_country)";
+  $sql = "INSERT INTO contacts (lead_id, contact_type, first_name, family_name, fullname, cell_phone, business_phone, alt_phone, phones, personal_email, business_email, alt_email, emails, p_street_1, p_street_2, p_city, p_state, p_postcode, p_country, business_name, b_street_1, b_street_2, b_city, b_state, b_postcode, b_country, m_street_1, m_street_2, m_city, m_state, m_postcode, m_country) VALUES (:lead_id, :contact_type, :first_name, :family_name, :fullname, :cell_phone, :business_phone, :alt_phone, :phones, :personal_email, :business_email, :alt_email, :emails, :p_street_1, :p_street_2, :p_city, :p_state, :p_postcode, :p_country, :business_name, :b_street_1, :b_street_2, :b_city, :b_state, :b_postcode, :b_country, :m_street_1, :m_street_2, :m_city, :m_state, :m_postcode, :m_country)";
   $stmt = $dbcrm->prepare($sql);
   $stmt->bindValue(':lead_id', !empty($lead_id) ? (int)$lead_id : null, PDO::PARAM_INT);
-  $stmt->bindValue(':ctype', $ctype, PDO::PARAM_INT);
+  $stmt->bindValue(':contact_type', $contact_type, PDO::PARAM_INT);
   $stmt->bindValue(':first_name', $first_name, PDO::PARAM_STR);
   $stmt->bindValue(':family_name', $family_name, PDO::PARAM_STR);
   $stmt->bindValue(':fullname', $full_name, PDO::PARAM_STR);
@@ -132,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POS
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'contacts' && $_POST['page'] == 'edit') {
   $id = htmlentities(trim($_POST['id']));
   //$prop_id = htmlentities(trim($_POST['prop_id']));
-  // $ctype = htmlentities(trim($_POST['ctype']));
+  // $contact_type = htmlentities(trim($_POST['contact_type']));
   // $first_name = htmlentities(trim($_POST['first_name']));
   // $family_name = htmlentities(trim($_POST['family_name']));
   //$full_name = $first_name . ' ' . $family_name;

@@ -138,11 +138,11 @@ require SECTIONOPEN;
     <div class="col form-field"
          id="contact-type-field">
       <div class="form-group pb-2">
-        <label for="ctype"
+        <label for="contact_type"
                class="pb-1"
                id="contact-type-label"><?= $lang['lead_contact_type']; ?></label>
-        <select name="ctype"
-                id="ctype"
+        <select name="contact_type"
+                id="contact_type"
                 class="form-select"
                 autocomplete="off">
           <option value=""><?= $lang['lead_select_contact_type']; ?></option>
@@ -480,7 +480,7 @@ require SECTIONOPEN;
           <label class="pb-1"><?= $lang['lead_how_did_you_hear']; ?></label>
           <?php
         $hear_about = $helpers->get_lead_hear_about_array($lang);
-        $hear_ids = ['hear_mass_mailing', 'hear_tv_radio', 'hear_internet', 'hear_neighbor', 'hear_trade_show', 'hear_other'];
+        $hear_ids = ['hear_mass_mailing', 'hear_tv_radio', 'hear_internet', 'hear_neighbor', 'hear_trade_show', 'hear_insurance', 'hear_referral', 'hear_other'];
         $i = 0;
         foreach ($hear_about as $key => $value) {
           echo '<div class="form-check pb-2">';

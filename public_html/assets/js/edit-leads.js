@@ -22,6 +22,72 @@ document.addEventListener('DOMContentLoaded', function () {
         formGroup.innerHTML = newDisplay;
     }
 
+    // Handle collapse chevron rotation for Services Interested In
+    const servicesCollapse = document.getElementById('servicesInterestedCollapse');
+    if (servicesCollapse) {
+        const servicesHeader = document.querySelector('[data-bs-target="#servicesInterestedCollapse"]');
+        const servicesIcon = servicesHeader ? servicesHeader.querySelector('.collapse-icon') : null;
+
+        // Add hover effects to the entire header
+        if (servicesHeader) {
+            servicesHeader.addEventListener('mouseenter', function () {
+                this.style.backgroundColor = 'rgba(40, 167, 69, 0.9)'; // Slightly darker success
+                this.style.transition = 'background-color 0.2s ease';
+            });
+
+            servicesHeader.addEventListener('mouseleave', function () {
+                this.style.backgroundColor = ''; // Reset to original bg-success
+            });
+        }
+
+        servicesCollapse.addEventListener('show.bs.collapse', function () {
+            if (servicesIcon) {
+                servicesIcon.classList.remove('fa-chevron-down');
+                servicesIcon.classList.add('fa-chevron-up');
+            }
+        });
+
+        servicesCollapse.addEventListener('hide.bs.collapse', function () {
+            if (servicesIcon) {
+                servicesIcon.classList.remove('fa-chevron-up');
+                servicesIcon.classList.add('fa-chevron-down');
+            }
+        });
+    }
+
+    // Handle collapse chevron rotation for Structure Information
+    const structureCollapse = document.getElementById('structureInformationCollapse');
+    if (structureCollapse) {
+        const structureHeader = document.querySelector('[data-bs-target="#structureInformationCollapse"]');
+        const structureIcon = structureHeader ? structureHeader.querySelector('.collapse-icon') : null;
+
+        // Add hover effects to the entire header
+        if (structureHeader) {
+            structureHeader.addEventListener('mouseenter', function () {
+                this.style.backgroundColor = 'rgba(255, 193, 7, 0.9)'; // Slightly darker warning
+                this.style.transition = 'background-color 0.2s ease';
+            });
+
+            structureHeader.addEventListener('mouseleave', function () {
+                this.style.backgroundColor = ''; // Reset to original bg-warning
+            });
+        }
+
+        structureCollapse.addEventListener('show.bs.collapse', function () {
+            if (structureIcon) {
+                structureIcon.classList.remove('fa-chevron-down');
+                structureIcon.classList.add('fa-chevron-up');
+            }
+        });
+
+        structureCollapse.addEventListener('hide.bs.collapse', function () {
+            if (structureIcon) {
+                structureIcon.classList.remove('fa-chevron-up');
+                structureIcon.classList.add('fa-chevron-down');
+            }
+        });
+    }
+
     // Handle collapse chevron rotation for File Upload Links
     const fileUploadCollapse = document.getElementById('fileUploadLinksCollapse');
     if (fileUploadCollapse) {
