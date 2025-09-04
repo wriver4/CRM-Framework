@@ -5,7 +5,7 @@
  */
 
 require_once '../../config/system.php';
-require_once '../../classes/Database.php';
+// Database class is loaded via autoloader in system.php
 
 class FullnameMigration
 {

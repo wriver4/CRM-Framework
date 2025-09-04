@@ -66,12 +66,42 @@ if ($note_id <= 0 || $lead_id <= 0) {
 }
 
 try {
-    // Custom autoloader for classes
+    // Custom autoloader for organized classes
     spl_autoload_register(function ($class_name) {
         if (strpos($class_name, '\\') !== false) {
             return;
         }
-        $file = dirname($_SERVER['DOCUMENT_ROOT']) . '/classes/' . $class_name . '.php';
+        
+        $base_path = dirname($_SERVER['DOCUMENT_ROOT']) . '/classes/';
+        
+        // Define class location mapping for organized structure
+        $class_locations = [
+            'Database' => 'Core/Database.php',
+            'Security' => 'Core/Security.php',
+            'Nonce' => 'Core/Nonce.php',
+            'Sessions' => 'Core/Sessions.php',
+            'Table' => 'Core/Table.php',
+            'ViewTable' => 'Core/ViewTable.php',
+            'EditDeleteTable' => 'Core/EditDeleteTable.php',
+            'ActionTable' => 'Core/ActionTable.php',
+            'Notes' => 'Models/Notes.php',
+            'Leads' => 'Models/Leads.php',
+            'Contacts' => 'Models/Contacts.php',
+            'Users' => 'Models/Users.php',
+            'Audit' => 'Logging/Audit.php',
+            'Helpers' => 'Utilities/Helpers.php'
+        ];
+        
+        if (isset($class_locations[$class_name])) {
+            $file = $base_path . $class_locations[$class_name];
+            if (file_exists($file)) {
+                require_once $file;
+                return;
+            }
+        }
+        
+        // Fallback: try direct path (for backward compatibility)
+        $file = $base_path . $class_name . '.php';
         if (file_exists($file)) {
             require_once $file;
         }

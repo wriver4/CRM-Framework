@@ -13,8 +13,7 @@ class DatabaseTest extends TestCase
     {
         parent::setUp();
         
-        // Include the Database class
-        require_once __DIR__ . '/../../../classes/Database.php';
+        // Database class is loaded via autoloader in bootstrap
     }
 
     public function testDatabaseClassExists(): void

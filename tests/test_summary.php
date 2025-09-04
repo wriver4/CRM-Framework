@@ -41,6 +41,19 @@ try {
         if (strpos($class_name, '\\') !== false) {
             return;
         }
+        
+        // Search in organized subdirectories
+        $directories = ['Core', 'Models', 'Views', 'Utilities', 'Logging'];
+        
+        foreach ($directories as $dir) {
+            $file = __DIR__ . '/../classes/' . $dir . '/' . $class_name . '.php';
+            if (file_exists($file)) {
+                require_once $file;
+                return;
+            }
+        }
+        
+        // Fallback to root classes directory for backward compatibility
         $file = __DIR__ . '/../classes/' . $class_name . '.php';
         if (file_exists($file)) {
             require_once $file;

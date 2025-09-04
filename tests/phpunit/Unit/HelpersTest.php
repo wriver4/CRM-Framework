@@ -13,10 +13,7 @@ class HelpersTest extends TestCase
 
     protected function setUp(): void
     {
-        // Load required classes
-        require_once __DIR__ . '/../../../classes/Database.php';
-        require_once __DIR__ . '/../../../classes/Helpers.php';
-        
+        // Classes are loaded via autoloader in bootstrap
         $this->helpers = new \Helpers();
     }
 

@@ -36,16 +36,16 @@ function test($name, $callback) {
 // Test 1: Check if core classes exist
 test("Core classes exist", function() {
     $classes = [
-        __DIR__ . '/classes/Database.php',
-        __DIR__ . '/classes/Helpers.php',
-        __DIR__ . '/classes/Security.php',
-        __DIR__ . '/classes/Leads.php',
-        __DIR__ . '/classes/Contacts.php'
+        __DIR__ . '/classes/Core/Database.php',
+        __DIR__ . '/classes/Utilities/Helpers.php',
+        __DIR__ . '/classes/Core/Security.php',
+        __DIR__ . '/classes/Models/Leads.php',
+        __DIR__ . '/classes/Models/Contacts.php'
     ];
     
     foreach ($classes as $class) {
         if (!file_exists($class)) {
-            return "Missing class file: " . basename($class);
+            return "Missing class file: " . basename($class) . " at " . $class;
         }
     }
     
@@ -55,8 +55,8 @@ test("Core classes exist", function() {
 // Test 2: Check if Helpers class can be loaded
 test("Helpers class loads", function() {
     // Load dependencies first
-    require_once __DIR__ . '/classes/Database.php';
-    require_once __DIR__ . '/classes/Helpers.php';
+    require_once __DIR__ . '/classes/Core/Database.php';
+    require_once __DIR__ . '/classes/Utilities/Helpers.php';
     
     if (!class_exists('Helpers')) {
         return "Helpers class not found after include";

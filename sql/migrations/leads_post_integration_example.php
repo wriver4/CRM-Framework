@@ -12,7 +12,7 @@
  */
 
 // Add this near the top of leads/post.php after other class includes
-require_once dirname(__DIR__, 2) . '/classes/Models/LeadMarketingData.php';
+// LeadMarketingData class will be loaded via autoloader (no direct require needed)
 
 // Example of how to modify the data processing section:
 

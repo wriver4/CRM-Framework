@@ -9,10 +9,9 @@
  * This script can be run manually or via cron job
  */
 
-// Include required classes
-require_once dirname(__DIR__) . '/classes/Models/LeadMarketingData.php';
-require_once dirname(__DIR__) . '/classes/Utilities/Helpers.php';
-require_once dirname(__DIR__) . '/classes/Logging/Audit.php';
+// Load system configuration (includes autoloader)
+require_once dirname(__DIR__) . '/config/system.php';
+// Classes will be loaded via autoloader
 
 // Load language file
 $lang = include dirname(__DIR__) . '/public_html/admin/languages/en.php';
