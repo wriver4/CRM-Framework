@@ -41,6 +41,42 @@
          <i class="fa-solid fa-broom me-2"></i>Cleanup Duplicate Notes
        </a>
     </li>
+    <div class="dropdown dropdown-hover-all">
+      <div class="dropdown-item dropdown-toggle"
+           href="#"
+           role="button"
+           data-bs-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="false">
+        <i class="fa fa-envelope me-2"></i>Email Processing
+      </div>
+      <ul class="dropdown-menu text-small">
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/email/processing_log' ?>"
+             tabindex="0">
+             <i class="fa fa-list me-2"></i>Processing Log
+           </a>
+        </li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/email/accounts_config' ?>"
+             tabindex="0">
+             <i class="fa fa-cog me-2"></i>Email Accounts
+           </a>
+        </li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/email/sync_queue' ?>"
+             tabindex="0">
+             <i class="fa fa-sync me-2"></i>CRM Sync Queue
+           </a>
+        </li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/email/system_status' ?>"
+             tabindex="0">
+             <i class="fa fa-heartbeat me-2"></i>System Status
+           </a>
+        </li>
+      </ul>
+    </div>
     <li><a class="dropdown-item<?php echo ($dir == "users") ? ' active' : ''; ?>"
          href="<?php echo URL . '/users/list' ?>"
          tabindex="0"><?= $lang['navbar_users']; ?></a>

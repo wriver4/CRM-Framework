@@ -14,6 +14,13 @@
     <testsuite name="Feature">
       <directory>tests/phpunit/Feature</directory>
     </testsuite>
+    <testsuite name="EmailProcessing">
+      <file>tests/phpunit/Unit/EmailFormProcessorTest.php</file>
+      <file>tests/phpunit/Unit/EmailAccountManagerTest.php</file>
+      <file>tests/phpunit/Unit/CrmSyncManagerTest.php</file>
+      <file>tests/phpunit/Integration/EmailProcessingIntegrationTest.php</file>
+      <file>tests/phpunit/Feature/EmailProcessingWorkflowTest.php</file>
+    </testsuite>
   </testsuites>
   <php>
     <!-- Environment variables for testing -->
