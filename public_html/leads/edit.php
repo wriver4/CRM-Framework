@@ -489,6 +489,182 @@ require SECTIONOPEN;
     </div>
   </div>
 
+  <!-- Screening Estimates -->
+  <?php
+  // Check if user has permission to edit engineering or sales estimates
+  $user_role = $_SESSION['user_role'] ?? 'user';
+  $user_rid = $_SESSION['user_rid'] ?? 0;
+  
+  // Define role permissions
+  $can_edit_engineering = in_array($user_rid, [1, 2, 4, 5]); // Super Admin, Admin, Operations Technician 1 & 2
+  $can_edit_sales = in_array($user_rid, [1, 2, 13, 14, 15]); // Super Admin, Admin, Sales Manager, Sales Assistant, Sales Person
+  $can_edit_admin_leads = in_array($user_rid, [1, 2]); // Super Admin, Admin (can edit both)
+  
+  // Check if any engineering data exists to determine default collapse state
+  $has_engineering_data = !empty($eng_system_cost_low) || !empty($eng_system_cost_high) || !empty($eng_protected_area);
+  $default_expanded = $has_engineering_data ? 'show' : '';
+  $chevron_direction = $has_engineering_data ? 'up' : 'down';
+  ?>
+  
+  <div class="card mb-4">
+    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center" 
+         style="cursor: pointer;"
+         data-bs-toggle="collapse"
+         data-bs-target="#screeningEstimatesCollapse"
+         aria-expanded="<?= $has_engineering_data ? 'true' : 'false' ?>"
+         aria-controls="screeningEstimatesCollapse">
+      <h5 class="mb-0 d-flex align-items-center">
+        <i class="fa-solid fa-calculator me-2"></i><?= $lang['screening_estimates'] ?? 'Screening Estimates'; ?>
+      </h5>
+      <i class="fa-solid fa-chevron-<?= $chevron_direction ?> collapse-icon"
+         style="transition: transform 0.3s ease; cursor: pointer;"></i>
+    </div>
+    <div class="collapse <?= $default_expanded ?>"
+         id="screeningEstimatesCollapse">
+      <div class="card-body">
+        
+        <!-- Engineering Estimates Row -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <h6 class="text-muted mb-3">
+              <i class="fa-solid fa-cogs me-2"></i><?= $lang['engineering_estimates'] ?? 'Engineering Estimates'; ?>
+            </h6>
+            <div class="row">
+              <!-- Engineering System Cost -->
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label class="form-label fw-bold text-muted"><?= $lang['system_cost'] ?? 'System Cost'; ?></label>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number"
+                               name="eng_system_cost_low"
+                               id="eng_system_cost_low"
+                               class="form-control"
+                               value="<?= htmlspecialchars($eng_system_cost_low ?? '') ?>"
+                               placeholder="<?= $lang['system_cost_low'] ?? 'Low' ?>"
+                               min="0"
+                               step="1"
+                               <?= !$can_edit_engineering && !$can_edit_admin_leads ? 'readonly' : '' ?>>
+                      </div>
+
+                    </div>
+                    <div class="col-6">
+                      <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number"
+                               name="eng_system_cost_high"
+                               id="eng_system_cost_high"
+                               class="form-control"
+                               value="<?= htmlspecialchars($eng_system_cost_high ?? '') ?>"
+                               placeholder="<?= $lang['system_cost_high'] ?? 'High' ?>"
+                               min="0"
+                               step="1"
+                               <?= !$can_edit_engineering && !$can_edit_admin_leads ? 'readonly' : '' ?>>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Engineering Protected Area -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="eng_protected_area"
+                         class="form-label fw-bold text-muted"><?= $lang['protected_area'] ?? 'Protected Area'; ?></label>
+                  <div class="input-group">
+                    <input type="number"
+                           name="eng_protected_area"
+                           id="eng_protected_area"
+                           class="form-control"
+                           value="<?= htmlspecialchars($eng_protected_area ?? '') ?>"
+                           placeholder="0"
+                           min="0"
+                           step="1"
+                           <?= !$can_edit_engineering && !$can_edit_admin_leads ? 'readonly' : '' ?>>
+                    <span class="input-group-text"><?= $lang['protected_area_sqft'] ?? 'SQFT' ?></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <hr class="my-4">
+        
+        <!-- Sales Estimates Row -->
+        <div class="row">
+          <div class="col-12">
+            <h6 class="text-muted mb-3">
+              <i class="fa-solid fa-handshake me-2"></i><?= $lang['sales_estimates'] ?? 'Sales Estimates'; ?>
+            </h6>
+            <div class="row">
+              <!-- Sales System Cost -->
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label class="form-label fw-bold text-muted"><?= $lang['system_cost'] ?? 'System Cost'; ?></label>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number"
+                               name="sales_system_cost_low"
+                               id="sales_system_cost_low"
+                               class="form-control"
+                               value="<?= htmlspecialchars($sales_system_cost_low ?? '') ?>"
+                               placeholder="<?= $lang['system_cost_low'] ?? 'Low' ?>"
+                               min="0"
+                               step="1"
+                               <?= !$can_edit_sales && !$can_edit_admin_leads ? 'readonly' : '' ?>>
+                      </div>
+
+                    </div>
+                    <div class="col-6">
+                      <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number"
+                               name="sales_system_cost_high"
+                               id="sales_system_cost_high"
+                               class="form-control"
+                               value="<?= htmlspecialchars($sales_system_cost_high ?? '') ?>"
+                               placeholder="<?= $lang['system_cost_high'] ?? 'High' ?>"
+                               min="0"
+                               step="1"
+                               <?= !$can_edit_sales && !$can_edit_admin_leads ? 'readonly' : '' ?>>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Sales Protected Area -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="sales_protected_area"
+                         class="form-label fw-bold text-muted"><?= $lang['protected_area'] ?? 'Protected Area'; ?></label>
+                  <div class="input-group">
+                    <input type="number"
+                           name="sales_protected_area"
+                           id="sales_protected_area"
+                           class="form-control"
+                           value="<?= htmlspecialchars($sales_protected_area ?? '') ?>"
+                           placeholder="0"
+                           min="0"
+                           step="1"
+                           <?= !$can_edit_sales && !$can_edit_admin_leads ? 'readonly' : '' ?>>
+                    <span class="input-group-text"><?= $lang['protected_area_sqft'] ?? 'SQFT' ?></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
   <!-- Notes System with Drawer -->
   <?php 
   try {
@@ -1254,6 +1430,69 @@ document.addEventListener('DOMContentLoaded', function() {
       uploadIcon.style.transform = 'rotate(180deg)';
     });
   }
+
+  // Handle screening estimates collapse
+  const screeningCollapse = document.getElementById('screeningEstimatesCollapse');
+  const screeningIcon = screeningCollapse?.previousElementSibling?.querySelector('.collapse-icon');
+
+  if (screeningCollapse && screeningIcon) {
+    screeningCollapse.addEventListener('show.bs.collapse', function() {
+      screeningIcon.classList.remove('fa-chevron-down');
+      screeningIcon.classList.add('fa-chevron-up');
+    });
+
+    screeningCollapse.addEventListener('hide.bs.collapse', function() {
+      screeningIcon.classList.remove('fa-chevron-up');
+      screeningIcon.classList.add('fa-chevron-down');
+    });
+  }
+
+  // Auto-expand screening estimates when user enters data
+  const screeningInputs = [
+    'eng_system_cost_low', 'eng_system_cost_high', 'eng_protected_area',
+    'sales_system_cost_low', 'sales_system_cost_high', 'sales_protected_area'
+  ];
+
+  screeningInputs.forEach(inputId => {
+    const input = document.getElementById(inputId);
+    if (input) {
+      input.addEventListener('focus', function() {
+        if (screeningCollapse && !screeningCollapse.classList.contains('show')) {
+          const bsCollapse = new bootstrap.Collapse(screeningCollapse, {
+            show: true
+          });
+        }
+      });
+    }
+  });
+
+  // Format currency inputs with commas
+  const currencyInputs = [
+    'eng_system_cost_low', 'eng_system_cost_high', 
+    'sales_system_cost_low', 'sales_system_cost_high'
+  ];
+
+  currencyInputs.forEach(inputId => {
+    const input = document.getElementById(inputId);
+    if (input) {
+      input.addEventListener('input', function(e) {
+        // Remove non-numeric characters except for existing commas
+        let value = e.target.value.replace(/[^\d]/g, '');
+        
+        // Add commas for thousands
+        if (value) {
+          value = parseInt(value).toLocaleString();
+        }
+        
+        e.target.value = value;
+      });
+
+      // Remove commas before form submission
+      input.addEventListener('blur', function(e) {
+        e.target.value = e.target.value.replace(/,/g, '');
+      });
+    }
+  });
 
 });
 </script>

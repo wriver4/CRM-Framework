@@ -74,6 +74,15 @@ if ($dir == 'leads' && $page == 'view') {
         $structure_description = $result["structure_description"];
         $structure_other = $result["structure_other"];
         $structure_additional = $result["structure_additional"];
+        
+        // Screening Estimates fields
+        $eng_system_cost_low = $result["eng_system_cost_low"] ?? null;
+        $eng_system_cost_high = $result["eng_system_cost_high"] ?? null;
+        $eng_protected_area = $result["eng_protected_area"] ?? null;
+        $sales_system_cost_low = $result["sales_system_cost_low"] ?? null;
+        $sales_system_cost_high = $result["sales_system_cost_high"] ?? null;
+        $sales_protected_area = $result["sales_protected_area"] ?? null;
+        
         $picture_upload_link = $result["picture_upload_link"];
         $plans_upload_link = $result["plans_upload_link"];
         $created_at = $result["created_at"];
@@ -114,6 +123,15 @@ if ($dir == 'leads' && $page == 'edit') {
         $structure_description = $result["structure_description"];
         $structure_other = $result["structure_other"];
         $structure_additional = $result["structure_additional"];
+        
+        // Screening Estimates fields
+        $eng_system_cost_low = $result["eng_system_cost_low"] ?? null;
+        $eng_system_cost_high = $result["eng_system_cost_high"] ?? null;
+        $eng_protected_area = $result["eng_protected_area"] ?? null;
+        $sales_system_cost_low = $result["sales_system_cost_low"] ?? null;
+        $sales_system_cost_high = $result["sales_system_cost_high"] ?? null;
+        $sales_protected_area = $result["sales_protected_area"] ?? null;
+        
         $picture_submitted_1 = $result["picture_submitted_1"];
         $picture_submitted_2 = $result["picture_submitted_2"];
         $picture_submitted_3 = $result["picture_submitted_3"];
@@ -127,6 +145,7 @@ if ($dir == 'leads' && $page == 'edit') {
         $hear_about = $result["hear_about"];
         $hear_about_other = $result["hear_about_other"];
         $stage = $result["stage"];
+        
         $created_at = $result["created_at"];
         $updated_at = $result["updated_at"];
         $last_edited_by = $result["last_edited_by"];

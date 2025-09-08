@@ -255,14 +255,17 @@ class Leads extends Database
             form_country = :form_country, timezone = :timezone, full_address = :full_address,
             services_interested_in = :services_interested_in, structure_type = :structure_type,
             structure_description = :structure_description, structure_other = :structure_other,
-            structure_additional = :structure_additional, picture_submitted_1 = :picture_submitted_1,
-            picture_submitted_2 = :picture_submitted_2, picture_submitted_3 = :picture_submitted_3,
-            plans_submitted_1 = :plans_submitted_1, plans_submitted_2 = :plans_submitted_2,
-            plans_submitted_3 = :plans_submitted_3, picture_upload_link = :picture_upload_link,
-            plans_upload_link = :plans_upload_link, plans_and_pics = :plans_and_pics,
-            get_updates = :get_updates, hear_about = :hear_about, hear_about_other = :hear_about_other,
-            stage = :stage, last_edited_by = :last_edited_by, updated_at = CURRENT_TIMESTAMP,
-            full_name = :full_name
+            structure_additional = :structure_additional,
+            eng_system_cost_low = :eng_system_cost_low, eng_system_cost_high = :eng_system_cost_high,
+            eng_protected_area = :eng_protected_area, sales_system_cost_low = :sales_system_cost_low,
+            sales_system_cost_high = :sales_system_cost_high, sales_protected_area = :sales_protected_area,
+            picture_submitted_1 = :picture_submitted_1, picture_submitted_2 = :picture_submitted_2, 
+            picture_submitted_3 = :picture_submitted_3, plans_submitted_1 = :plans_submitted_1, 
+            plans_submitted_2 = :plans_submitted_2, plans_submitted_3 = :plans_submitted_3, 
+            picture_upload_link = :picture_upload_link, plans_upload_link = :plans_upload_link, 
+            plans_and_pics = :plans_and_pics, get_updates = :get_updates, hear_about = :hear_about, 
+            hear_about_other = :hear_about_other, stage = :stage, last_edited_by = :last_edited_by, 
+            updated_at = CURRENT_TIMESTAMP, full_name = :full_name
         WHERE id = :id";
         $data['id'] = $id;
         
@@ -272,7 +275,10 @@ class Leads extends Database
             'lead_id', 'business_name', 'project_name', 'form_street_1', 'form_street_2', 'form_city', 
             'form_state', 'form_postcode', 'form_country', 'timezone', 'full_address',
             'services_interested_in', 'structure_type', 'structure_description', 'structure_other',
-            'structure_additional', 'picture_submitted_1', 'picture_submitted_2', 'picture_submitted_3',
+            'structure_additional',
+            'eng_system_cost_low', 'eng_system_cost_high', 'eng_protected_area',
+            'sales_system_cost_low', 'sales_system_cost_high', 'sales_protected_area',
+            'picture_submitted_1', 'picture_submitted_2', 'picture_submitted_3',
             'plans_submitted_1', 'plans_submitted_2', 'plans_submitted_3', 'picture_upload_link',
             'plans_upload_link', 'plans_and_pics', 'get_updates', 'hear_about', 'hear_about_other',
             'stage', 'last_edited_by', 'full_name', 'id'

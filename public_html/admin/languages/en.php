@@ -422,6 +422,15 @@ $lang = [
   'stage_7' => 'Closed Won',
   'stage_8' => 'Closed Lost',
   'stage_9' => 'Referral',
+  
+  // Screening Estimates
+  'screening_estimates' => 'Screening Estimates',
+  'engineering_estimates' => 'Engineering Estimates',
+  'sales_estimates' => 'Sales Estimates',
+  'system_cost' => 'System Cost',
+  'protected_area' => 'Protected Area',
+  'protected_area_sqft' => 'SQFT',
+  
   'lead_notes' => 'Notes',
   'created_at' => 'Created At',
   'updated_at' => 'Updated At',

@@ -1,5 +1,10 @@
 # CRM Framework - Developer Documentation
 
+## 🚨 IMPORTANT: For AI Assistants and Internal Development
+**AI Assistants**: Read `repo.md` file first - it contains critical development guidelines and database credentials needed for development work.
+
+**Public Documentation**: This README.md contains public-facing documentation without sensitive information.
+
 ## Quick Start
 
 ### Prerequisites
@@ -1697,11 +1702,153 @@ ls -la /path/to/new/file
 - **Files created through SFTP mount** will show as `mark:users` locally but are `democrm:democrm` on server
 - **Web server requires specific ownership** for proper access and security
 
-**Example for SQL migration files**:
-```bash
-# After creating multiple migration files
-chown -R democrm:democrm /home/democrm/
-chgrp nobody /home/democrm/public_html
-ls -la /home/democrm/sql/migrations/  # verify ownership
+## 🚨 CRITICAL DEVELOPMENT GUIDELINES
+
+### ⚠️ MANDATORY: Read This Section First
+**ALL AI assistants and developers MUST read and follow these guidelines before making ANY changes to the codebase.**
+
+### 🔒 System Configuration Pattern - NEVER CHANGE
+**CRITICAL**: The system configuration include pattern is the foundation of this framework and must NEVER be modified:
+
+```php
+require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
+```
+
+**❌ NEVER DO THIS**:
+- Change the include path to relative paths like `../../config/system.php`
+- Use different include methods like `require_once __DIR__ . '/../../config/system.php'`
+- Bypass system.php for "simpler" database connections
+- Create direct PDO connections in migration scripts
+
+**✅ ALWAYS DO THIS**:
+- Use the exact pattern above in ALL PHP files in `public_html/`
+- Understand that this pattern works from any subdirectory depth
+- Trust that this pattern loads all necessary autoloaders, constants, and classes
+- Use the Database class for all database operations
+
+**Why This Matters**:
+- **Path Independence**: Works from any subdirectory depth (`/admin/`, `/admin/email/`, etc.)
+- **Server Compatibility**: Uses `$_SERVER['DOCUMENT_ROOT']` which Apache sets correctly
+- **Framework Foundation**: Loads autoloaders, constants, security, and core classes
+- **Consistency**: Ensures all pages have the same foundation and capabilities
+
+### 🗄️ Database Migration Guidelines
+
+**❌ DO NOT CREATE PHP MIGRATION RUNNER SCRIPTS**:
+- Do not create `run_*_migration.php` files
+- Do not write PHP scripts that execute SQL migrations
+- Do not bypass the system configuration for database connections
+
+**✅ CORRECT MIGRATION APPROACH**:
+1. **Create SQL-only migration files** in `sql/migrations/` directory
+2. **Use descriptive filenames** like `add_screening_estimates_fields.sql`
+3. **Include clear comments** explaining the purpose and fields being added
+4. **Use proper SQL syntax** with individual ALTER TABLE statements
+5. **Let the developer run the migration manually** using their preferred method
+
+**Example Migration File Structure**:
+```sql
+-- Migration: Add Screening Estimates fields to leads table
+-- Date: 2025-01-27
+-- Description: Add 6 fields for screening estimates
+
+-- Add engineering screening estimate fields
+ALTER TABLE leads
+ADD COLUMN eng_system_cost_low INT DEFAULT NULL COMMENT 'Engineering estimate - system cost low range (whole dollars)';
+
+ALTER TABLE leads
+ADD COLUMN eng_system_cost_high INT DEFAULT NULL COMMENT 'Engineering estimate - system cost high range (whole dollars)';
+
+-- Continue with remaining fields...
+```
+
+### 💰 Data Type Guidelines for Financial and Measurement Fields
+
+**Money Fields (Costs, Prices, Estimates)**:
+- **Use INT for whole dollar amounts** (no cents needed)
+- **Frontend Display**: Add dollar sign icon (`$`) before the field
+- **Example**: `$25000` for a $25,000 estimate
+
+**Area/Measurement Fields**:
+- **Use INT for square footage** (no decimal precision needed)
+- **Frontend Display**: Add "SQFT" text after the field
+- **Example**: `2500 SQFT` for 2,500 square feet
+
+**Multilingual Considerations**:
+- **Currency symbols and units must be translatable**
+- **Use language files for currency symbols** (some countries use different symbols)
+- **Use language files for measurement units** (some countries use metric)
+
+### 🌍 Multilingual Framework Requirements
+
+**This is a multinational application requiring full multilingual support**:
+
+**Language File Structure**:
+- All user-facing text must be in language files: `public_html/admin/languages/`
+- Use the `Helpers` class for translation-aware form generation
+- Never hardcode English text in templates or PHP files
+
+**Form Field Labels and Text**:
+- Use language variables for all labels, buttons, and messages
+- Currency symbols and measurement units must be translatable
+- Error messages and validation text must support multiple languages
+
+**Database Considerations**:
+- Use UTF-8 encoding for all text fields
+- Consider cultural differences in data formats (dates, numbers, addresses)
+- Plan for right-to-left languages in UI design
+
+### 📋 Code Review Checklist
+
+**Before submitting any code changes, verify**:
+- [ ] System configuration include pattern is unchanged
+- [ ] No PHP migration runner scripts created
+- [ ] Financial fields use INT with proper frontend formatting
+- [ ] All user-facing text uses language variables
+- [ ] Database fields have proper UTF-8 encoding
+- [ ] File ownership will be set correctly after creation
+- [ ] Code follows the framework's direct, procedural approach
+- [ ] No complex routing functions or modern framework patterns introduced
+
+### 🎯 Quick Reference for AI Assistants
+
+**When asked to add database fields**:
+1. Create SQL-only migration file in `sql/migrations/`
+2. Use INT for money (whole dollars) and measurements (square feet)
+3. Include clear comments explaining the purpose
+4. Do not create PHP runner scripts
+
+**When asked to modify existing PHP files**:
+1. Never change the system configuration include pattern
+2. Use the existing Database class for all database operations
+3. Follow the framework's direct, procedural approach
+4. Ensure all text is translatable via language files
+
+**When asked about the framework architecture**:
+1. This is NOT a traditional MVC framework
+2. It uses direct file routing with no URL rewriting
+3. Templates are included directly, not rendered through engines
+4. Database connections use inheritance patterns, not dependency injection
+
+### 🔄 Migration Workflow Summary
+
+**For AI Assistants - Complete Workflow**:
+1. **Create SQL migration file** in `sql/migrations/` with descriptive name
+2. **Use INT for financial/measurement fields** (whole dollars, square feet)
+3. **Include comprehensive comments** explaining purpose and field usage
+4. **Provide the SQL content in response** for developer to copy/paste
+5. **Do NOT create PHP runner scripts** - let developer handle execution
+6. **Remind about file ownership** - developer will handle via SSH
+
+**Example Response Format**:
+```
+I've created the migration file `sql/migrations/add_screening_estimates_fields.sql` with the following content:
+
+[SQL content here]
+
+To run this migration:
+1. Copy the SQL content from the file
+2. Execute it using your preferred database tool (phpMyAdmin, MySQL CLI, etc.)
+3. Set file ownership: `ssh wswg "chown -R democrm:democrm /home/democrm/"`
 ```
 

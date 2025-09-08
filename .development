@@ -1,0 +1,11 @@
+# Development Mode Active
+
+This file indicates the application is in development mode.
+
+When this file exists, AI assistants should:
+1. Automatically update .zencoder/rules/repo.md when making code changes
+2. Document new features, database changes, and functionality directly in repo.md
+3. Avoid creating separate markdown documentation files
+4. Maintain a comprehensive development log in the main repository documentation
+
+Remove this file when moving to production to disable automatic documentation updates.

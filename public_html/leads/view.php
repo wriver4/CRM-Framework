@@ -218,6 +218,92 @@ require __DIR__ . '/../templates/section_header.php';
 
             </div>
             <?php endif; ?>
+            
+            <?php
+            // Check if any screening estimates data exists
+            $has_eng_data = !empty($eng_system_cost_low) || !empty($eng_system_cost_high) || !empty($eng_protected_area);
+            $has_sales_data = !empty($sales_system_cost_low) || !empty($sales_system_cost_high) || !empty($sales_protected_area);
+            $has_screening_data = $has_eng_data || $has_sales_data;
+            ?>
+            
+            <?php if ($has_screening_data): ?>
+            <!-- Screening Estimates Section -->
+            <div class="mt-4">
+              <h6 class="text-muted mb-3">
+                <i class="fa-solid fa-calculator me-2"></i><?= $lang['screening_estimates'] ?? 'Screening Estimates'; ?>
+              </h6>
+              
+              <div class="row">
+                <?php if ($has_eng_data): ?>
+                <!-- Engineering Estimates -->
+                <div class="col-md-6 mb-3">
+                  <div class="card border-info">
+                    <div class="card-header bg-info text-white py-2">
+                      <h6 class="mb-0">
+                        <i class="fa-solid fa-cogs me-2"></i><?= $lang['engineering_estimates'] ?? 'Engineering Estimates'; ?>
+                      </h6>
+                    </div>
+                    <div class="card-body">
+                      <?php if (!empty($eng_system_cost_low) || !empty($eng_system_cost_high)): ?>
+                      <p class="mb-2">
+                        <strong><?= $lang['system_cost'] ?? 'System Cost'; ?>:</strong>
+                        <?php if (!empty($eng_system_cost_low) && !empty($eng_system_cost_high)): ?>
+                          $<?= number_format($eng_system_cost_low) ?> - $<?= number_format($eng_system_cost_high) ?>
+                        <?php elseif (!empty($eng_system_cost_low)): ?>
+                          $<?= number_format($eng_system_cost_low) ?> (<?= $lang['system_cost_low'] ?? 'Low' ?>)
+                        <?php elseif (!empty($eng_system_cost_high)): ?>
+                          $<?= number_format($eng_system_cost_high) ?> (<?= $lang['system_cost_high'] ?? 'High' ?>)
+                        <?php endif; ?>
+                      </p>
+                      <?php endif; ?>
+                      
+                      <?php if (!empty($eng_protected_area)): ?>
+                      <p class="mb-0">
+                        <strong><?= $lang['protected_area'] ?? 'Protected Area'; ?>:</strong>
+                        <?= number_format($eng_protected_area) ?> <?= $lang['protected_area_sqft'] ?? 'SQFT' ?>
+                      </p>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                </div>
+                <?php endif; ?>
+                
+                <?php if ($has_sales_data): ?>
+                <!-- Sales Estimates -->
+                <div class="col-md-6 mb-3">
+                  <div class="card border-success">
+                    <div class="card-header bg-success text-white py-2">
+                      <h6 class="mb-0">
+                        <i class="fa-solid fa-handshake me-2"></i><?= $lang['sales_estimates'] ?? 'Sales Estimates'; ?>
+                      </h6>
+                    </div>
+                    <div class="card-body">
+                      <?php if (!empty($sales_system_cost_low) || !empty($sales_system_cost_high)): ?>
+                      <p class="mb-2">
+                        <strong><?= $lang['system_cost'] ?? 'System Cost'; ?>:</strong>
+                        <?php if (!empty($sales_system_cost_low) && !empty($sales_system_cost_high)): ?>
+                          $<?= number_format($sales_system_cost_low) ?> - $<?= number_format($sales_system_cost_high) ?>
+                        <?php elseif (!empty($sales_system_cost_low)): ?>
+                          $<?= number_format($sales_system_cost_low) ?> (<?= $lang['system_cost_low'] ?? 'Low' ?>)
+                        <?php elseif (!empty($sales_system_cost_high)): ?>
+                          $<?= number_format($sales_system_cost_high) ?> (<?= $lang['system_cost_high'] ?? 'High' ?>)
+                        <?php endif; ?>
+                      </p>
+                      <?php endif; ?>
+                      
+                      <?php if (!empty($sales_protected_area)): ?>
+                      <p class="mb-0">
+                        <strong><?= $lang['protected_area'] ?? 'Protected Area'; ?>:</strong>
+                        <?= number_format($sales_protected_area) ?> <?= $lang['protected_area_sqft'] ?? 'SQFT' ?>
+                      </p>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                </div>
+                <?php endif; ?>
+              </div>
+            </div>
+            <?php endif; ?>
           </div>
         </div>
 
