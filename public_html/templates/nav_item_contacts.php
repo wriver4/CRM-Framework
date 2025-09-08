@@ -2,7 +2,7 @@
 <li id="contacts"
     class="nav-item">
   <a class="btn nav-link link-light<?php echo ($dir == "contacts") ? ' active' : ''; ?>"
-     href="/contacts/list"
+     href="<?php echo CONTACTS; ?>/list"
      tabindex="0">
     <?= $lang['navbar_contacts']; ?></a>
 </li>

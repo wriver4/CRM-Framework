@@ -6,15 +6,23 @@
  */
 
 // Load system configuration
-require_once '../../config/system.php';
+require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 
 // Security check
 $security = new Security();
 $security->check_user_permissions('admin', 'read');
 
 // Set page variables for navigation
-$dir = 'admin/email';
+$dir = 'admin';
+$subdir = 'email';
+$sub_subdir = '';
+$sub_sub_subdir = '';
 $page = 'sync_queue';
+$table_page = true;
+
+// Set display variables
+$title = 'Email Sync Queue';
+$title_icon = '<i class="fa fa-sync"></i>';
 
 // Load language file
 $lang = include LANG . '/en.php';

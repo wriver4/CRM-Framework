@@ -6,15 +6,23 @@
  */
 
 // Load system configuration
-require_once '../../config/system.php';
+require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 
 // Security check
 $security = new Security();
 $security->check_user_permissions('admin', 'read');
 
 // Set page variables for navigation
-$dir = 'admin/email';
+$dir = 'admin';
+$subdir = 'email';
+$sub_subdir = '';
+$sub_sub_subdir = '';
 $page = 'system_status';
+$table_page = false;
+
+// Set display variables
+$title = 'Email System Status';
+$title_icon = '<i class="fa fa-heartbeat"></i>';
 
 // Load language file
 $lang = include LANG . '/en.php';
@@ -45,16 +53,24 @@ try {
 // 2. Required tables exist
 $required_tables = ['email_form_processing', 'crm_sync_queue', 'email_accounts_config'];
 $missing_tables = [];
+$table_check_errors = [];
 
+// Check each table by trying to query it directly
 foreach ($required_tables as $table) {
     try {
-        $stmt = $pdo->prepare("SHOW TABLES LIKE ?");
-        $stmt->execute([$table]);
-        if (!$stmt->fetch()) {
-            $missing_tables[] = $table;
-        }
+        // Try a simple SELECT to see if table exists and is accessible
+        $stmt = $pdo->prepare("SELECT 1 FROM `$table` LIMIT 1");
+        $stmt->execute();
+        // If we get here, table exists and is accessible
     } catch (Exception $e) {
-        $missing_tables[] = $table . ' (error checking)';
+        $missing_tables[] = $table;
+        // Check if it's a "table doesn't exist" error vs other errors
+        if (strpos($e->getMessage(), "doesn't exist") !== false || 
+            strpos($e->getMessage(), "Table") !== false && strpos($e->getMessage(), "doesn't exist") !== false) {
+            $table_check_errors[] = "$table: Table does not exist";
+        } else {
+            $table_check_errors[] = "$table: " . $e->getMessage();
+        }
     }
 }
 
@@ -65,10 +81,14 @@ if (empty($missing_tables)) {
         'message' => 'All required tables exist'
     ];
 } else {
+    $error_message = 'Missing tables: ' . implode(', ', $missing_tables);
+    if (!empty($table_check_errors)) {
+        $error_message .= ' | Debug: ' . implode(' | ', $table_check_errors);
+    }
     $status_checks['tables'] = [
         'name' => 'Required Tables',
         'status' => 'error',
-        'message' => 'Missing tables: ' . implode(', ', $missing_tables)
+        'message' => $error_message
     ];
 }
 
@@ -250,89 +270,85 @@ try {
     $daily_stats = [];
 }
 
+require HEADER;
+require BODY;
+require NAV;
+require SECTIONOPEN;
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email System Status - <?php echo TABTITLEPREFIX; ?></title>
-    <?php include HEADER; ?>
-</head>
-<body>
-    <?php include NAV; ?>
-    
-    <div class="container-fluid mt-4">
-        <div class="row">
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2><i class="fa fa-heartbeat me-2"></i>Email Processing System Status</h2>
-                    <div>
-                        <span class="badge badge-lg bg-<?php echo $overall_status === 'ok' ? 'success' : ($overall_status === 'warning' ? 'warning' : 'danger'); ?>">
-                            System <?php echo ucfirst($overall_status); ?>
-                        </span>
-                    </div>
-                </div>
+<div class="col-12">
+  <div class="d-flex justify-content-end align-items-center mb-4">
+    <div>
+      <span
+            class="badge badge-lg bg-<?php echo $overall_status === 'ok' ? 'success' : ($overall_status === 'warning' ? 'warning' : 'danger'); ?>">
+        System <?php echo ucfirst($overall_status); ?>
+      </span>
+    </div>
+  </div>
 
-                <!-- Overall Status Card -->
-                <div class="card mb-4 border-<?php echo $overall_status === 'ok' ? 'success' : ($overall_status === 'warning' ? 'warning' : 'danger'); ?>">
-                    <div class="card-header bg-<?php echo $overall_status === 'ok' ? 'success' : ($overall_status === 'warning' ? 'warning' : 'danger'); ?> text-white">
-                        <h5 class="mb-0">
-                            <i class="fa fa-<?php echo $overall_status === 'ok' ? 'check-circle' : ($overall_status === 'warning' ? 'exclamation-triangle' : 'times-circle'); ?> me-2"></i>
-                            Overall System Status: <?php echo ucfirst($overall_status); ?>
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="mb-0">
-                            <?php if ($overall_status === 'ok'): ?>
-                                All systems are operating normally. Email processing is functioning correctly.
-                            <?php elseif ($overall_status === 'warning'): ?>
-                                System is operational but some issues require attention. Check the details below.
-                            <?php else: ?>
-                                Critical issues detected that may affect email processing. Immediate attention required.
-                            <?php endif; ?>
-                        </p>
-                    </div>
-                </div>
+  <!-- Overall Status Card -->
+  <div
+       class="card mb-4 border-<?php echo $overall_status === 'ok' ? 'success' : ($overall_status === 'warning' ? 'warning' : 'danger'); ?>">
+    <div
+         class="card-header bg-<?php echo $overall_status === 'ok' ? 'success' : ($overall_status === 'warning' ? 'warning' : 'danger'); ?> text-white">
+      <h5 class="mb-0">
+        <i
+           class="fa fa-<?php echo $overall_status === 'ok' ? 'check-circle' : ($overall_status === 'warning' ? 'exclamation-triangle' : 'times-circle'); ?> me-2"></i>
+        Overall System Status: <?php echo ucfirst($overall_status); ?>
+      </h5>
+    </div>
+    <div class="card-body">
+      <p class="mb-0">
+        <?php if ($overall_status === 'ok'): ?>
+        All systems are operating normally. Email processing is functioning correctly.
+        <?php elseif ($overall_status === 'warning'): ?>
+        System is operational but some issues require attention. Check the details below.
+        <?php else: ?>
+        Critical issues detected that may affect email processing. Immediate attention required.
+        <?php endif; ?>
+      </p>
+    </div>
+  </div>
 
-                <!-- Status Checks -->
-                <div class="row">
-                    <?php foreach ($status_checks as $key => $check): ?>
-                    <div class="col-md-6 col-lg-4 mb-3">
-                        <div class="card h-100 border-<?php echo $check['status'] === 'ok' ? 'success' : ($check['status'] === 'warning' ? 'warning' : 'danger'); ?>">
-                            <div class="card-body">
-                                <h6 class="card-title">
-                                    <i class="fa fa-<?php echo $check['status'] === 'ok' ? 'check-circle text-success' : ($check['status'] === 'warning' ? 'exclamation-triangle text-warning' : 'times-circle text-danger'); ?> me-2"></i>
-                                    <?php echo $check['name']; ?>
-                                </h6>
-                                <p class="card-text small"><?php echo htmlspecialchars($check['message']); ?></p>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
+  <!-- Status Checks -->
+  <div class="row">
+    <?php foreach ($status_checks as $key => $check): ?>
+    <div class="col-md-6 col-lg-4 mb-3">
+      <div
+           class="card h-100 border-<?php echo $check['status'] === 'ok' ? 'success' : ($check['status'] === 'warning' ? 'warning' : 'danger'); ?>">
+        <div class="card-body">
+          <h6 class="card-title">
+            <i
+               class="fa fa-<?php echo $check['status'] === 'ok' ? 'check-circle text-success' : ($check['status'] === 'warning' ? 'exclamation-triangle text-warning' : 'times-circle text-danger'); ?> me-2"></i>
+            <?php echo $check['name']; ?>
+          </h6>
+          <p class="card-text small"><?php echo htmlspecialchars($check['message']); ?></p>
+        </div>
+      </div>
+    </div>
+    <?php endforeach; ?>
+  </div>
 
-                <!-- Recent Activity Chart -->
-                <?php if (!empty($daily_stats)): ?>
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">Processing Activity (Last 7 Days)</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Success</th>
-                                        <th>Failed</th>
-                                        <th>Skipped</th>
-                                        <th>Duplicate</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
+  <!-- Recent Activity Chart -->
+  <?php if (!empty($daily_stats)): ?>
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5 class="mb-0">Processing Activity (Last 7 Days)</h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Success</th>
+              <th>Failed</th>
+              <th>Skipped</th>
+              <th>Duplicate</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
                                     // Group stats by date
                                     $grouped_stats = [];
                                     foreach ($daily_stats as $stat) {
@@ -342,68 +358,72 @@ try {
                                     foreach ($grouped_stats as $date => $statuses):
                                         $total = array_sum($statuses);
                                     ?>
-                                    <tr>
-                                        <td><?php echo date('M j, Y', strtotime($date)); ?></td>
-                                        <td><span class="badge bg-success"><?php echo $statuses['success'] ?? 0; ?></span></td>
-                                        <td><span class="badge bg-danger"><?php echo $statuses['failed'] ?? 0; ?></span></td>
-                                        <td><span class="badge bg-warning"><?php echo $statuses['skipped'] ?? 0; ?></span></td>
-                                        <td><span class="badge bg-secondary"><?php echo $statuses['duplicate'] ?? 0; ?></span></td>
-                                        <td><strong><?php echo $total; ?></strong></td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <?php endif; ?>
+            <tr>
+              <td><?php echo date('M j, Y', strtotime($date)); ?></td>
+              <td><span class="badge bg-success"><?php echo $statuses['success'] ?? 0; ?></span></td>
+              <td><span class="badge bg-danger"><?php echo $statuses['failed'] ?? 0; ?></span></td>
+              <td><span class="badge bg-warning"><?php echo $statuses['skipped'] ?? 0; ?></span></td>
+              <td><span class="badge bg-secondary"><?php echo $statuses['duplicate'] ?? 0; ?></span></td>
+              <td><strong><?php echo $total; ?></strong></td>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <?php endif; ?>
 
-                <!-- Quick Actions -->
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">Quick Actions</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <a href="/admin/email/processing_log" class="btn btn-outline-primary w-100 mb-2">
-                                    <i class="fa fa-list me-1"></i>View Processing Log
-                                </a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="/admin/email/accounts_config" class="btn btn-outline-info w-100 mb-2">
-                                    <i class="fa fa-cog me-1"></i>Manage Accounts
-                                </a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="/admin/email/sync_queue" class="btn btn-outline-warning w-100 mb-2">
-                                    <i class="fa fa-sync me-1"></i>Check Sync Queue
-                                </a>
-                            </div>
-                            <div class="col-md-3">
-                                <a href="/leads/email_import.php" class="btn btn-outline-success w-100 mb-2">
-                                    <i class="fa fa-envelope me-1"></i>Manual Import
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <!-- Quick Actions -->
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5 class="mb-0">Quick Actions</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-3">
+          <a href="/admin/email/processing_log"
+             class="btn btn-outline-primary w-100 mb-2">
+            <i class="fa fa-list me-1"></i>View Processing Log
+          </a>
+        </div>
+        <div class="col-md-3">
+          <a href="/admin/email/accounts_config"
+             class="btn btn-outline-info w-100 mb-2">
+            <i class="fa fa-cog me-1"></i>Manage Accounts
+          </a>
+        </div>
+        <div class="col-md-3">
+          <a href="/admin/email/sync_queue"
+             class="btn btn-outline-warning w-100 mb-2">
+            <i class="fa fa-sync me-1"></i>Check Sync Queue
+          </a>
+        </div>
+        <div class="col-md-3">
+          <a href="/admin/email/email_import"
+             class="btn btn-outline-success w-100 mb-2">
+            <i class="fa fa-envelope me-1"></i>Manual Import
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 
-                <!-- System Information -->
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <h5 class="mb-0">System Information</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <dl class="row">
-                                    <dt class="col-sm-4">PHP Version:</dt>
-                                    <dd class="col-sm-8"><?php echo PHP_VERSION; ?></dd>
-                                    
-                                    <dt class="col-sm-4">Database:</dt>
-                                    <dd class="col-sm-8">
-                                        <?php
+  <!-- System Information -->
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5 class="mb-0">System Information</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <dl class="row">
+            <dt class="col-sm-4">PHP Version:</dt>
+            <dd class="col-sm-8"><?php echo PHP_VERSION; ?></dd>
+
+            <dt class="col-sm-4">Database:</dt>
+            <dd class="col-sm-8">
+              <?php
                                         try {
                                             $version = $pdo->query('SELECT VERSION()')->fetchColumn();
                                             echo htmlspecialchars($version);
@@ -411,37 +431,34 @@ try {
                                             echo 'Unknown';
                                         }
                                         ?>
-                                    </dd>
-                                    
-                                    <dt class="col-sm-4">Server Time:</dt>
-                                    <dd class="col-sm-8"><?php echo date('Y-m-d H:i:s T'); ?></dd>
-                                </dl>
-                            </div>
-                            <div class="col-md-6">
-                                <dl class="row">
-                                    <dt class="col-sm-4">IMAP Extension:</dt>
-                                    <dd class="col-sm-8">
-                                        <?php echo extension_loaded('imap') ? '<span class="text-success">Available</span>' : '<span class="text-danger">Not Available</span>'; ?>
-                                    </dd>
-                                    
-                                    <dt class="col-sm-4">JSON Extension:</dt>
-                                    <dd class="col-sm-8">
-                                        <?php echo extension_loaded('json') ? '<span class="text-success">Available</span>' : '<span class="text-danger">Not Available</span>'; ?>
-                                    </dd>
-                                    
-                                    <dt class="col-sm-4">Cron Script:</dt>
-                                    <dd class="col-sm-8">
-                                        <?php echo file_exists($cron_script) ? '<span class="text-success">Present</span>' : '<span class="text-danger">Missing</span>'; ?>
-                                    </dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+            </dd>
 
-    <?php include FOOTER; ?>
-</body>
-</html>
+            <dt class="col-sm-4">Server Time:</dt>
+            <dd class="col-sm-8"><?php echo date('Y-m-d H:i:s T'); ?></dd>
+          </dl>
+        </div>
+        <div class="col-md-6">
+          <dl class="row">
+            <dt class="col-sm-4">IMAP Extension:</dt>
+            <dd class="col-sm-8">
+              <?php echo extension_loaded('imap') ? '<span class="text-success">Available</span>' : '<span class="text-danger">Not Available</span>'; ?>
+            </dd>
+
+            <dt class="col-sm-4">JSON Extension:</dt>
+            <dd class="col-sm-8">
+              <?php echo extension_loaded('json') ? '<span class="text-success">Available</span>' : '<span class="text-danger">Not Available</span>'; ?>
+            </dd>
+
+            <dt class="col-sm-4">Cron Script:</dt>
+            <dd class="col-sm-8">
+              <?php echo file_exists($cron_script) ? '<span class="text-success">Present</span>' : '<span class="text-danger">Missing</span>'; ?>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<?php
+require SECTIONCLOSE;
+require FOOTER;

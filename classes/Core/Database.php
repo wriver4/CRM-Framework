@@ -79,9 +79,24 @@ class Database
             \PDO::ATTR_EMULATE_PREPARES   => false,
         ];
         
-        // Initialize SQL logger
-        $this->sqlLogger = new SqlErrorLogger();
+        // Initialize SQL logger (lazy loading to avoid circular dependency)
+        $this->sqlLogger = null;
     }
+
+    /**
+     * Get SQL logger instance (lazy loading to avoid circular dependency)
+     */
+    protected function getSqlLogger()
+    {
+        if ($this->sqlLogger === null && class_exists('SqlErrorLogger')) {
+            // Only create if we're not already in SqlErrorLogger to avoid circular dependency
+            if (get_class($this) !== 'SqlErrorLogger') {
+                $this->sqlLogger = new SqlErrorLogger();
+            }
+        }
+        return $this->sqlLogger;
+    }
+
     public function dbcrm()
     {
         static $DBCRM = null;
@@ -115,7 +130,10 @@ class Database
             $executionTime = round((microtime(true) - $startTime) * 1000, 2);
             
             // Log successful execution (only if debug mode is enabled)
-            $this->sqlLogger->logSqlExecution($sql, $parameters, $executionTime, true);
+            $logger = $this->getSqlLogger();
+            if ($logger) {
+                $logger->logSqlExecution($sql, $parameters, $executionTime, true);
+            }
             
             return $result;
             
@@ -131,10 +149,12 @@ class Database
                 'pdo_error_info' => $e->errorInfo ?? null
             ]);
             
-            $this->sqlLogger->logSqlError($e->getMessage(), $errorContext);
-            
-            // Log failed execution
-            $this->sqlLogger->logSqlExecution($sql, $parameters, $executionTime, false);
+            $logger = $this->getSqlLogger();
+            if ($logger) {
+                $logger->logSqlError($e->getMessage(), $errorContext);
+                // Log failed execution
+                $logger->logSqlExecution($sql, $parameters, $executionTime, false);
+            }
             
             // Re-throw the exception
             throw $e;
@@ -192,7 +212,10 @@ class Database
             $extra = array_diff($providedKeys, $expectedParams);
             
             if (!empty($missing) || !empty($extra)) {
-                $this->sqlLogger->logParameterMismatch($sql, $parameters, $expectedParams);
+                $logger = $this->getSqlLogger();
+                if ($logger) {
+                    $logger->logParameterMismatch($sql, $parameters, $expectedParams);
+                }
             }
         }
     }
@@ -202,14 +225,9 @@ class Database
      */
     protected function logFormError($formName, $error, $formData = [])
     {
-        $this->sqlLogger->logFormError($formName, $error, $formData);
-    }
-
-    /**
-     * Get SQL logger instance
-     */
-    public function getSqlLogger()
-    {
-        return $this->sqlLogger;
+        $logger = $this->getSqlLogger();
+        if ($logger) {
+            $logger->logFormError($formName, $error, $formData);
+        }
     }
 }

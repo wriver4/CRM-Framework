@@ -803,4 +803,123 @@ public function admin_select_property_id($lang, $prop_id )
     ];
   }
 
+  // === NETWORK & SECURITY UTILITIES ===
+  // Moved from config/helpers.php for better organization
+
+  /**
+   * Get client IP address with proxy support
+   * @return string Client IP address or empty string if not found
+   */
+  public function get_client_ip()
+  {
+    // Check for IP from shared internet
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = filter_var($_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP);
+        if ($ip !== false) return $ip;
+    }
+    
+    // Check for IP passed from proxy
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        // Can contain multiple IPs, get the first one
+        $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        $ip = filter_var(trim($ips[0]), FILTER_VALIDATE_IP);
+        if ($ip !== false) return $ip;
+    }
+    
+    // Check for IP from remote address
+    if (!empty($_SERVER['REMOTE_ADDR'])) {
+        $ip = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
+        if ($ip !== false) return $ip;
+    }
+    
+    return '';
+  }
+
+  /**
+   * Get country code by IP address using free geolocation services
+   * @return string Country code or 'Unknown' if not found
+   */
+  public function country_by_ip()
+  {
+    $ip = $this->get_client_ip();
+    if ($ip == '' || $ip == '127.0.0.1' || $ip == '::1') {
+        return 'Unknown';
+    }
+    
+    // List of free geolocation services to try (in order of preference)
+    $services = [
+        [
+            'url' => "http://ip-api.com/json/" . $ip . "?fields=countryCode",
+            'parser' => function($data) {
+                $source = json_decode($data);
+                return ($source && isset($source->countryCode) && $source->countryCode != null) 
+                    ? $source->countryCode : null;
+            }
+        ],
+        [
+            'url' => "https://freeiplookupapi.com/json/" . $ip,
+            'parser' => function($data) {
+                $source = json_decode($data);
+                return ($source && isset($source->countryCode) && $source->countryCode != null) 
+                    ? $source->countryCode : null;
+            }
+        ]
+    ];
+    
+    // Create a context with timeout and user agent
+    $context = stream_context_create([
+        'http' => [
+            'timeout' => 3, // 3 second timeout per service
+            'user_agent' => 'Mozilla/5.0 (compatible; CRM-App/1.0)',
+            'ignore_errors' => true
+        ]
+    ]);
+    
+    // Try each service in order
+    foreach ($services as $service) {
+        try {
+            $response = @file_get_contents($service['url'], false, $context);
+            
+            if ($response !== false) {
+                $countryCode = $service['parser']($response);
+                if ($countryCode !== null) {
+                    return $countryCode;
+                }
+            }
+        } catch (Exception $e) {
+            // Continue to next service
+            continue;
+        }
+    }
+    
+    // If all services fail, return 'Unknown'
+    return 'Unknown';
+  }
+
+  /**
+   * Validate session ID format according to PHP session configuration
+   * @param string $sessionId Session ID to validate
+   * @return bool True if valid, false otherwise
+   */
+  public function isValidSessionId(string $sessionId): bool
+  {
+    if (empty($sessionId)) {
+        return false;
+    }
+
+    $sidLength = ini_get('session.sid_length');
+    $bitsPerCharacter = ini_get('session.sid_bits_per_character');
+    $characterClass = [
+        6 => '0-9a-zA-z,-',
+        5 => '0-9a-z',
+        4 => '0-9a-f'
+    ];
+
+    if (array_key_exists($bitsPerCharacter, $characterClass)) {
+        $pattern = '/^[' . $characterClass[$bitsPerCharacter] . ']{' . $sidLength . '}$/';
+        return preg_match($pattern, $sessionId) === 1;
+    }
+    throw new \RuntimeException('Unknown value in session.sid_bits_per_character.');
+  }
+
 }

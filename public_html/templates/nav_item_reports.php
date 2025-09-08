@@ -2,7 +2,7 @@
 <li id="reports"
     class="nav-item">
   <a class="btn nav-link link-light<?php  echo ($dir == "reports") ? ' active' : ''; ?>"
-     href="/reports/index"
+     href="<?php echo REPORTS; ?>/index"
      tabindex="0">
     <?= $lang['navbar_reports']; ?></a>
 </li>

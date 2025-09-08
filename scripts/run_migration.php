@@ -127,7 +127,7 @@ try {
     echo "   */5 * * * * php " . dirname(__DIR__) . "/scripts/email_cron.php\n\n";
     
     echo "3. Test the system:\n";
-    echo "   - Visit: /leads/email_import.php\n";
+    echo "   - Visit: /admin/email/email_import\n";
     echo "   - API: /api/email_forms.php/status?api_key=waveguard_api_key_2024\n\n";
     
     echo "Migration completed successfully!\n";

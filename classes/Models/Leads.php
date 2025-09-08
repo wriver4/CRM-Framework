@@ -906,4 +906,308 @@ class Leads extends Database
             return false;
         }
     }
+
+    // ========================================
+    // DASHBOARD ANALYTICS METHODS
+    // ========================================
+
+    /**
+     * Get lead counts by stage for dashboard analytics
+     * @return array Array of stage counts with stage names and numbers
+     */
+    public function getLeadCountsByStage()
+    {
+        try {
+            $sql = "SELECT 
+                        stage,
+                        COUNT(*) as count
+                    FROM leads 
+                    GROUP BY stage 
+                    ORDER BY 
+                        CASE stage
+                            WHEN '1' THEN 1
+                            WHEN 'Lead' THEN 1
+                            WHEN '2' THEN 2
+                            WHEN 'Prospect' THEN 2
+                            WHEN '3' THEN 3
+                            WHEN 'Qualified' THEN 3
+                            WHEN '4' THEN 4
+                            WHEN 'Proposal' THEN 4
+                            WHEN '5' THEN 5
+                            WHEN 'Closing Conference' THEN 5
+                            WHEN '6' THEN 6
+                            WHEN 'Completed Estimate' THEN 6
+                            WHEN '7' THEN 7
+                            WHEN 'Closed Won' THEN 7
+                            WHEN '8' THEN 8
+                            WHEN 'Closed Lost' THEN 8
+                            WHEN '9' THEN 9
+                            WHEN 'Referral' THEN 9
+                            ELSE 99
+                        END";
+            
+            $stmt = $this->dbcrm()->prepare($sql);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+            
+            // Convert stage names to numbers and consolidate counts
+            $stageCountsMap = [];
+            foreach ($results as $row) {
+                $stageNumber = $this->normalizeStageToNumber($row['stage']);
+                
+                if (!isset($stageCountsMap[$stageNumber])) {
+                    $stageCountsMap[$stageNumber] = 0;
+                }
+                $stageCountsMap[$stageNumber] += (int)$row['count'];
+            }
+            
+            // Convert to final format with proper display names
+            $stageCounts = [];
+            foreach ($stageCountsMap as $stageNumber => $count) {
+                $stageName = $this->get_stage_display_name($stageNumber);
+                $stageCounts[] = [
+                    'stage_number' => $stageNumber,
+                    'stage_name' => $stageName,
+                    'count' => $count,
+                    'badge_class' => $this->get_stage_badge_class($stageNumber)
+                ];
+            }
+            
+            // Sort by stage number
+            usort($stageCounts, function($a, $b) {
+                return $a['stage_number'] <=> $b['stage_number'];
+            });
+            
+            return $stageCounts;
+        } catch (Exception $e) {
+            error_log("Error getting lead counts by stage: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get total lead count
+     * @return int Total number of leads
+     */
+    public function getTotalLeadCount()
+    {
+        try {
+            $sql = "SELECT COUNT(*) as total FROM leads";
+            $stmt = $this->dbcrm()->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            return (int)$result['total'];
+        } catch (Exception $e) {
+            error_log("Error getting total lead count: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Get lead counts by source for dashboard analytics
+     * @return array Array of source counts
+     */
+    public function getLeadCountsBySource()
+    {
+        try {
+            $sql = "SELECT 
+                        lead_source,
+                        COUNT(*) as count
+                    FROM leads 
+                    GROUP BY lead_source 
+                    ORDER BY lead_source";
+            
+            $stmt = $this->dbcrm()->prepare($sql);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+            
+            $sourceCounts = [];
+            $sourceArray = $this->get_lead_source_array();
+            
+            foreach ($results as $row) {
+                $sourceId = (int)$row['lead_source'];
+                $sourceName = $sourceArray[$sourceId] ?? 'Unknown';
+                
+                $sourceCounts[] = [
+                    'source_id' => $sourceId,
+                    'source_name' => $sourceName,
+                    'count' => (int)$row['count']
+                ];
+            }
+            
+            return $sourceCounts;
+        } catch (Exception $e) {
+            error_log("Error getting lead counts by source: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get recent leads activity for dashboard
+     * @param int $limit Number of recent leads to return
+     * @return array Array of recent leads
+     */
+    public function getRecentLeads($limit = 10)
+    {
+        try {
+            $sql = "SELECT 
+                        id,
+                        lead_id,
+                        full_name,
+                        email,
+                        stage,
+                        created_at,
+                        updated_at
+                    FROM leads 
+                    ORDER BY updated_at DESC 
+                    LIMIT :limit";
+            
+            $stmt = $this->dbcrm()->prepare($sql);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+            
+            // Enhance results with stage information
+            foreach ($results as &$lead) {
+                $stageNumber = $this->normalizeStageToNumber($lead['stage']);
+                $lead['stage_number'] = $stageNumber;
+                $lead['stage_name'] = $this->get_stage_display_name($stageNumber);
+                $lead['badge_class'] = $this->get_stage_badge_class($stageNumber);
+            }
+            
+            return $results;
+        } catch (Exception $e) {
+            error_log("Error getting recent leads: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get leads created in the last 30 days by day
+     * @return array Array of daily lead counts
+     */
+    public function getLeadsLast30Days()
+    {
+        try {
+            $sql = "SELECT 
+                        DATE(created_at) as date,
+                        COUNT(*) as count
+                    FROM leads 
+                    WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+                    GROUP BY DATE(created_at)
+                    ORDER BY date";
+            
+            $stmt = $this->dbcrm()->prepare($sql);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+            
+            // Fill in missing dates with 0 counts
+            $dailyCounts = [];
+            $startDate = new DateTime('-30 days');
+            $endDate = new DateTime();
+            
+            // Create array with all dates initialized to 0
+            $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
+            foreach ($period as $date) {
+                $dailyCounts[$date->format('Y-m-d')] = 0;
+            }
+            
+            // Fill in actual counts
+            foreach ($results as $row) {
+                $dailyCounts[$row['date']] = (int)$row['count'];
+            }
+            
+            // Convert to array format for charts
+            $chartData = [];
+            foreach ($dailyCounts as $date => $count) {
+                $chartData[] = [
+                    'date' => $date,
+                    'count' => $count
+                ];
+            }
+            
+            return $chartData;
+        } catch (Exception $e) {
+            error_log("Error getting leads for last 30 days: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Normalize stage value to stage number (handles both text and numeric stages)
+     * @param mixed $stage Stage value from database
+     * @return int Stage number (1-9)
+     */
+    private function normalizeStageToNumber($stage)
+    {
+        // If it's already a number, return it
+        if (is_numeric($stage)) {
+            $num = (int)$stage;
+            return ($num >= 1 && $num <= 9) ? $num : 1;
+        }
+        
+        // If it's text, convert using existing method
+        return $this->convert_text_stage_to_number($stage);
+    }
+
+    /**
+     * Get dashboard summary statistics
+     * @return array Summary statistics for dashboard
+     */
+    public function getDashboardSummary()
+    {
+        try {
+            $summary = [
+                'total_leads' => $this->getTotalLeadCount(),
+                'stage_counts' => $this->getLeadCountsByStage(),
+                'source_counts' => $this->getLeadCountsBySource(),
+                'recent_leads' => $this->getRecentLeads(5),
+                'daily_counts' => $this->getLeadsLast30Days()
+            ];
+            
+            // Calculate conversion metrics
+            $stageCounts = $summary['stage_counts'];
+            $totalLeads = $summary['total_leads'];
+            
+            if ($totalLeads > 0) {
+                // Find closed won and closed lost counts
+                $closedWon = 0;
+                $closedLost = 0;
+                
+                foreach ($stageCounts as $stage) {
+                    if ($stage['stage_number'] == 7) { // Closed Won
+                        $closedWon = $stage['count'];
+                    } elseif ($stage['stage_number'] == 8) { // Closed Lost
+                        $closedLost = $stage['count'];
+                    }
+                }
+                
+                $totalClosed = $closedWon + $closedLost;
+                $summary['conversion_rate'] = $totalClosed > 0 ? round(($closedWon / $totalClosed) * 100, 1) : 0;
+                $summary['closed_won'] = $closedWon;
+                $summary['closed_lost'] = $closedLost;
+                $summary['active_leads'] = $totalLeads - $totalClosed;
+            } else {
+                $summary['conversion_rate'] = 0;
+                $summary['closed_won'] = 0;
+                $summary['closed_lost'] = 0;
+                $summary['active_leads'] = 0;
+            }
+            
+            return $summary;
+        } catch (Exception $e) {
+            error_log("Error getting dashboard summary: " . $e->getMessage());
+            return [
+                'total_leads' => 0,
+                'stage_counts' => [],
+                'source_counts' => [],
+                'recent_leads' => [],
+                'daily_counts' => [],
+                'conversion_rate' => 0,
+                'closed_won' => 0,
+                'closed_lost' => 0,
+                'active_leads' => 0
+            ];
+        }
+    }
 }

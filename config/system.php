@@ -5,6 +5,31 @@
  * file 'LICENSE.txt', which is part of this source code package.
  */
 
+// --- SESSION SECURITY CONFIGURATION ---
+// These settings enhance session security but are commented out for now
+// to avoid breaking existing functionality. Uncomment and test carefully.
+
+// Prevents session fixation attacks by rejecting uninitialized session IDs
+// ini_set('session.use_strict_mode', 1);
+
+// Increases session ID entropy - longer IDs are harder to guess/brute force
+// ini_set('session.sid_length', 32);
+
+// More bits per character in session ID increases randomness
+// ini_set('session.sid_bits_per_character', 6);
+
+// Prevents JavaScript access to session cookies (XSS protection)
+// ini_set('session.cookie_httponly', 1);
+
+// Only send session cookies over HTTPS connections (prevents interception)
+// ini_set('session.cookie_secure', 1);
+
+// Prevents session ID from being passed in URLs (only use cookies)
+// ini_set('session.use_only_cookies', 1);
+
+// Marks session cookie as SameSite=Strict (CSRF protection)
+// ini_set('session.cookie_samesite', 'Strict');
+
 session_start();
 
 // --- AUTOLOADING ---
@@ -95,6 +120,13 @@ define("CSS", ASSETS . '/css');
 define("JS", ASSETS . '/js');
 define("SECURITY", URL . "/security");
 
+// --- MODULE URLS ---
+// Performance-optimized constants for module navigation
+define("LEADS", URL . "/leads");
+define("CONTACTS", URL . "/contacts");
+define("ADMIN", URL . "/admin");
+define("REPORTS", URL . "/reports");
+
 // --- APPLICATION & UI SETTINGS ---
 define("DOCSUBDOMAIN", basename(DOCROOT));
 define("TABTITLEPREFIX", ucfirst(substr(basename(DOCROOT), 0, -2)));
@@ -139,13 +171,16 @@ $whoops->register();
 // Whoops will catch the fatal error, log it, and display a detailed error page
 // for debugging, which is more effective than the previous class_exists checks.
 try {
-    $db = new Database();
-    $dbcrm = $db->dbcrm();
+    $dbcrm = (new Database())->dbcrm();
     $not = $users = new Users();
     $audit = new Audit();
     $helper = new Helpers();
+    $roles = new Roles();
+    $permissions = new Permissions();
     $rolesperms = new RolesPermissions();
     $nonce = new Nonce();
+    $security = new Security();
+    
 } catch (\Throwable $e) {
     // The Logit handler has already logged the detailed error via Whoops.
     // Now, we can stop execution gracefully with a user-friendly message.
@@ -153,4 +188,5 @@ try {
     die("A critical application service could not be started. Please check the error logs.");
 }
 
-require_once 'helpers.php';
+// Note: Helper functions have been moved to the Helpers class
+// Use $helper->get_client_ip(), $helper->country_by_ip(), $helper->isValidSessionId() instead

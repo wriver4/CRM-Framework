@@ -1,4 +1,8 @@
-<?php // header("Content-Security-Policy: default-src 'self'");
+<?php 
+// Include routing helper functions
+require_once DOCTEMPLATES . '/routing_helpers.php';
+
+// header("Content-Security-Policy: default-src 'self'");
 /**
  * Notes:
  * default-src 'self' cdn.example.com;

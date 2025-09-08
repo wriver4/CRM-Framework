@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['refresh'] = true;
         $_SESSION['refresh_time'] = 60;
         $_SESSION['last_activity'] = time();
-        $audit->log($result['id'], 'login', 'Admin Login page', $_SESSION['ua'], $_SESSION['ip'], country_by_ip(), null);
+        $audit->log($result['id'], 'login', 'Admin Login page', $_SESSION['ua'], $_SESSION['ip'], $helper->country_by_ip(), null);
         header("location: /");
       } else {
         $login_error_message = $lang['username_or_password_invalid'];

@@ -6,8 +6,7 @@ $lang = [
   'navbar_contacts' => "Contacts",
   'navbar_leads_new' => "New Lead Entry",
   'navbar_leads_list' => "Leads List",
-  'navbar_email_import' => "Email Import",
-  'navbar_email_import_tooltip' => "Manage email form imports",
+
   'navbar_users' => "Users",
   'navbar_reports' => "Reports",
   'navbar_admin_leads' => "Admin Leads",
@@ -435,3 +434,5 @@ $lang = [
   'lead_source_cold_call' => 'Cold Call',
   'lead_source_in_person' => 'In Person',
 ];
+
+return $lang;

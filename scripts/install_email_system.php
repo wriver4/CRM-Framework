@@ -113,7 +113,7 @@ try {
     echo "   */5 * * * * php " . __DIR__ . "/email_cron.php >> logs/email_cron.log 2>&1\n\n";
     
     echo "3. Test the system:\n";
-    echo "   - Visit: /leads/email_import.php\n";
+    echo "   - Visit: /admin/email/email_import\n";
     echo "   - API Status: /api/email_forms.php/status?api_key=waveguard_api_key_2024\n\n";
     
     echo "4. Configure email account passwords:\n";

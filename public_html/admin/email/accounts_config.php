@@ -6,15 +6,23 @@
  */
 
 // Load system configuration
-require_once '../../config/system.php';
+require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 
 // Security check
 $security = new Security();
 $security->check_user_permissions('admin', 'read');
 
 // Set page variables for navigation
-$dir = 'admin/email';
+$dir = 'admin';
+$subdir = 'email';
+$sub_subdir = '';
+$sub_sub_subdir = '';
 $page = 'accounts_config';
+$table_page = true;
+
+// Set display variables
+$title = 'Email Accounts Configuration';
+$title_icon = '<i class="fa fa-cog"></i>';
 
 // Load language file
 $lang = include LANG . '/en.php';
@@ -162,7 +170,7 @@ if ($action === 'list') {
 
 // Generate nonce for forms
 $nonce = new Nonce();
-$nonce_token = $nonce->generate();
+$nonce_token = $nonce->create('email_accounts_config');
 
 ?>
 <!DOCTYPE html>

@@ -216,6 +216,22 @@ if ($table_page == true) {
         .'     { orderable: false, targets: _all }'
         .'    ],';
   }
+  // Admin email system pages
+  if ($dir == 'admin' && $subdir == 'email') {
+    if ($page == 'processing_log' || $page == 'sync_queue') {
+      echo '   "pageLength": 10,'
+          .'    order: [[0, "desc"]],'
+          .'    columnDefs: ['
+          .'     { orderable: false, targets: [0] }'
+          .'    ],';
+    } elseif ($page == 'accounts_config') {
+      echo '   "pageLength": 10,'
+          .'    order: [[1, "asc"]],'
+          .'    columnDefs: ['
+          .'     { orderable: false, targets: [0] }'
+          .'    ],';
+    }
+  }
   echo '  });'
       .'});'
       . '</script>'; 

@@ -1,68 +1,5 @@
 # CRM Framework - Developer Documentation
 
-> **📖 About This README**  
-> This document serves a dual purpose: it's both **project-specific documentation** for the current CRM system AND a **reusable blueprint** for future projects. Use it to understand this codebase, collaborate effectively with AI assistants, and bootstrap new projects with proven patterns.
-
-## 📋 Table of Contents
-
-### 🚀 **Getting Started**
-- [Quick Start](#quick-start) - *Set up and run the project locally*
-- [Running Tests](#running-tests) - *Execute PHPUnit and Playwright test suites*
-- [Development Notes](#development-notes) - *Key architectural differences from typical frameworks*
-
-### 📊 **Project Overview**
-- [Summary](#summary) - *High-level description of the CRM framework*
-- [Language & Runtime](#language--runtime) - *Technical specifications and requirements*
-- [Dependencies](#dependencies) - *Required packages and libraries*
-- [Structure](#structure) - *Directory organization and file purposes*
-- [Entry Points](#entry-points) - *Main application access points*
-- [Configuration](#configuration) - *System configuration files and settings*
-
-### 🏗️ **Architecture & Patterns**
-- [Key Architectural Patterns](#key-architectural-patterns) - *Understanding the non-MVC approach*
-- [Coding Methodology & Reusable Components](#coding-methodology--reusable-components) - *Development philosophy and portable code library*
-
-### 💻 **Development Guide**
-- [Development Patterns & Conventions](#development-patterns--conventions) - *Coding standards and best practices*
-- [AI Chat Collaboration Best Practices](#ai-chat-collaboration-best-practices) - *Effective AI assistant collaboration*
-- [Development Workflow](#development-workflow) - *Change management and deployment process*
-- [Common Issues & Solutions](#common-issues--solutions) - *Troubleshooting guide*
-
-### 🔧 **Technical Reference**
-- [Error Handling](#error-handling) - *Logging and error management systems*
-- [Security](#security) - *Authentication and protection mechanisms*
-- [Server & Access Configuration](#server--access-configuration) - *SSH, SSL, and server setup*
-
----
-
-## 🎯 **How to Use This Documentation**
-
-### **For Current Project Development:**
-- Start with [Quick Start](#quick-start) to get the project running
-- Reference [Development Patterns & Conventions](#development-patterns--conventions) for coding standards
-- Use [Common Issues & Solutions](#common-issues--solutions) for troubleshooting
-- Follow [Development Workflow](#development-workflow) for changes and deployment
-
-### **For New Project Creation:**
-- Review [Coding Methodology & Reusable Components](#coding-methodology--reusable-components) for portable code
-- Use the "New Project Setup Checklist" to systematically bootstrap projects
-- Copy components from the "Reusable Component Library" as needed
-- Adapt patterns from [Key Architectural Patterns](#key-architectural-patterns)
-
-### **For AI Collaboration:**
-- Reference [AI Chat Collaboration Best Practices](#ai-chat-collaboration-best-practices) for effective communication
-- Use conversation transfer methods when moving between chat sessions
-- Apply structured templates for different types of AI requests
-- Share relevant sections when providing context to AI assistants
-
-### **For Team Onboarding:**
-- New developers should read [Summary](#summary) and [Key Architectural Patterns](#key-architectural-patterns) first
-- Review [Development Patterns & Conventions](#development-patterns--conventions) for project standards
-- Understand the [Structure](#structure) and [Entry Points](#entry-points)
-- Practice with [Running Tests](#running-tests) to verify setup
-
----
-
 ## Quick Start
 
 ### Prerequisites
@@ -149,7 +86,7 @@ A PHP-based CRM (Customer Relationship Management) framework providing functiona
 - **config/**: Configuration files for system settings
 - **public_html/**: Web-accessible files including controllers and views
 - **scripts/**: Utility scripts for data migration
-- **sql/**: SQL scripts for database setup and migrations
+- **sql/**: Database schema (`democrm_democrm_structure.sql`) and migration scripts
 - **vendor/**: Composer dependencies
 - **logs/**: Application logs
 - **templates/**: HTML templates and components
@@ -163,7 +100,37 @@ A PHP-based CRM (Customer Relationship Management) framework providing functiona
 **System Config**: config/system.php
 **Database Config**: Embedded in classes/Database.php
 **Path Constants**: Defined in config/system.php
-**Geolocation Config**: config/helpers.php
+**Network Utilities**: Helpers class (IP detection, geolocation, session validation)
+
+### System Constants Reference
+All constants are defined in `config/system.php` for performance and consistency:
+
+#### **File System Paths**
+- `DOCROOT` - Application root directory
+- `DOCPUBLIC` - Public HTML directory (`$_SERVER['DOCUMENT_ROOT']`)
+- `DOCTEMPLATES` - Templates directory path
+- `HEADER`, `BODY`, `NAV`, `FOOTER` - Template component paths
+- `LISTOPEN`, `LISTBUTTONS`, `LISTCLOSE` - List template components
+- `SECTIONOPEN`, `SECTIONCLOSE` - Section template components
+
+#### **URL Constants**
+- `URL` - Base application URL (`https://domain.com`)
+- `TEMPLATES` - Templates URL path
+- `ASSETS` - Static assets URL path
+- `IMG`, `CSS`, `JS` - Asset-specific URL paths
+- `SECURITY` - Security module URL
+
+#### **Module URL Constants** *(Performance Optimized)*
+- `LEADS` - Leads module URL (`/leads`)
+- `CONTACTS` - Contacts module URL (`/contacts`) 
+- `ADMIN` - Admin module URL (`/admin`)
+- `REPORTS` - Reports module URL (`/reports`)
+
+#### **Application Settings**
+- `LANG` - Language files directory
+- `LOGINLANG` - Login-specific language files
+- `VALIDEMAIL` - Email validation regex pattern
+- `NONCE_SECRET` - CSRF protection secret key
 
 ## Key Architectural Patterns
 
@@ -183,6 +150,20 @@ A PHP-based CRM (Customer Relationship Management) framework providing functiona
 - **Multilingual Integration**: `Helpers` class provides translation-aware form generation and data handling
 - **Routing Variables**: Page-specific variables control conditional resource loading in templates
 
+### Critical Framework Routing Pattern
+**REQUIRED**: All PHP files in `public_html/` must include the system configuration using this exact pattern:
+```php
+require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
+```
+
+**Why This Pattern:**
+- **Path Independence**: Works from any subdirectory depth (`/admin/`, `/admin/email/`, etc.)
+- **Server Compatibility**: Uses `$_SERVER['DOCUMENT_ROOT']` which Apache sets to `/home/democrm/public_html`
+- **Framework Foundation**: Loads autoloaders, constants, and core classes required by all pages
+- **Security**: Ensures proper class loading and authentication systems are available
+
+**Common Mistake**: Using relative paths like `../../config/system.php` breaks when directory structure changes
+
 ### File Processing Flow
 1. **Request Routing**: Direct file access (e.g., `/leads/list.php`)
 2. **Authentication**: Security checks via `Security` class
@@ -199,256 +180,246 @@ A PHP-based CRM (Customer Relationship Management) framework providing functiona
 - **Language Arrays**: Simple PHP arrays for translations rather than complex i18n systems
 - **Static Connections**: Singleton database pattern for connection reuse
 
-## Coding Methodology & Reusable Components
+## Email Processing System
 
-### Core Development Philosophy
+### Overview
+Automated email form processing system that monitors email accounts and converts form submissions into CRM leads. Supports three form types:
+- **Estimate Forms** - Fire protection system quotes
+- **LTR Forms** - Long-term retardant applications  
+- **Contact Forms** - General inquiries
 
-**Pragmatic Simplicity Over Framework Complexity**
-- Favor direct, understandable code over abstract patterns
-- Use proven patterns consistently across the codebase
-- Prioritize maintainability and readability
-- Build reusable components that can be copied between projects
+### Features
+- **Automated Processing**: IMAP monitoring with 5-minute cron intervals
+- **Form Parsing**: Structured data extraction from email content
+- **Lead Integration**: Direct integration with existing leads system
+- **Duplicate Detection**: Prevents duplicate lead creation
+- **Admin Interface**: Management dashboard at `/admin/email/system_status`
+- **REST API**: External integration support
+- **Multilingual Support**: Follows framework language patterns
 
-**Database-First Design**
-- Design database schema before building application logic
-- Use database constraints to enforce business rules
-- Solve complex operations through proper class design, table relationships, temporary tables, and optimized queries
-- Use stored procedures only when class design, table structure, and query optimization cannot solve the problem
-- Always use proper PDO parameter binding for security and cross-database compatibility
-
-**Component-Based Architecture**
-- Build self-contained, reusable components
-- Each component should have clear inputs and outputs
-- Components should be easily portable between projects
-- Document component dependencies and requirements
-
-### Reusable Component Library
-
-#### 🔄 **Copy-Paste Ready Components**
-
-**1. Database Connection Pattern**
-```php
-// File: classes/Core/Database.php
-// Reusable singleton database connection
-// Copy entire file to new projects
-```
-
-**2. Security & Authentication**
-```php
-// File: classes/Core/Security.php
-// Complete authentication system
-// File: classes/Core/Nonce.php  
-// CSRF protection system
-// Copy both files for security layer
-```
-
-**3. Multilingual System**
-```php
-// File: classes/Utilities/Helpers.php
-// Translation-aware form generation
-// File: public_html/admin/languages/
-// Language file structure
-// Copy entire language system
-```
-
-**4. CRUD Operation Templates**
-```php
-// Pattern: public_html/[entity]/
-// - list.php (data listing with filters)
-// - new.php (create new record)
-// - edit.php (modify existing record)
-// - view.php (read-only display)
-// - delete.php (remove record)
-// Copy entire directory structure for new entities
-```
-
-**5. Testing Framework**
-```php
-// Files: tests/phpunit/ (complete test structure)
-// Files: tests/playwright/ (E2E testing)
-// Files: run_tests_simple.sh (test runner)
-// Copy entire testing infrastructure
-```
-
-#### 📦 **Portable Modules**
-
-**Email Processing System** (Complete Module)
-```
-📁 Copy These Files/Directories:
-├── classes/Models/EmailFormProcessor.php
-├── classes/Models/EmailAccountManager.php  
-├── classes/Models/CrmSyncManager.php
-├── public_html/admin/email/ (entire directory)
-├── public_html/leads/email_import.php
-├── public_html/api/email_forms.php
-├── sql/migrations/add_email_processing_tables.sql
-└── tests/ (email processing tests)
-
-📋 Requirements:
-- Database with leads table
-- Monolog logging system
-- Bootstrap 5 frontend
-- PDO database connection
-```
-
-**Audit Trail System** (Complete Module)
-```
-📁 Copy These Files:
-├── classes/Models/Audit.php
-├── sql/audit_trail_table.sql
-└── Integration code in existing CRUD operations
-
-📋 Requirements:
-- User authentication system
-- Database connection
-- Session management
-```
-
-**Multilingual Support** (Complete Module)
-```
-📁 Copy These Files/Directories:
-├── classes/Utilities/Helpers.php
-├── public_html/admin/languages/ (entire directory)
-├── templates/ (language-aware templates)
-└── Integration patterns in controllers
-
-📋 Requirements:
-- Bootstrap 5 for form styling
-- Session management for language selection
-```
-
-#### 🛠 **Utility Components**
-
-**Database Migration Pattern**
-```sql
--- Template: sql/migrations/template_migration.sql
--- Always include:
--- 1. Descriptive header comment
--- 2. IF NOT EXISTS checks
--- 3. Foreign key constraint validation
--- 4. Rollback instructions
--- 5. Verification queries
-```
-
-**Error Handling Stack**
-```php
-// Files to copy:
-├── vendor/filp/whoops (error display)
-├── vendor/monolog/monolog (logging)
-├── classes/Logging/Logit.php (custom logger)
-└── config/system.php (error configuration)
-```
-
-**Form Validation Pattern**
-```php
-// Standard validation flow:
-// 1. CSRF token validation (Nonce class)
-// 2. Input sanitization
-// 3. Business rule validation
-// 4. Database constraint validation
-// 5. Success/error feedback
-```
-
-### Project Portability Guidelines
-
-#### 🎯 **What to Copy to New Projects**
-
-**Essential Core (Always Copy)**
-- `classes/Core/Database.php` - Database connection
-- `classes/Core/Security.php` - Authentication
-- `classes/Core/Nonce.php` - CSRF protection
-- `config/system.php` - System configuration
-- `composer.json` - Dependencies
-
-**Optional Modules (Copy as Needed)**
-- `classes/Utilities/Helpers.php` - Multilingual support
-- `classes/Models/Audit.php` - Audit trail
-- `tests/` - Testing framework
-- `public_html/templates/` - UI templates
-
-**Project-Specific (Don't Copy)**
-- Database schema files (create new)
-- Business logic models (create new)
-- Entity-specific controllers (create new)
-- Custom styling/branding
-
-#### 📋 **New Project Setup Checklist**
-
-**1. Core Infrastructure**
-- [ ] Copy database connection class
-- [ ] Copy security and authentication system
-- [ ] Copy error handling and logging
-- [ ] Set up composer dependencies
-- [ ] Configure system constants
-
-**2. Database Setup**
-- [ ] Create new database schema
-- [ ] Set up user authentication tables
-- [ ] Configure database credentials
-- [ ] Test database connection
-
-**3. Optional Modules**
-- [ ] Copy multilingual system (if needed)
-- [ ] Copy audit trail system (if needed)
-- [ ] Copy testing framework (recommended)
-- [ ] Copy email processing (if needed)
-
-**4. Customization**
-- [ ] Update branding and styling
-- [ ] Create project-specific models
-- [ ] Build entity-specific controllers
-- [ ] Configure project-specific settings
-
-#### 🔧 **Adaptation Guidelines**
-
-**When Copying Components:**
-1. **Update namespace/class names** if using namespaces
-2. **Modify database table names** to match new schema
-3. **Update file paths** in configuration
-4. **Adjust styling/branding** to match new project
-5. **Test all copied functionality** in new environment
-
-**Configuration Changes:**
-- Database credentials in `Database.php`
-- System paths in `config/system.php`
-- Error logging paths
-- Session configuration
-- Security settings
-
-**Dependencies to Install:**
+### Installation & Setup
 ```bash
-composer require monolog/monolog
-composer require filp/whoops
-# Add other dependencies as needed
+# Install system
+php scripts/install_email_system.php
+
+# Configure cron job
+*/5 * * * * php /home/democrm/scripts/email_cron.php >> logs/email_cron.log 2>&1
 ```
 
-### Code Reuse Best Practices
+### Configuration
+- **Email Accounts**: Configured in `email_accounts_config` table
+- **Form Mapping**: Defined in `EmailFormMapper` class
+- **Processing Logic**: `EmailFormProcessor` class handles IMAP and lead creation
+- **Admin Access**: `/admin/email/email_import` for manual processing
 
-**Design for Portability**
-- Keep business logic separate from presentation
-- Use configuration files for environment-specific settings
-- Avoid hardcoded paths and URLs
-- Document all dependencies clearly
+## phpList Marketing Integration
 
-**Maintain Consistency**
-- Use the same patterns across all projects
-- Keep the same file structure where possible
-- Use consistent naming conventions
-- Document any deviations from standard patterns
+### Overview
+Automated email marketing list management system that syncs lead data with phpList when users opt-in for updates. Uses a hybrid approach combining immediate flagging with batch processing for reliable, scalable marketing automation.
 
-**Version Control Strategy**
-- Tag stable versions of reusable components
-- Maintain a "template" branch with clean, reusable code
-- Document breaking changes between versions
-- Keep a changelog for component updates
+### Architecture
+**Hybrid Processing Model:**
+1. **Immediate Flagging**: When lead created with `get_updates = 1`, subscriber record created in `phplist_subscribers` table with `sync_status = 'pending'`
+2. **Batch Processing**: Cron job runs every 15 minutes to sync pending subscribers with phpList via API
 
-This methodology ensures that successful patterns and components can be efficiently reused across projects while maintaining code quality and consistency.
+### Database Tables
+- **`phplist_subscribers`**: Main tracking table with sync status, attempts, and segmentation data
+- **`phplist_config`**: Configuration for API credentials, sync settings, and list mappings
+- **`phplist_sync_log`**: Detailed logging for sync operations and debugging
+
+### Key Features
+- **Automatic List Segmentation**: Geographic (state), service type, and lead source segmentation
+- **Error Handling & Retry Logic**: Maximum retry attempts with detailed error logging
+- **Web-based Admin Interface**: Configuration, monitoring, and manual retry capabilities
+- **Graceful Degradation**: Lead creation never fails due to phpList issues
+
+### Installation & Setup
+```bash
+# 1. Run database migration
+php sql/migrations/run_phplist_migration.php
+
+# 2. Configure via admin interface
+# Access: /admin/phplist/config.php
+# - Set API credentials (URL, username, password)
+# - Configure list mappings for segmentation
+# - Enable sync and set frequency
+
+# 3. Set up cron job (every 15 minutes)
+*/15 * * * * php /home/democrm/scripts/phplist_sync.php
+
+# 4. Test integration
+# - Create lead with get_updates = 1
+# - Verify subscriber record created
+# - Run sync script manually
+# - Check subscriber appears in phpList
+```
+
+### Configuration Options
+**API Settings:**
+- `phplist_api_url`: Full URL to phpList admin directory
+- `phplist_api_username/password`: API credentials (password encrypted)
+- `api_timeout_seconds`: Request timeout (default: 30)
+
+**Sync Settings:**
+- `sync_enabled`: Enable/disable sync (1/0)
+- `sync_frequency_minutes`: Cron frequency (default: 15)
+- `max_sync_attempts`: Retry limit (default: 3)
+- `batch_size`: Records per sync batch (default: 50)
+
+**List Mapping (JSON):**
+```json
+{
+  "phplist_geographic_lists": {"US-CA": 2, "US-TX": 3, "US-CO": 4},
+  "phplist_service_lists": {"1": 10, "2": 11},
+  "phplist_source_lists": {"Internet search": 20, "Referral": 21}
+}
+```
+
+### Admin Management
+- **Subscribers**: `/admin/phplist/subscribers.php` - View, filter, search, retry failed syncs
+- **Configuration**: `/admin/phplist/config.php` - API settings, connection testing, statistics
+- **Sync Logs**: `/admin/phplist/sync_log.php` - Detailed operation logs and debugging
+
+### API Integration
+- **Requirements**: phpList 3.x with REST API enabled, HTTPS recommended
+- **Operations**: Add/update subscriber, get subscriber details, list management
+- **Custom Attributes**: Maps CRM data (name, location, source, business) to phpList attributes
+
+### Monitoring & Troubleshooting
+**Sync Status Types:**
+- `pending`: Waiting for sync
+- `synced`: Successfully synced to phpList
+- `failed`: Sync failed (check error message)
+- `skipped`: Intentionally skipped (invalid email, etc.)
+
+**Common Issues:**
+- API connection failures: Verify credentials and connectivity
+- Sync failures: Check error messages and API rate limits
+- Performance issues: Adjust batch size and timeout settings
+
+**Debug Mode**: Enable `debug_mode = 1` for detailed logging and API communication tracking
+
+### Security & Maintenance
+- API passwords encrypted in database
+- HTTPS recommended for API communication
+- Subscriber data only synced with explicit opt-in
+- Regular monitoring of sync status and error logs
+- Include phpList tables in database backups
+
+## SQL Error Logging System
+
+### Overview
+Comprehensive error logging and debugging system for tracking database-related issues across all operations.
+
+### Components
+- **SqlErrorLogger**: Main logging class (`/classes/Logging/SqlErrorLogger.php`)
+- **Enhanced Database**: Integrated logging in `Database` class
+- **Admin Interface**: Web-based log viewer (`/admin/system/sql-logs.php`)
+- **Configuration**: Debug settings in `config/system.php`
+
+### Features
+- **Error Tracking**: SQL errors, parameter mismatches, query failures
+- **Context Capture**: User info, request context, stack traces, timing data
+- **Security**: Sensitive data protection and access control
+- **Admin Dashboard**: Real-time log viewing with filtering and statistics
+
+### Usage
+```php
+// Automatic logging in Database class
+$this->logSqlError($e, $sql, $params, $context);
+
+// Manual logging
+$logger = new SqlErrorLogger();
+$logger->logError($exception, $sql, $params, $additionalContext);
+```
+
+## Testing Framework
+
+### Overview
+Comprehensive testing system with two complementary frameworks for different testing needs.
+
+### Testing Tools
+- **PHPUnit**: Unit, integration, and feature testing of PHP classes
+- **Playwright**: End-to-end web interface testing with browser automation
+
+### PHPUnit Testing
+```bash
+# Run all tests
+./vendor/bin/phpunit
+
+# Run specific test types
+./vendor/bin/phpunit tests/phpunit/Unit/          # Unit tests
+./vendor/bin/phpunit tests/phpunit/Integration/   # Integration tests
+./vendor/bin/phpunit tests/phpunit/Feature/       # Feature tests
+
+# Run specific test
+./vendor/bin/phpunit tests/phpunit/Unit/EmailFormProcessorTest.php
+```
+
+### Playwright Testing
+```bash
+# Install dependencies
+npm install
+
+# Run all tests
+npx playwright test
+
+# Run specific tests
+npx playwright test --grep "login"           # Test login functionality
+npx playwright test --grep "leads"           # Test leads-related UI
+npx playwright test --project=chromium       # Chrome-specific testing
+
+# Debug mode
+npx playwright test --debug                  # Step through tests
+npx playwright test --headed                 # See browser actions
+```
+
+### Test Structure
+- **Unit Tests**: Test individual classes and methods in isolation
+- **Integration Tests**: Test component interactions and database operations
+- **Feature Tests**: Test complete workflows and business logic
+- **E2E Tests**: Test full user workflows through browser interface
+
+### Development Workflow
+1. **Write Unit Tests**: For new classes and methods
+2. **Integration Tests**: For database operations and component interactions
+3. **Feature Tests**: For complete business workflows
+4. **E2E Tests**: For critical user paths and UI functionality
+
+## Development & Operations
+
+### File Ownership
+- **Application Files**: Must be owned by `democrm:democrm`
+- **Web Server**: Runs as `nobody` user (standard Apache configuration)
+- **Permissions**: `644` for files, `755` for directories
+
+### File Management Best Practices
+- **Prefer file tools** (`WriteFile`, `EditFile`) over shell commands for proper ownership
+- **Verify ownership** after shell-based file operations: `chown democrm:democrm /path/to/file`
+- **Check ownership**: `find /home/democrm -user root -name '*.php' | grep -v '.git'` (should return 0)
+
+### Performance Optimizations
+- **Constants Usage**: Use pre-compiled constants (`LEADS`, `CONTACTS`) instead of string concatenation
+- **Database Connections**: Singleton pattern for connection reuse
+- **Template Caching**: Direct PHP includes for optimal performance
+- **Opcache**: PHP opcache enabled for constant and class caching
+
+### Security Considerations
+- **CSRF Protection**: `Nonce` class for form security
+- **Permission Checks**: Role-based access control via `Security` class
+- **SQL Injection Prevention**: PDO prepared statements throughout
+- **Sensitive Data**: Automatic sanitization in logging systems
+- **Admin Access**: Separate admin permissions for system management tools
+
+### Maintenance Tasks
+- **Log Rotation**: SQL error logs rotate automatically when large
+- **Email Processing**: Cron job runs every 5 minutes for email import
+- **Database Cleanup**: Regular cleanup of processed email records
+- **Performance Monitoring**: SQL error logs track query performance
 
 # Development Patterns & Conventions
 
 ## Database Operations
-- **IMPORTANT: Current database structure is stored in `/sql/` directory** - Always check existing schema files before making SQL changes
-- **Always ask user to provide current database structure** before starting any SQL-related work
 - **Always use individual `bindValue()` calls** instead of `execute()` with parameter arrays
 - **Cast to integers when binding ID parameters**: `$stmt->bindValue(':id', (int)$id, PDO::PARAM_INT)`
 - **Use appropriate PDO parameter types**: `PDO::PARAM_INT` for integers, `PDO::PARAM_STR` for strings
@@ -458,98 +429,6 @@ This methodology ensures that successful patterns and components can be efficien
 - **Always create backup tables** before major alterations
 - **Use MariaDB 10 compatible syntax**
 - **Maintain foreign key constraints** for data integrity
-
-### Database Connection Troubleshooting
-
-**Quick Database Connection Testing (For Troubleshooting Only)**
-
-When PDO connections fail or you need to quickly test database connectivity, use these methods:
-
-**Direct MySQL Command Line Test (Recommended)**
-```bash
-# Test database connection from command line
-mysql -u username -p -h localhost database_name
-
-# Quick test queries
-mysql -u username -p -e "SELECT COUNT(*) FROM leads;" database_name
-mysql -u username -p -e "SHOW TABLES;" database_name
-mysql -u username -p -e "DESCRIBE leads;" database_name
-mysql -u username -p -e "SHOW PROCESSLIST;" database_name
-mysql -u username -p -e "SHOW STATUS LIKE 'Connections';" database_name
-```
-
-**Alternative PDO Connection Test (Minimal)**
-```php
-<?php
-// Minimal PDO test - bypass your Database class for troubleshooting
-$host = 'localhost';
-$username = 'your_username';
-$password = 'your_password';
-$database = 'your_database';
-
-try {
-    $dsn = "mysql:host=$host;dbname=$database;charset=utf8mb4";
-    $pdo = new PDO($dsn, $username, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ]);
-    
-    echo "PDO Connected successfully\n";
-    
-    // Test query
-    $stmt = $pdo->query("SELECT COUNT(*) as count FROM leads");
-    $result = $stmt->fetch();
-    echo "Leads count: " . $result['count'] . "\n";
-    
-} catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage() . "\n";
-    echo "Error Code: " . $e->getCode() . "\n";
-}
-?>
-```
-
-**Database Credentials Location**
-```php
-// Current project database credentials are in:
-// File: classes/Core/Database.php
-// Look for the constructor method with hardcoded credentials
-
-// Example extraction for troubleshooting:
-// $host = 'localhost';
-// $dbname = 'democrm_democrm';  // Check actual database name
-// $username = 'democrm_user';   // Check actual username
-// $password = 'actual_password'; // Check actual password
-```
-
-**Common Connection Issues & Solutions**
-```php
-// Issue: "Access denied for user"
-// Solution: Check username/password in Database.php
-
-// Issue: "Unknown database"
-// Solution: Verify database name exists
-// mysql -u root -p -e "SHOW DATABASES;"
-
-// Issue: "Can't connect to MySQL server"
-// Solution: Check if MySQL service is running
-// systemctl status mysql
-// systemctl status mariadb
-
-// Issue: "Connection refused"
-// Solution: Check MySQL is listening on correct port
-// netstat -tlnp | grep :3306
-
-// Issue: "Too many connections"
-// Solution: Check MySQL max_connections setting
-// mysql -u root -p -e "SHOW VARIABLES LIKE 'max_connections';"
-```
-
-**⚠️ Important Notes:**
-- **Use these methods ONLY for troubleshooting** - Always return to PDO for production code
-- **Never commit troubleshooting code** - These are temporary debugging tools
-- **Security**: These examples show credentials in plain text - use only in secure environments
-- **Clean up**: Remove troubleshooting code after debugging is complete
 
 ## Code Standards
 - **Never use closing PHP tags (`?>`)** at the end of PHP-only files - this prevents whitespace issues
@@ -628,66 +507,6 @@ try {
 - **Test database**: Verify test environment has access to database
 - **Authentication in tests**: Use test credentials from `tests/playwright/test-credentials.js`
 
-## AI Chat Collaboration Best Practices
-
-### Moving Conversations Between Chats
-When you need to move part of our conversation to a separate chat while preserving context:
-
-**Method 1: Copy Specific Messages (Recommended)**
-1. Select the relevant messages you want to move
-2. Copy them (Ctrl+C / Cmd+C)
-3. Start a new conversation
-4. Paste the context at the beginning with a note like:
-```
-Context from previous conversation:
-[Paste the relevant messages here]
-
-Now I want to focus on: [your specific question]
-```
-
-**Method 2: Reference Previous Work**
-```
-I'm continuing from a previous conversation where we:
-- [Brief summary of what was accomplished]
-- [Key decisions made]
-- [Current state of the project]
-
-My new question is: [specific question]
-```
-
-**Method 3: Export Key Information**
-```
-Previous conversation summary:
-- Problem: [brief description]
-- Solution implemented: [what was done]
-- Files modified: [list of files]
-- Next steps identified: [what's pending]
-
-Current focus: [new topic/question]
-```
-
-### Effective AI Collaboration Tips
-
-**For Code Reviews:**
-- Share the specific file and line numbers you're concerned about
-- Explain what you expected vs. what you're seeing
-- Include any error messages in full
-
-**For New Features:**
-- Start with a clear description of what you want to accomplish
-- Mention any constraints or preferences
-- Reference existing patterns in your codebase
-
-**For Debugging:**
-- Include the full error message and stack trace
-- Share the relevant code context (not just the failing line)
-- Mention what you've already tried
-
-**For Architecture Decisions:**
-- Explain the business requirements
-- Share your current thinking and alternatives considered
-- Ask for pros/cons analysis rather than just "what should I do"
-
 ## Development Workflow
 
 ### Making Changes
@@ -761,6 +580,36 @@ Current focus: [new topic/question]
 **Connection**: PDO
 **Database Name**: democrm_democrm
 **Character Set**: utf8mb4
+
+## Database Setup & Schema
+
+### Database Structure Reference
+**Primary Schema File**: `sql/democrm_democrm_structure.sql`
+- Contains complete database schema (tables, indexes, constraints)
+- Structure-only file (33K) - no data included
+- Use this file for development reference and schema understanding
+
+### Available SQL Files
+- **`sql/democrm_democrm_structure.sql`** - Database structure only (33K, recommended for development)
+- **`sql/democrm_democrm.sql`** - Full database with structure and data (7.2M, for production restore)
+- **`sql/democrm_democrm_no create.sql`** - Data only, no CREATE statements (33K, for data migration)
+
+### Usage Guidelines
+- **For Documentation**: Always reference `democrm_democrm_structure.sql`
+- **For Development**: Use `democrm_democrm_structure.sql` to understand schema
+- **For Production Restore**: Use `democrm_democrm.sql` (contains actual data)
+- **For Data Migration**: Use `democrm_democrm_no create.sql` when schema exists
+
+### Database Setup Process
+```bash
+# For development/testing (structure only)
+mysql -u username -p democrm_democrm < sql/democrm_democrm_structure.sql
+
+# For complete setup with data (production restore)
+mysql -u username -p democrm_democrm < sql/democrm_democrm.sql
+```
+
+**Note**: Always use the structure file (`democrm_democrm_structure.sql`) for development reference and documentation purposes.
 
 ## Database Class Architecture
 
@@ -1263,19 +1112,20 @@ $helpers->select_role($lang, $current_role_id);
 - Error messages and notifications
 - Button labels and actions
 
-## Geolocation Services
+## Network & Geolocation Services
 
 The application includes IP geolocation functionality for audit logging and user tracking. The system uses free geolocation services with fallback support.
 
-**Configuration Location**: `config/helpers.php`
+**Configuration Location**: `classes/Utilities/Helpers.php`
 
 **Services Used**:
 - **ip-api.com** (primary) - Free tier with 1000 requests/month
 - **freeiplookupapi.com** (fallback) - Free service
 
-**Key Functions**:
-- `get_client_ip()` - Detects client IP from various sources (proxy-aware)
-- `country_by_ip()` - Returns country code from IP address using fallback services
+**Key Methods**:
+- `$helper->get_client_ip()` - Detects client IP from various sources (proxy-aware)
+- `$helper->country_by_ip()` - Returns country code from IP address using fallback services
+- `$helper->isValidSessionId($id)` - Validates session ID format according to PHP configuration
 
 **Features**:
 - **Multiple fallback services**: Ensures reliability if one service fails
@@ -1373,7 +1223,32 @@ tests/
     ├── test_minimal.html            # Minimal HTML test
     ├── test_note_delete.php         # Note deletion test
     └── test_note_delete_fixed.php   # Fixed note deletion test
+
+scripts/testing/                    # Test runner scripts and utilities
+├── run_tests_simple.sh             # Simple test runner
+├── run_email_tests.sh              # Email processing test runner
+├── run-note-deletion-tests.sh      # Note deletion specific tests
+├── run-phpunit-nixos.sh            # PHPUnit runner for NixOS
+├── run-tests-nixos.sh              # Complete test suite for NixOS
+├── run-tests.php                   # PHP-based test runner
+├── setup-local-playwright.sh       # Playwright local setup
+├── setup-local-tests.sh            # Local testing environment setup
+├── install-playwright-nixos.sh     # Playwright installation for NixOS
+└── simple-test.php                 # Simple PHP test utility
 ```
+
+## Test Runner Scripts
+
+**Convenience Wrapper**: Use `./run-tests [type]` from project root for easy access to all test runners.
+
+**Available Test Runners:**
+- `./run-tests simple` - Basic functionality tests
+- `./run-tests email` - Email processing system tests  
+- `./run-tests notes` - Note deletion functionality tests
+- `./run-tests phpunit` - PHPUnit test suite
+- `./run-tests all` - Complete test suite
+- `./run-tests setup-playwright` - Setup Playwright environment
+- `./run-tests setup-tests` - Setup local testing environment
 
 ## 1. Playwright Testing System
 
@@ -1783,111 +1658,4 @@ chown -R democrm:democrm /home/democrm/
 chgrp nobody /home/democrm/public_html
 ls -la /home/democrm/sql/migrations/  # verify ownership
 ```
-
----
-
-## 🎯 **Documentation Summary & Quick Reference**
-
-### **📖 What This README Provides**
-
-This comprehensive documentation serves **multiple audiences** and **use cases**:
-
-#### **🔧 For Current Project Development**
-- **Complete setup guide** - Get the CRM system running locally or on server
-- **Architecture understanding** - Learn the non-MVC, direct-file approach
-- **Development standards** - Follow established patterns and conventions
-- **Troubleshooting guide** - Solve common issues quickly
-- **Testing framework** - Run comprehensive test suites
-
-#### **🚀 For New Project Creation**
-- **Reusable component library** - Copy proven code patterns to new projects
-- **Setup checklists** - Systematically bootstrap new projects
-- **Portable modules** - Complete systems (auth, multilingual, testing) ready to copy
-- **Architecture blueprints** - Proven patterns for direct-file PHP applications
-- **Configuration templates** - Database, security, and system setup patterns
-
-#### **🤖 For AI Collaboration**
-- **Context transfer methods** - Move conversations between chat sessions effectively
-- **Structured communication templates** - Get better results from AI assistants
-- **Code review guidelines** - Share context effectively for debugging and reviews
-- **Architecture documentation** - Help AI understand your unique approach
-
-#### **👥 For Team Onboarding**
-- **Project overview** - Understand the system quickly
-- **Development workflow** - Learn the change management process
-- **Standards and conventions** - Follow established team practices
-- **Testing procedures** - Verify changes before deployment
-
-### **🎨 Key Features of This Documentation**
-
-#### **📋 Comprehensive Table of Contents**
-- **Organized by purpose** - Find information based on what you're trying to accomplish
-- **Clear section descriptions** - Understand what each section contains
-- **Multiple navigation paths** - Different entry points for different use cases
-
-#### **🔄 Dual-Purpose Design**
-- **Project-Specific** - Complete documentation for this CRM system
-- **Reusable Blueprint** - Template for future projects with similar architecture
-- **Copy-Paste Ready** - Components and patterns ready to use elsewhere
-
-#### **🎯 Audience-Specific Guidance**
-- **Role-based instructions** - Different paths for developers, AI collaboration, team leads
-- **Use-case driven** - Organized around what you're trying to accomplish
-- **Progressive disclosure** - Start simple, dive deeper as needed
-
-### **🚀 Quick Start Paths**
-
-#### **"I need to work on this project"**
-1. [Quick Start](#quick-start) → [Development Patterns](#development-patterns--conventions) → [Common Issues](#common-issues--solutions)
-
-#### **"I want to create a similar project"**
-1. [Coding Methodology](#coding-methodology--reusable-components) → [Key Architectural Patterns](#key-architectural-patterns) → New Project Setup Checklist
-
-#### **"I need to collaborate with AI effectively"**
-1. [AI Chat Collaboration Best Practices](#ai-chat-collaboration-best-practices) → Share relevant sections as context
-
-#### **"I'm new to this codebase"**
-1. [Summary](#summary) → [Key Architectural Patterns](#key-architectural-patterns) → [Structure](#structure) → [Running Tests](#running-tests)
-
-### **💡 Best Practices for Using This Documentation**
-
-#### **📚 For Learning**
-- **Start with Summary** - Get the big picture first
-- **Understand the Architecture** - This isn't a typical MVC framework
-- **Run the Tests** - Verify your understanding with working code
-- **Try the Examples** - Hands-on experience with the patterns
-
-#### **🔧 For Development**
-- **Reference Standards** - Check conventions before writing code
-- **Use the Checklists** - Systematic approach to common tasks
-- **Follow the Workflow** - Established process for changes and deployment
-- **Check Troubleshooting** - Common issues and solutions
-
-#### **🚀 For New Projects**
-- **Copy Core Components** - Start with proven, working code
-- **Adapt Gradually** - Modify copied components for new requirements
-- **Maintain Consistency** - Use the same patterns across projects
-- **Document Changes** - Keep your own README updated
-
-#### **🤖 For AI Collaboration**
-- **Share Context Strategically** - Include relevant sections in your prompts
-- **Use Structured Templates** - Get better results with organized requests
-- **Transfer Conversations** - Maintain context across chat sessions
-- **Reference Documentation** - Point AI to specific sections for context
-
-### **🎉 The Result**
-
-This README transforms from simple project documentation into a **comprehensive development resource** that:
-
-- **Reduces onboarding time** for new developers
-- **Accelerates new project creation** with proven patterns
-- **Improves AI collaboration** with structured communication
-- **Maintains consistency** across multiple projects
-- **Preserves knowledge** in a reusable format
-
-**Use it as both a reference for this project AND a template for future projects!** 🚀
-
----
-
-*Last updated: $(date) - This documentation evolves with the project and serves as a living blueprint for effective PHP development patterns.*
 

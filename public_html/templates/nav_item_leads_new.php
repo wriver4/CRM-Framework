@@ -2,7 +2,7 @@
 <li id="leads-new"
     class="nav-item">
   <a class="btn nav-link link-light<?php echo ($dir == "leads") ? ' active' : ''; ?>"
-     href="/leads/new"
+     href="<?php echo LEADS; ?>/new"
      tabindex="0">
     <?= $lang['navbar_leads_new']; ?></a>
 </li>

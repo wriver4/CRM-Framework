@@ -1,10 +1,32 @@
 <?php
 $browser_language = "en";
 $not->loggedin();
-if (file_exists(LANG . '/' . $browser_language . '.php')) {
-  require_once LANG . '/' . $browser_language . '.php';
-} else {
-  require_once LANG . '/en.php';
+
+// Load language file - ensure $lang is properly initialized
+if (!isset($lang) || !is_array($lang)) {
+    if (file_exists(LANG . '/' . $browser_language . '.php')) {
+        $lang = include LANG . '/' . $browser_language . '.php';
+    } else {
+        $lang = include LANG . '/en.php';
+    }
+    
+    // Fallback if language file doesn't return an array
+    if (!is_array($lang)) {
+        $lang = [
+            'navbar_tooltip_title' => 'Home',
+            'navbar_status' => 'Status',
+            'navbar_contacts' => 'Contacts',
+            'navbar_leads_new' => 'New Lead Entry',
+            'navbar_leads_list' => 'Leads List',
+            'navbar_users' => 'Users',
+            'navbar_reports' => 'Reports',
+            'navbar_admin_leads' => 'Admin Leads',
+            'navbar_security' => 'Security',
+            'navbar_maintenance' => 'Maintenance',
+            'navbar_help' => 'Help',
+            'navbar_logout' => 'Logout'
+        ];
+    }
 }
 ?>
 <div class="container">

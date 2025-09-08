@@ -315,7 +315,7 @@ class EmailProcessingIntegrationTest extends TestCase
     {
         // Test that web interface files exist
         $webFiles = [
-            'leads/email_import.php',
+            'admin/email/email_import.php',
             'admin/email/processing_log.php',
             'admin/email/accounts_config.php',
             'admin/email/sync_queue.php',
