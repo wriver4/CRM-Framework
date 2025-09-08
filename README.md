@@ -63,6 +63,7 @@ npx playwright test
 - All models extend the `Database` class for connection access
 - Language files are stored in `public_html/admin/languages/`
 - Templates are included directly, not rendered through a template engine
+- **Routing**: Uses simple variable concatenation - avoid complex routing helper functions
 
 ## Summary
 A PHP-based CRM (Customer Relationship Management) framework providing functionality for managing leads, contacts, users, and sales pipelines. **This is NOT a traditional MVC framework** - it follows a direct, procedural approach with object-oriented components. The architecture uses direct file routing (no URL rewriting), database inheritance patterns (all models extend a singleton Database class), and template inclusion rather than dependency injection or modern framework patterns. The application features a comprehensive multilingual system with language arrays stored in `admin/languages/` and a specialized `Helpers` class that generates translation-aware HTML components and form elements. It includes CRUD operations, role-based access control, audit trails, and reporting capabilities. The frontend uses Bootstrap 5, Bootstrap Icons, Font Awesome, jQuery, DataTables, and Validator.js for a modern user interface.
@@ -179,6 +180,51 @@ require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 - **Template Inclusion**: PHP `include` statements rather than template engines
 - **Language Arrays**: Simple PHP arrays for translations rather than complex i18n systems
 - **Static Connections**: Singleton database pattern for connection reuse
+
+## Routing & URL Generation
+
+### Simple Variable-Based Routing
+The framework uses a **simple variable-based approach** for routing and URL generation, avoiding complex routing functions:
+
+```php
+// Set routing variables at the top of each page
+$dir = 'contacts';           // Primary directory
+$subdir = '';                // Subdirectory (if applicable)
+$sub_subdir = '';            // Sub-subdirectory (if applicable)
+$page = 'list';              // Current page type
+
+// Build URLs directly from variables
+$list_url = '/' . $dir;
+if (!empty($subdir)) $list_url .= '/' . $subdir;
+if (!empty($sub_subdir)) $list_url .= '/' . $sub_subdir;
+$list_url .= '/list';
+
+$new_url = '/' . $dir;
+if (!empty($subdir)) $new_url .= '/' . $subdir;
+if (!empty($sub_subdir)) $new_url .= '/' . $sub_subdir;
+$new_url .= '/new';
+```
+
+### Template Integration
+- **Navigation active states**: `($dir == "users") ? ' active' : ''`
+- **Form validation**: `$_POST['dir'] == 'contacts' && $_POST['page'] == 'new'`
+- **Conditional resource loading**: `if ($dir == 'leads' && $page == 'new')`
+- **Button generation**: Templates use page variables directly for URL building
+
+### Multi-Level Directory Support
+The system supports up to 4 levels of directory nesting:
+```php
+// Examples:
+// /users/list.php                    → $dir='users', $page='list'
+// /security/roles/list.php           → $dir='security', $subdir='roles', $page='list'
+// /admin/email/accounts/list.php     → $dir='admin', $subdir='email', $sub_subdir='accounts', $page='list'
+```
+
+**Benefits:**
+- ✅ **Simple and direct** - No complex routing functions
+- ✅ **Easy to understand** - Clear variable-based approach
+- ✅ **Performance optimized** - No function call overhead
+- ✅ **Maintainable** - Easy to modify and debug
 
 ## Email Processing System
 

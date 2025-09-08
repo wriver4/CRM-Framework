@@ -1,6 +1,4 @@
-<?php 
-// Include routing helper functions
-require_once DOCTEMPLATES . '/routing_helpers.php';
+<?php
 
 // header("Content-Security-Policy: default-src 'self'");
 /**
