@@ -77,6 +77,37 @@ class Sessions extends Database
     }
 
     /**
+     * Get user's language ID
+     * @return int|null
+     */
+    public static function getLanguageId()
+    {
+        return $_SESSION['language_id'] ?? null;
+    }
+
+    /**
+     * Get user's language file name
+     * @return string
+     */
+    public static function getLanguageFile()
+    {
+        return $_SESSION['language_file'] ?? 'en.php';
+    }
+
+    /**
+     * Set user's language preference in session
+     * @param int $languageId
+     * @param string $langCode
+     * @param string $fileName
+     */
+    public static function setLanguage($languageId, $langCode, $fileName)
+    {
+        $_SESSION['language_id'] = $languageId;
+        $_SESSION['lang'] = $langCode;
+        $_SESSION['language_file'] = $fileName;
+    }
+
+    /**
      * Check if session is still valid (not expired)
      * @param int $timeout_minutes Default 30 minutes
      * @return bool

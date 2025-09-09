@@ -62,7 +62,7 @@ class Users extends Database
 		}
 	}
 
-	public function edit_profile($id, $full_name, $password, $rid, $email)
+	public function edit_profile($id, $full_name, $password, $rid, $email, $language_id = null)
 	{
 		
 		$helper = new Helpers();
@@ -72,7 +72,12 @@ class Users extends Database
 		}
 		$sql .= "rid = :rid, ";
 		if (strlen($email) > 0) {
-			$sql .= "`email` = :email ";
+			$sql .= "`email` = :email, ";
+		}
+		if ($language_id !== null) {
+			$sql .= "`language_id` = :language_id ";
+		} else {
+			$sql = rtrim($sql, ', ') . ' ';
 		}
 		$sql .= "WHERE `id` = :id";
 		$stmt = $this->dbcrm()->prepare($sql);
@@ -86,12 +91,30 @@ class Users extends Database
 		if (strlen($email) > 0) {
 			$stmt->bindValue(':email', $email);
 		}
+		if ($language_id !== null) {
+			$stmt->bindValue(':language_id', $language_id, PDO::PARAM_INT);
+		}
 		if ($stmt->execute()) {
 			header("location: list");
 		} else {
 			echo "Something went wrong. Please try again later.";
 		}
 		$stmt = null;
+	}
+
+	/**
+	 * Update user's language preference
+	 * @param int $userId
+	 * @param int $languageId
+	 * @return bool
+	 */
+	public function updateLanguagePreference($userId, $languageId)
+	{
+		$sql = "UPDATE users SET language_id = :language_id WHERE id = :user_id";
+		$stmt = $this->dbcrm()->prepare($sql);
+		$stmt->bindValue(':language_id', $languageId, PDO::PARAM_INT);
+		$stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+		return $stmt->execute();
 	}
 
 	public function delete($id, $status)

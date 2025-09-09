@@ -167,7 +167,7 @@ require SECTIONOPEN;
                      class="form-control"
                      value="<?= htmlspecialchars($project_name ?? '') ?>"
                      autocomplete="off"
-                     placeholder="Enter project name...">
+                     placeholder="<?= $lang['placeholder_project_name'] ?? 'Enter project name...'; ?>">
             </div>
           </div>
         </div>
@@ -213,7 +213,7 @@ require SECTIONOPEN;
             <?php if ($full_address_display): ?>
             <?= str_replace("\n", ", ", htmlspecialchars($full_address_display)) ?>
             <?php else: ?>
-            <em class="text-muted">No address provided</em>
+            <em class="text-muted"><?= $lang['message_no_address'] ?? 'No address provided'; ?></em>
             <?php endif; ?>
           </div>
         </div>
@@ -293,7 +293,7 @@ require SECTIONOPEN;
           <div class="d-flex align-items-center">
             <i class="fa-solid fa-tools text-muted me-3 fa-lg"></i>
             <div class="services-content text-muted">
-              <em>No services selected</em>
+              <em><?= $lang['message_no_services'] ?? 'No services selected'; ?></em>
             </div>
           </div>
         </div>
@@ -449,7 +449,7 @@ require SECTIONOPEN;
                     <?php if (!empty($plans_upload_link)): ?>
                     <span class="text-break"><?= htmlspecialchars($plans_upload_link) ?></span>
                     <?php else: ?>
-                    <em class="text-muted">No plans upload link provided</em>
+                    <em class="text-muted"><?= $lang['message_no_plans_link'] ?? 'No plans upload link provided'; ?></em>
                     <?php endif; ?>
                   </div>
                 </div>
@@ -474,7 +474,7 @@ require SECTIONOPEN;
                     <?php if (!empty($picture_upload_link)): ?>
                     <span class="text-break"><?= htmlspecialchars($picture_upload_link) ?></span>
                     <?php else: ?>
-                    <em class="text-muted">No pictures upload link provided</em>
+                    <em class="text-muted"><?= $lang['message_no_pictures_link'] ?? 'No pictures upload link provided'; ?></em>
                     <?php endif; ?>
                   </div>
                 </div>
@@ -713,17 +713,17 @@ require SECTIONOPEN;
     <div class="card-body">
       <div class="row mb-3">
         <div class="col-12">
-          <label class="form-label fw-bold">New Note</label>
+          <label class="form-label fw-bold"><?= $lang['label_current_action'] ?? 'Current Action'; ?></label>
           <div>
             <?php 
-            // Custom note source array with desired order and options
+            // 🌍 Internationalized note source array with desired order and options
             $custom_note_sources = [
-                1 => 'Phone Call',
-                2 => 'Email',
-                3 => 'Text Message',
-                5 => 'Virtual Meeting',
-                6 => 'In-Person',
-                4 => 'Internal Note'
+                1 => $lang['note_source_phone_call'] ?? 'Phone Call',
+                2 => $lang['note_source_email'] ?? 'Email',
+                3 => $lang['note_source_text_message'] ?? 'Text Message',
+                5 => $lang['note_source_virtual_meeting'] ?? 'Virtual Meeting',
+                6 => $lang['note_source_in_person'] ?? 'In-Person',
+                4 => $lang['note_source_internal_note'] ?? 'Internal Note'
             ];
             foreach ($custom_note_sources as $key => $value): ?>
             <div class="form-check form-check-inline">
@@ -748,22 +748,22 @@ require SECTIONOPEN;
                     id="note_text"
                     class="form-control"
                     rows="2"
-                    placeholder="Add a note (optional)..."></textarea>
+                    placeholder="<?= $lang['placeholder_questions_asked'] ?? 'Questions Asked'; ?>"></textarea>
         </div>
       </div>
       <div class="row mb-3">
         <div class="col-12">
-          <label class="form-label fw-bold">Next Action</label>
+          <label class="form-label fw-bold"><?= $lang['label_next_action'] ?? 'Next Action'; ?></label>
           <div>
             <?php 
-            // Original note source array with all options
+            // 🌍 Internationalized next action source array with desired order and options (matching Current Action)
             $next_action_sources = [
-                1 => 'Phone Call',
-                2 => 'Email',
-                3 => 'Text Message',
-                4 => 'Internal Note',
-                5 => 'Meeting',
-                6 => 'Site Visit'
+                1 => $lang['note_source_phone_call'] ?? 'Phone Call',
+                2 => $lang['note_source_email'] ?? 'Email',
+                3 => $lang['note_source_text_message'] ?? 'Text Message',
+                5 => $lang['note_source_virtual_meeting'] ?? 'Virtual Meeting',
+                6 => $lang['note_source_in_person'] ?? 'In-Person',
+                4 => $lang['note_source_internal_note'] ?? 'Internal Note'
             ];
             foreach ($next_action_sources as $key => $value): ?>
             <div class="form-check form-check-inline">
@@ -782,6 +782,16 @@ require SECTIONOPEN;
         </div>
       </div>
       <div class="row mb-3">
+        <div class="col-12">
+          <label for="next_action_notes" class="form-label fw-bold"><?= $lang['label_notes'] ?? 'Notes'; ?></label>
+          <textarea name="next_action_notes"
+                    id="next_action_notes"
+                    class="form-control"
+                    rows="2"
+                    placeholder="<?= $lang['placeholder_what_promised'] ?? 'What you promised...'; ?>"></textarea>
+        </div>
+      </div>
+      <div class="row mb-3">
         <div class="col-md-6">
           <label for="next_action_date"
                  class="form-label fw-bold">Next Action Date</label>
@@ -792,13 +802,12 @@ require SECTIONOPEN;
         </div>
         <div class="col-md-6">
           <label for="next_action_time"
-                 class="form-label fw-bold">Time <small class="text-muted">(optional - anytime during working day if not
-              specified)</small></label>
+                 class="form-label fw-bold"><?= $lang['label_time_optional'] ?? 'Time'; ?> <small class="text-muted"><?= $lang['label_time_note'] ?? '(optional - anytime during working day if not specified)'; ?></small></label>
           <input type="time"
                  name="next_action_time"
                  id="next_action_time"
                  class="form-control"
-                 placeholder="Optional">
+                 placeholder="<?= $lang['placeholder_optional'] ?? 'Optional'; ?>">
         </div>
       </div>
       <div class="row mb-3">
@@ -839,7 +848,7 @@ require SECTIONOPEN;
             <input type="text"
                    class="form-control"
                    id="notesSearch"
-                   placeholder="Search notes..."
+                   placeholder="<?= $lang['placeholder_search_notes'] ?? 'Search notes...'; ?>"
                    value="<?= htmlspecialchars($search) ?>">
             <button class="btn btn-outline-secondary"
                     type="button"
@@ -1181,7 +1190,7 @@ document.addEventListener('DOMContentLoaded', function() {
       } else {
         // Use current time as example
         timeToConvert = new Date();
-        timeToConvert.setHours(9, 0, 0, 0); // 9:00 AM as example
+        // Keep the current time instead of setting to 9:00 AM
       }
 
       if (clientTz !== userTz) {
@@ -1210,7 +1219,7 @@ document.addEventListener('DOMContentLoaded', function() {
           });
           timeConversionElement.textContent = `${clientTime} client time = ${userTime} your time`;
         } else {
-          timeConversionElement.textContent = `Example: 9:00 AM client time = ${userTime} your time`;
+          timeConversionElement.textContent = `Current time: ${clientTime} client time = ${userTime} your time`;
         }
       } else {
         timeConversionElement.textContent = 'Same timezone';

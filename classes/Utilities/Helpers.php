@@ -564,7 +564,7 @@ public function admin_select_property_id($lang, $prop_id )
     };
   }
 
-  // prefered lang
+  // prefered lang (legacy method - deprecated)
   public function get_current_languages($pdo)
   {
     $sql = "SELECT * FROM languages ORDER BY plang_id ASC";
@@ -574,6 +574,28 @@ public function admin_select_property_id($lang, $prop_id )
     foreach ($langs as $plang) {
       echo '<option value="' . $langs['plang_id'] . '">' . $langs['plang'] . '</option>';
     }
+  }
+
+  /**
+   * Get language options for HTML select (new method)
+   * @param int|null $selectedId Currently selected language ID
+   * @return string HTML options for select element
+   */
+  public function get_language_options($selectedId = null)
+  {
+    $languagesModel = new Languages();
+    return $languagesModel->getLanguageOptionsHtml($selectedId);
+  }
+
+  /**
+   * Get user's current language information
+   * @param int $userId User ID
+   * @return array Language information
+   */
+  public function get_user_language($userId)
+  {
+    $languagesModel = new Languages();
+    return $languagesModel->getUserLanguage($userId);
   }
 
   // MISC

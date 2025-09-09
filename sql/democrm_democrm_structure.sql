@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 08, 2025 at 04:09 PM
+-- Generation Time: Sep 08, 2025 at 07:38 PM
 -- Server version: 10.11.9-MariaDB
 -- PHP Version: 7.2.30
 
@@ -192,6 +192,26 @@ CREATE TABLE `email_form_processing` (
   `parsed_form_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Extracted form data as JSON' CHECK (json_valid(`parsed_form_data`)),
   `error_message` text DEFAULT NULL COMMENT 'Error details if processing failed'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Log of email form processing activities';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `languages`
+--
+
+CREATE TABLE `languages` (
+  `id` int(11) NOT NULL,
+  `iso_code` char(2) NOT NULL COMMENT 'ISO 639-1 language code (e.g., en, es, fr)',
+  `country_code` char(2) DEFAULT NULL COMMENT 'ISO 3166-1 country code (e.g., US, ES, MX)',
+  `locale_code` varchar(10) NOT NULL COMMENT 'Full locale code (e.g., en-US, es-ES, es-MX)',
+  `name_english` varchar(100) NOT NULL COMMENT 'Language name in English',
+  `name_native` varchar(100) NOT NULL COMMENT 'Language name in native language',
+  `file_name` varchar(50) NOT NULL COMMENT 'Language file name (e.g., en.php, es.php)',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Whether language is available for selection',
+  `is_default` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Whether this is the system default language',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -534,6 +554,7 @@ CREATE TABLE `users` (
   `password` varchar(250) NOT NULL,
   `rid` int(10) UNSIGNED NOT NULL,
   `email` varchar(250) DEFAULT NULL,
+  `language_id` int(11) DEFAULT NULL COMMENT 'Foreign key to languages table',
   `language` int(2) NOT NULL DEFAULT 1,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
@@ -601,6 +622,17 @@ ALTER TABLE `email_form_processing`
   ADD KEY `idx_sender_email` (`sender_email`),
   ADD KEY `idx_message_id` (`message_id`),
   ADD KEY `fk_email_processing_lead_id` (`lead_id`);
+
+--
+-- Indexes for table `languages`
+--
+ALTER TABLE `languages`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_locale` (`locale_code`),
+  ADD UNIQUE KEY `unique_filename` (`file_name`),
+  ADD UNIQUE KEY `unique_iso_country` (`iso_code`,`country_code`),
+  ADD KEY `idx_active` (`is_active`),
+  ADD KEY `idx_default` (`is_default`);
 
 --
 -- Indexes for table `leads`
@@ -726,7 +758,8 @@ ALTER TABLE `roles_permissions`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
+  ADD UNIQUE KEY `username` (`username`),
+  ADD KEY `idx_users_language` (`language_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -760,6 +793,12 @@ ALTER TABLE `email_accounts_config`
 -- AUTO_INCREMENT for table `email_form_processing`
 --
 ALTER TABLE `email_form_processing`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `languages`
+--
+ALTER TABLE `languages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -882,6 +921,12 @@ ALTER TABLE `phplist_subscribers`
 --
 ALTER TABLE `phplist_sync_log`
   ADD CONSTRAINT `fk_phplist_sync_log_subscriber` FOREIGN KEY (`subscriber_id`) REFERENCES `phplist_subscribers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `fk_users_language` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`) ON DELETE SET NULL;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

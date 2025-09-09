@@ -2,17 +2,18 @@
 	var urlPath = window.location.pathname,
 		urlPathArray = urlPath.split('.'),
 		tabId = urlPathArray[0].split('/').pop();
-	$('#department, #user, #ticket').removeClass('active');	
+	$('#department, #user, #ticket').removeClass('active');
 	$('#'+tabId).addClass('active');
 });*/
 
-let dropdowns = document.querySelectorAll('.dropdown-toggle')
+// Commented out custom dropdown handling to allow Bootstrap to handle dropdowns properly
+/*let dropdowns = document.querySelectorAll('.dropdown-toggle')
 dropdowns.forEach((dd) => {
 	dd.addEventListener('click', function (e) {
 		var el = this.nextElementSibling
 		el.style.display = el.style.display === 'block' ? 'none' : 'block'
 	})
-});
+});*/
 
 /*
 (function ($bs) {
