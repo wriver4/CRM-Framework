@@ -4,6 +4,11 @@ $lang = [
   'navbar_tooltip_title' => "Home",
   'navbar_status' => "Status",
   'navbar_contacts' => "Contacts",
+  'navbar_prospecting' => "Prospecting",
+  'navbar_leads' => "Leads",
+  'navbar_referrals' => "Referrals",
+  'navbar_prospects' => "Prospects",
+  'navbar_contracting' => "Contracting",
   'navbar_leads_new' => "New Lead Entry",
   'navbar_leads_list' => "Leads List",
 
@@ -417,20 +422,52 @@ $lang = [
   'marketing_automation_insurance_followup' => 'Insurance Follow-up Required',
   'lead_cancel' => 'Cancel',
   'lead_submit' => 'Submit',
+  'lead_submit_and_next' => 'Submit and Next',
   'lead_update' => 'Update Lead',
   'leads_list' => 'Leads List',
   'lead_stage' => 'Stage',
   
   // Lead Stage Names (numbered)
   'stage_1' => 'Lead',
-  'stage_2' => 'Prospect',
+  'stage_2' => 'Pre-Qualification',
   'stage_3' => 'Qualified',
-  'stage_4' => 'Proposal',
-  'stage_5' => 'Closing Conference',
-  'stage_6' => 'Completed Estimate',
-  'stage_7' => 'Closed Won',
-  'stage_8' => 'Closed Lost',
-  'stage_9' => 'Referral',
+  'stage_4' => 'Referral',
+  'stage_5' => 'Prospect',
+  'stage_6' => 'Prelim Design',
+  'stage_7' => 'Manufacturing Estimate',
+  'stage_8' => 'Contractor Estimate',
+  'stage_9' => 'Completed Estimate',
+  'stage_10' => 'Prospect Response',
+  'stage_11' => 'Closing Conference',
+  'stage_12' => 'Potential Client Response',
+  'stage_13' => 'Contracting',
+  'stage_14' => 'Closed Won',
+  'stage_15' => 'Closed Lost',
+  
+  // Navigation Menu Items
+  'prospecting' => 'Prospecting',
+  'referrals' => 'Referrals',
+  'prospects' => 'Prospects',
+  'contracting' => 'Contracting',
+  
+  // Module-specific labels
+  'referral_view' => 'View Referral',
+  'referral_edit' => 'Edit Referral',
+  'referral_new' => 'New Referral',
+  'referral_cancel' => 'Cancel',
+  'referral_update' => 'Update Referral',
+  
+  'prospect_view' => 'View Prospect',
+  'prospect_edit' => 'Edit Prospect',
+  'prospect_new' => 'New Prospect',
+  'prospect_cancel' => 'Cancel',
+  'prospect_update' => 'Update Prospect',
+  
+  'contracting_view' => 'View Contract',
+  'contracting_edit' => 'Edit Contract',
+  'contracting_new' => 'New Contract',
+  'contracting_cancel' => 'Cancel',
+  'contracting_update' => 'Update Contract',
   
   // Screening Estimates
   'screening_estimates' => 'Screening Estimates',
@@ -461,6 +498,7 @@ $lang = [
   'note_source_internal_note' => 'Internal Note',
   
   // Form placeholders and labels
+  'project_name' => 'Project Name',
   'placeholder_project_name' => 'Enter project name...',
   'placeholder_questions_asked' => 'Questions Asked',
   'placeholder_what_promised' => 'What you promised...',

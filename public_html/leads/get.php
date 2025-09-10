@@ -62,6 +62,8 @@ if ($dir == 'leads' && $page == 'view') {
     $result = $leads->get_lead_by_lead_id($id);  // Use lead_id (external number) instead of internal id
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
+        
+        // Base lead data
         $lead_source = $result["lead_source"];
         $first_name = $result["first_name"];
         $family_name = $result["family_name"];
@@ -70,25 +72,31 @@ if ($dir == 'leads' && $page == 'view') {
         $contact_type = $result["contact_type"];
         $lead_id = $result["lead_id"];
         $stage = $result["stage"];
-        $structure_type = $result["structure_type"];
-        $structure_description = $result["structure_description"];
-        $structure_other = $result["structure_other"];
-        $structure_additional = $result["structure_additional"];
-        
-        // Screening Estimates fields
-        $eng_system_cost_low = $result["eng_system_cost_low"] ?? null;
-        $eng_system_cost_high = $result["eng_system_cost_high"] ?? null;
-        $eng_protected_area = $result["eng_protected_area"] ?? null;
-        $sales_system_cost_low = $result["sales_system_cost_low"] ?? null;
-        $sales_system_cost_high = $result["sales_system_cost_high"] ?? null;
-        $sales_protected_area = $result["sales_protected_area"] ?? null;
-        
-        $picture_upload_link = $result["picture_upload_link"];
-        $plans_upload_link = $result["plans_upload_link"];
         $created_at = $result["created_at"];
         $updated_at = $result["updated_at"];
         $last_edited_by = $result["last_edited_by"];
         $last_edited_by_name = !empty($last_edited_by) ? $users->get_name_by_id($last_edited_by) : null;
+        
+        // Bridge table data
+        $structure_info = $result["structure_info"] ?? [];
+        $structure_type = $structure_info["structure_type"] ?? null;
+        $structure_description = $structure_info["structure_description"] ?? null;
+        $structure_other = $structure_info["structure_other"] ?? null;
+        $structure_additional = $structure_info["structure_additional"] ?? null;
+        
+        // Documents data
+        $documents = $result["documents"] ?? [];
+        $pictures = $documents["pictures"] ?? [];
+        $plans = $documents["plans"] ?? [];
+        
+        // Prospect data for cost estimates
+        $prospect_info = $result["prospect"] ?? [];
+        
+        // Referral data
+        $referral_info = $result["referral"] ?? [];
+        
+        // Contracting data
+        $contracting_info = $result["contracting"] ?? [];
     }
 }
 
@@ -97,6 +105,8 @@ if ($dir == 'leads' && $page == 'edit') {
     $result = $leads->get_lead_by_lead_id($id);  // Use lead_id (external number) instead of internal id
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
+        
+        // Base lead data
         $internal_id = $result["id"]; // Internal database ID for notes system
         $lead_source = $result["lead_source"];
         $full_name = $result["full_name"];
@@ -119,36 +129,30 @@ if ($dir == 'leads' && $page == 'edit') {
         }
         $full_address = $result["full_address"];
         $services_interested_in = $result["services_interested_in"];
-        $structure_type = $result["structure_type"];
-        $structure_description = $result["structure_description"];
-        $structure_other = $result["structure_other"];
-        $structure_additional = $result["structure_additional"];
-        
-        // Screening Estimates fields
-        $eng_system_cost_low = $result["eng_system_cost_low"] ?? null;
-        $eng_system_cost_high = $result["eng_system_cost_high"] ?? null;
-        $eng_protected_area = $result["eng_protected_area"] ?? null;
-        $sales_system_cost_low = $result["sales_system_cost_low"] ?? null;
-        $sales_system_cost_high = $result["sales_system_cost_high"] ?? null;
-        $sales_protected_area = $result["sales_protected_area"] ?? null;
-        
-        $picture_submitted_1 = $result["picture_submitted_1"];
-        $picture_submitted_2 = $result["picture_submitted_2"];
-        $picture_submitted_3 = $result["picture_submitted_3"];
-        $plans_submitted_1 = $result["plans_submitted_1"];
-        $plans_submitted_2 = $result["plans_submitted_2"];
-        $plans_submitted_3 = $result["plans_submitted_3"];
-        $picture_upload_link = $result["picture_upload_link"];
-        $plans_upload_link = $result["plans_upload_link"];
-        $plans_and_pics = $result["plans_and_pics"];
         $get_updates = $result["get_updates"];
-        $hear_about = $result["hear_about"];
-        $hear_about_other = $result["hear_about_other"];
         $stage = $result["stage"];
-        
         $created_at = $result["created_at"];
         $updated_at = $result["updated_at"];
         $last_edited_by = $result["last_edited_by"];
+        
+        // Bridge table data
+        $structure_info = $result["structure_info"] ?? [];
+        $documents = $result["documents"] ?? [];
+        $referral_info = $result["referral"] ?? [];
+        $prospect_info = $result["prospect"] ?? [];
+        $contracting_info = $result["contracting"] ?? [];
+        
+        // Extract specific data for form fields
+        $structure_type = $structure_info["structure_type"] ?? null;
+        $structure_description = $structure_info["structure_description"] ?? null;
+        $structure_other = $structure_info["structure_other"] ?? null;
+        $structure_additional = $structure_info["structure_additional"] ?? null;
+        
+        $pictures = $documents["pictures"] ?? [];
+        $plans = $documents["plans"] ?? [];
+        
+        $hear_about = $referral_info["referral_source_type"] ?? null;
+        $hear_about_other = $referral_info["referral_source_name"] ?? null;
     }
     
     // Get contacts associated with this lead for the contact dropdown in notes

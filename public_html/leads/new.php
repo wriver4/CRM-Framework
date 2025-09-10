@@ -574,11 +574,20 @@ require SECTIONOPEN;
     <?= $lang['lead_cancel']; ?>
   </a>
   <button type="submit"
+          name="submit_action"
+          value="submit"
           class="btn btn-success"
           role="button"
-          value="submit"
           tabindex="0">
     <?= $lang['lead_submit']; ?>
+  </button>
+  <button type="submit"
+          name="submit_action"
+          value="submit_and_next"
+          class="btn btn-primary ms-2"
+          role="button"
+          tabindex="0">
+    <?= $lang['lead_submit_and_next'] ?? 'Submit and Next'; ?>
   </button>
 </form>
 

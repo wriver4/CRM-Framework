@@ -24,11 +24,11 @@ if (file_exists($languageFile)) {
     require_once LANG . '/en.php';
 }
 require_once 'nav_start.php';
-require_once 'nav_item_leads_new.php';
-require_once 'nav_item_leads_list.php';
-//require_once 'nav_item_leads_view.php';
-//require_once 'nav_item_leads_edit.php';
-//require_once 'nav_item_leads_delete.php';
+require_once 'nav_item_prospecting.php';
+require_once 'nav_item_leads.php';
+require_once 'nav_item_referrals.php';
+require_once 'nav_item_prospects.php';
+require_once 'nav_item_contracting.php';
 require_once 'nav_item_contacts.php';
 require_once 'nav_item_reports.php';
 ?>

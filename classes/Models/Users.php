@@ -32,16 +32,36 @@ class Users extends Database
 
 	public function loggedin()
 	{
-		if (!isset($_SESSION) || !isset($_SESSION['loggedin'])) {
-			header("Location: /login");
+		// Use the modern Sessions class for authentication check
+		if (!Sessions::isLoggedIn()) {
+			// Try to send header redirect first (works if no output sent yet)
+			if (!headers_sent()) {
+				header("Location: /login.php");
+				exit;
+			} else {
+				// If headers already sent, use JavaScript redirect
+				echo '<script type="text/javascript">window.location.href="/login.php";</script>';
+				echo '<noscript><meta http-equiv="refresh" content="0;url=/login.php" /></noscript>';
+				exit;
+			}
 		}
 	}
 
 	public function logout()
 	{
-		// set user loggedin in database
-		session_destroy();
-		header('Location: /');
+		// Use the modern Sessions class for clean logout
+		Sessions::destroyClean();
+		
+		// Handle redirect properly
+		if (!headers_sent()) {
+			header('Location: /');
+			exit;
+		} else {
+			// If headers already sent, use JavaScript redirect
+			echo '<script type="text/javascript">window.location.href="/";</script>';
+			echo '<noscript><meta http-equiv="refresh" content="0;url=/" /></noscript>';
+			exit;
+		}
 	}
 
 	public function new($rid, $full_name, $username, $email, $password)

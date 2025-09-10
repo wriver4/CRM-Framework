@@ -9,6 +9,7 @@ class LeadsList extends EditDeleteTable
 {
     public function __construct($results, $lang)
     {
+        // Reorder columns: move project_name to the end for more space
         $this->column_names = [
             'action' => $lang['action'] ?? 'Action',
             'lead_id' => $lang['lead_id'] ?? 'Lead #',
@@ -16,7 +17,8 @@ class LeadsList extends EditDeleteTable
             'full_name' => $lang['full_name'] ?? 'Full Name',
             'cell_phone' => $lang['lead_cell_phone'] ?? 'Phone',
             'email' => $lang['lead_email'] ?? 'Email',
-            'full_address' => $lang['full_address'] ?? 'Address'
+            'full_address' => $lang['full_address'] ?? 'Address',
+            'project_name' => $lang['project_name'] ?? 'Project Name'
         ];
         parent::__construct($results, $this->column_names, "leads-list");
         $this->lang = $lang;
@@ -28,6 +30,25 @@ class LeadsList extends EditDeleteTable
         $this->row_nav_button_href_view_open = 'href="view?id=';
         $this->row_nav_button_href_close = '" tabindex="0" role="button" aria-pressed="false">';
         $this->row_nav_button_view_icon = '<i class="far fa-eye my-3" aria-hidden="true"></i>';
+    }
+
+    /**
+     * Override table header to give project name column more space
+     */
+    public function table_header($column_names = null)
+    {
+        echo $this->header_open;
+        foreach ($this->column_names as $key => $value) {
+            if ($key == 'action') {
+                echo '<th class="col-2 text-center" scope="col">' . $value . '</th>';
+            } elseif ($key == 'project_name') {
+                // Give project name column extra space (col-2 instead of default)
+                echo '<th class="col-2 text-center" scope="col">' . $value . '</th>';
+            } else {
+                echo '<th class="text-center" scope="col">' . $value . '</th>';
+            }
+        }
+        echo $this->header_close;
     }
 
     public function table_row_columns($results)
@@ -75,6 +96,13 @@ class LeadsList extends EditDeleteTable
                     echo '</td>';
                     break;
                 
+                case 'project_name':
+                    echo '<td>';
+                    $value = $results['project_name'] ?? '';
+                    echo htmlspecialchars($value ?: '-');
+                    echo '</td>';
+                    break;
+                
                 case 'cell_phone':
                     echo '<td>';
                     $value = $results['cell_phone'] ?? '';
@@ -113,28 +141,24 @@ class LeadsList extends EditDeleteTable
         }
     }
 
-    public function row_nav($value, $rid)
+    /**
+     * Override to provide only View and Edit buttons (no Delete)
+     */
+    protected function getButtonsConfig($value)
     {
-        echo $this->row_nav_open;
-
-        // View button - using col-6 for 2 buttons to make them square
-        echo '<div class="col-6 py-1"><a type="button" ';
-        echo $this->row_nav_button_view_class_enabled;
-        echo $this->row_nav_button_href_view_open;
-        echo urlencode($value);
-        echo $this->row_nav_button_href_close;
-        echo $this->row_nav_button_view_icon;
-        echo '</a></div>';
-
-        // Edit button - using col-6 for 2 buttons to make them square
-        echo '<div class="col-6 py-1"><a type="button" ';
-        echo $this->row_nav_button_edit_class_enabled;
-        echo $this->row_nav_button_href_edit_open;
-        echo urlencode($value);
-        echo $this->row_nav_button_href_close;
-        echo $this->row_nav_button_edit_icon;
-        echo '</a></div>';
-
-        echo $this->row_nav_close;
+        return [
+            'view' => [
+                'class' => $this->row_nav_button_view_class_enabled,
+                'href_open' => $this->row_nav_button_href_view_open,
+                'href_close' => $this->row_nav_button_href_close,
+                'icon' => $this->row_nav_button_view_icon
+            ],
+            'edit' => [
+                'class' => $this->row_nav_button_edit_class_enabled,
+                'href_open' => $this->row_nav_button_href_edit_open,
+                'href_close' => $this->row_nav_button_href_close,
+                'icon' => $this->row_nav_button_edit_icon
+            ]
+        ];
     }
 }

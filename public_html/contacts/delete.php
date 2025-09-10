@@ -21,7 +21,7 @@ require SECTIONOPEN;
       method="POST">
   <div class="form-group pb-2">
     <label for="ctype"
-           class="pb-1"><?= $lang['ctype']; ?></label>
+           class="pb-1"><?= $lang['contact_type']; ?></label>
     <input type="text"
            name="ctype"
            id="ctype"

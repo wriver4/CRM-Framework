@@ -55,7 +55,7 @@ require SECTIONOPEN;
     <div class="col">
       <div class="form-group pb-2">
         <label for="ctype"
-               class="required pb-1"><?= $lang['ctype']; ?></label>
+               class="required pb-1"><?= $lang['contact_type']; ?></label>
         <select name="ctype"
                 id="ctype"
                 class="form-select"

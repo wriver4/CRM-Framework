@@ -96,35 +96,74 @@ class EditDeleteTable extends Table
 
   public function row_nav($value, $rid)
   {
+    // Get buttons configuration for this class
+    $buttons = $this->getButtonsConfig($value);
+    $button_count = count($buttons);
+    
+    // Calculate Bootstrap column class based on button count
+    $col_class = $this->getButtonColumnClass($button_count);
+    
     echo $this->row_nav_open;
 
-    // View button
-    echo $this->row_nav_button_open
-      . $this->row_nav_button_view_class_enabled
-      . $this->row_nav_button_href_view_open
-      . urlencode($value)
-      . $this->row_nav_button_href_close
-      . $this->row_nav_button_view_icon
-      . $this->row_nav_button_close;
-
-    // Edit button
-    echo $this->row_nav_button_open
-      . $this->row_nav_button_edit_class_enabled
-      . $this->row_nav_button_href_edit_open
-      . urlencode($value)
-      . $this->row_nav_button_href_close
-      . $this->row_nav_button_edit_icon
-      . $this->row_nav_button_close;
-
-    // Delete button
-    echo $this->row_nav_button_open
-      . $this->row_nav_button_delete_class_enabled
-      . $this->row_nav_button_href_delete_open
-      . urlencode($value)
-      . $this->row_nav_button_href_close
-      . $this->row_nav_button_delete_icon
-      . $this->row_nav_button_close;
+    // Render each button with appropriate column class
+    foreach ($buttons as $button) {
+      echo '<div class="' . $col_class . ' py-1"><a type="button" ';
+      echo $button['class'];
+      echo $button['href_open'];
+      echo urlencode($value);
+      echo $button['href_close'];
+      echo $button['icon'];
+      echo '</a></div>';
+    }
 
     echo $this->row_nav_close;
+  }
+
+  /**
+   * Get buttons configuration for this table
+   * Override in child classes to customize buttons
+   */
+  protected function getButtonsConfig($value)
+  {
+    return [
+      'view' => [
+        'class' => $this->row_nav_button_view_class_enabled,
+        'href_open' => $this->row_nav_button_href_view_open,
+        'href_close' => $this->row_nav_button_href_close,
+        'icon' => $this->row_nav_button_view_icon
+      ],
+      'edit' => [
+        'class' => $this->row_nav_button_edit_class_enabled,
+        'href_open' => $this->row_nav_button_href_edit_open,
+        'href_close' => $this->row_nav_button_href_close,
+        'icon' => $this->row_nav_button_edit_icon
+      ],
+      'delete' => [
+        'class' => $this->row_nav_button_delete_class_enabled,
+        'href_open' => $this->row_nav_button_href_delete_open,
+        'href_close' => $this->row_nav_button_href_close,
+        'icon' => $this->row_nav_button_delete_icon
+      ]
+    ];
+  }
+
+  /**
+   * Calculate Bootstrap column class based on number of buttons
+   * Ensures buttons are square (width matches height)
+   */
+  protected function getButtonColumnClass($button_count)
+  {
+    switch ($button_count) {
+      case 1:
+        return 'col-12'; // Full width for single button
+      case 2:
+        return 'col-6';  // Half width for two buttons
+      case 3:
+        return 'col-4';  // Third width for three buttons
+      case 4:
+        return 'col-3';  // Quarter width for four buttons
+      default:
+        return 'col';    // Equal distribution for other cases
+    }
   }
 }

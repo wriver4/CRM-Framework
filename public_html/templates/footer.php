@@ -251,25 +251,25 @@ if ($table_page == true) {
     });</script>';
   }
 
-if ($dir == 'systems' && $page == 'edit') {
-echo '<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-<script>
-    ClassicEditor
-        .create( document.querySelector( \'#floatingTextarea\' ), {
-            toolbar: [\'undo\', \'redo\', \'|\', \'heading\', \'|\', \'bold\', \'italic\', \'|\',  \'bulletedList\', \'numberedList\', \'blockQuote\'],
-            heading: {
-                options: [
-                    { model: \'paragraph\', title: \'Paragraph\', class: \'ck-heading_paragraph\' },
-                    { model: \'heading1\', view: \'h1\', title: \'Heading 1\', class: \'ck-heading_heading1\' },
-                    { model: \'heading2\', view: \'h2\', title: \'Heading 2\', class: \'ck-heading_heading2\' },
-                    { model: \'heading3\', view: \'h3\', title: \'Heading 3\', class: \'ck-heading_heading3\' }
-                ]
-            }
-        } )
-        .catch( error => {
-            console.error( error );
-        } );
-</script>';
+// Summernote WYSIWYG Editor Integration
+try {
+  $editorHelper = EditorHelper::getInstance();
+  
+  // Check if current page should load Summernote
+  if ($editorHelper->shouldLoadEditor($dir ?? '', $page ?? '')) {
+    // Configure editor for current page
+    $editorHelper->configureForPage($dir ?? '', $page ?? '');
+    
+    // Output JavaScript includes and initialization
+    echo $editorHelper->getJsIncludes();
+    echo $editorHelper->getInitializationScript();
+    
+    // Load helper JavaScript for additional functionality
+    echo '<script src="' . JS . '/summernote-helper.js"></script>';
+  }
+} catch (Error $e) {
+  // Silently fail if EditorHelper is not available
+  error_log("EditorHelper not available: " . $e->getMessage());
 }
 
 echo '</body>

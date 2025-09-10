@@ -783,7 +783,6 @@ require SECTIONOPEN;
       </div>
       <div class="row mb-3">
         <div class="col-12">
-          <label for="next_action_notes" class="form-label fw-bold"><?= $lang['label_notes'] ?? 'Notes'; ?></label>
           <textarea name="next_action_notes"
                     id="next_action_notes"
                     class="form-control"
@@ -1004,7 +1003,8 @@ require SECTIONOPEN;
         <select name="stage"
                 id="stage"
                 class="form-select"
-                autocomplete="off">
+                autocomplete="off"
+                onchange="handleStageChange(this.value)">
           <?php
           $stage_options = $leads->get_lead_stage_array();
           $selected_stage = null;
@@ -1015,9 +1015,33 @@ require SECTIONOPEN;
               $selected_stage = $leads->convert_text_stage_to_number((string)$stage);
             }
           }
+          
+          // Get valid next stages for current stage
+          $valid_next_stages = [];
+          if ($selected_stage) {
+            $valid_next_stages = $leads->get_valid_next_stages($selected_stage);
+            // Always include current stage
+            $valid_next_stages[] = $selected_stage;
+            $valid_next_stages = array_unique($valid_next_stages);
+          } else {
+            // If no current stage, show all stages
+            $valid_next_stages = array_keys($stage_options);
+          }
+          
           foreach ($stage_options as $key => $value) {
-            $sel = ($selected_stage == (int)$key) ? ' selected' : '';
-            echo '<option value="' . $key . '"' . $sel . '>' . $value . '</option>';
+            // Only show valid next stages or current stage
+            if (in_array($key, $valid_next_stages)) {
+              $sel = ($selected_stage == (int)$key) ? ' selected' : '';
+              $badge_class = $leads->get_stage_badge_class($key);
+              $badge_color = '';
+              if (strpos($badge_class, 'bg-primary') !== false) $badge_color = '🔵';
+              elseif (strpos($badge_class, 'bg-info') !== false) $badge_color = '🔵';
+              elseif (strpos($badge_class, 'bg-warning') !== false) $badge_color = '🟡';
+              elseif (strpos($badge_class, 'bg-success') !== false) $badge_color = '🟢';
+              elseif (strpos($badge_class, 'bg-danger') !== false) $badge_color = '🔴';
+              
+              echo '<option value="' . $key . '"' . $sel . '>' . $badge_color . ' ' . $value . '</option>';
+            }
           }
           ?>
         </select>
@@ -1504,6 +1528,53 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
 });
+
+// Stage change handler
+function handleStageChange(newStage) {
+  const currentStage = <?= $selected_stage ?? 1 ?>;
+  const stageNames = <?= json_encode($leads->get_lead_stage_array()) ?>;
+  const leadId = '<?= htmlspecialchars($lead_id ?? '') ?>';
+  
+  if (newStage != currentStage) {
+    let message = '';
+    let redirectUrl = '';
+    
+    // Determine where the record will move based on new stage
+    switch (parseInt(newStage)) {
+      case 4: // Referral
+        message = `This lead will be moved to the Referrals list when you save.`;
+        redirectUrl = '/referrals/list';
+        break;
+      case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: // Prospect stages
+        message = `This lead will be moved to the Prospects list when you save.`;
+        redirectUrl = '/prospects/list';
+        break;
+      case 13: // Contracting
+        message = `This lead will be moved to the Contracting list when you save.`;
+        redirectUrl = '/contracting/list';
+        break;
+      case 14: // Closed Won
+        message = `This lead will be marked as Closed Won and moved to the appropriate list.`;
+        break;
+      case 15: // Closed Lost
+        message = `This lead will be marked as Closed Lost.`;
+        break;
+    }
+    
+    if (message) {
+      // Show confirmation dialog
+      if (confirm(`Stage Change: ${stageNames[currentStage]} → ${stageNames[newStage]}\n\n${message}\n\nDo you want to continue?`)) {
+        // User confirmed, let the form submission handle the stage change
+        return true;
+      } else {
+        // User cancelled, revert the dropdown
+        document.getElementById('stage').value = currentStage;
+        return false;
+      }
+    }
+  }
+  return true;
+}
 </script>
 
 <!-- Contact Selector JavaScript -->

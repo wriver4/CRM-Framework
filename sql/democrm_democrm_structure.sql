@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 08, 2025 at 07:38 PM
+-- Generation Time: Sep 09, 2025 at 08:12 PM
 -- Server version: 10.11.9-MariaDB
 -- PHP Version: 7.2.30
 
@@ -274,6 +274,64 @@ CREATE TABLE `leads` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `leads_backup_20241209`
+--
+
+CREATE TABLE `leads_backup_20241209` (
+  `id` int(11) NOT NULL,
+  `contact_id` int(11) DEFAULT NULL,
+  `lead_id` int(11) DEFAULT NULL,
+  `stage` varchar(20) DEFAULT 'Lead',
+  `first_name` varchar(100) NOT NULL DEFAULT '',
+  `family_name` varchar(255) DEFAULT NULL,
+  `full_name` varchar(200) DEFAULT NULL,
+  `cell_phone` varchar(15) DEFAULT NULL,
+  `email` varchar(255) NOT NULL DEFAULT '',
+  `business_name` varchar(255) DEFAULT NULL,
+  `project_name` varchar(255) DEFAULT NULL,
+  `contact_type` int(11) NOT NULL DEFAULT 1,
+  `form_street_1` varchar(100) DEFAULT NULL,
+  `form_street_2` varchar(50) DEFAULT NULL,
+  `form_city` varchar(50) DEFAULT NULL,
+  `form_state` varchar(10) DEFAULT NULL,
+  `form_postcode` varchar(15) DEFAULT NULL,
+  `form_country` varchar(5) DEFAULT 'US',
+  `timezone` varchar(50) DEFAULT NULL COMMENT 'Client timezone (e.g., America/New_York)',
+  `full_address` varchar(512) DEFAULT NULL,
+  `services_interested_in` varchar(20) DEFAULT NULL,
+  `structure_type` tinyint(4) DEFAULT 1,
+  `structure_description` varchar(20) DEFAULT NULL,
+  `structure_other` varchar(255) DEFAULT NULL,
+  `structure_additional` text DEFAULT NULL,
+  `eng_system_cost_low` int(11) DEFAULT NULL COMMENT 'Engineering estimate - system cost low range (whole dollars)',
+  `eng_system_cost_high` int(11) DEFAULT NULL COMMENT 'Engineering estimate - system cost high range (whole dollars)',
+  `eng_protected_area` int(11) DEFAULT NULL COMMENT 'Engineering estimate - protected area (square feet)',
+  `sales_system_cost_low` int(11) DEFAULT NULL COMMENT 'Sales estimate - system cost low range (whole dollars)',
+  `sales_system_cost_high` int(11) DEFAULT NULL COMMENT 'Sales estimate - system cost high range (whole dollars)',
+  `sales_protected_area` int(11) DEFAULT NULL COMMENT 'Sales estimate - protected area (square feet)',
+  `picture_submitted_1` varchar(255) DEFAULT NULL,
+  `picture_submitted_2` varchar(255) DEFAULT NULL,
+  `picture_submitted_3` varchar(255) DEFAULT NULL,
+  `plans_submitted_1` varchar(255) DEFAULT NULL,
+  `plans_submitted_2` varchar(255) DEFAULT NULL,
+  `plans_submitted_3` varchar(255) DEFAULT NULL,
+  `picture_submitted` text DEFAULT NULL,
+  `plans_submitted` text DEFAULT NULL,
+  `get_updates` int(1) DEFAULT 1,
+  `hear_about` varchar(20) DEFAULT NULL,
+  `hear_about_other` varchar(255) DEFAULT NULL,
+  `picture_upload_link` varchar(500) DEFAULT NULL,
+  `plans_upload_link` varchar(500) DEFAULT NULL,
+  `plans_and_pics` int(1) DEFAULT 0,
+  `lead_source` tinyint(4) NOT NULL DEFAULT 1,
+  `last_edited_by` int(11) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `leads_contacts`
 --
 
@@ -420,6 +478,168 @@ CREATE TABLE `leads_old` (
   `prospect_lost` varchar(5) DEFAULT NULL,
   `to_contracting` varchar(5) DEFAULT NULL,
   `plans_and_pics` varchar(5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lead_contracting`
+--
+
+CREATE TABLE `lead_contracting` (
+  `id` int(11) NOT NULL,
+  `lead_id` int(11) NOT NULL,
+  `contract_number` varchar(50) DEFAULT NULL,
+  `contract_type` enum('standard','custom','government','commercial') DEFAULT 'standard',
+  `contract_value` decimal(12,2) DEFAULT NULL,
+  `contract_signed_date` date DEFAULT NULL,
+  `contract_start_date` date DEFAULT NULL,
+  `contract_completion_date` date DEFAULT NULL,
+  `payment_terms` varchar(200) DEFAULT NULL,
+  `payment_schedule` enum('upfront','50_50','milestone','net_30','custom') DEFAULT 'milestone',
+  `deposit_amount` decimal(10,2) DEFAULT NULL,
+  `deposit_received` tinyint(1) DEFAULT 0,
+  `deposit_date` date DEFAULT NULL,
+  `project_manager_id` int(11) DEFAULT NULL,
+  `lead_technician_id` int(11) DEFAULT NULL,
+  `project_start_date` date DEFAULT NULL,
+  `estimated_completion_date` date DEFAULT NULL,
+  `actual_completion_date` date DEFAULT NULL,
+  `project_status` enum('pending','in_progress','on_hold','completed','cancelled') DEFAULT 'pending',
+  `completion_percentage` int(3) DEFAULT 0,
+  `deliverables` text DEFAULT NULL COMMENT 'JSON array of deliverables',
+  `milestones` text DEFAULT NULL COMMENT 'JSON array of milestones',
+  `current_milestone` varchar(200) DEFAULT NULL,
+  `permits_required` text DEFAULT NULL,
+  `permits_obtained` text DEFAULT NULL,
+  `insurance_verified` tinyint(1) DEFAULT 0,
+  `warranty_terms` text DEFAULT NULL,
+  `warranty_start_date` date DEFAULT NULL,
+  `warranty_end_date` date DEFAULT NULL,
+  `quality_check_completed` tinyint(1) DEFAULT 0,
+  `quality_check_date` date DEFAULT NULL,
+  `client_satisfaction_score` int(2) DEFAULT NULL COMMENT '1-10 scale',
+  `project_notes` text DEFAULT NULL,
+  `change_orders` text DEFAULT NULL COMMENT 'JSON array of change orders',
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lead_documents`
+--
+
+CREATE TABLE `lead_documents` (
+  `id` int(11) NOT NULL,
+  `lead_id` int(11) NOT NULL,
+  `document_type` enum('picture','plan','contract','proposal','survey','other') NOT NULL,
+  `document_category` varchar(100) DEFAULT NULL COMMENT 'e.g., initial_submission, site_survey, final_plans',
+  `file_name` varchar(255) NOT NULL,
+  `file_path` varchar(500) NOT NULL,
+  `file_size` int(11) DEFAULT NULL,
+  `mime_type` varchar(100) DEFAULT NULL,
+  `upload_date` timestamp NULL DEFAULT current_timestamp(),
+  `uploaded_by` int(11) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `sort_order` int(3) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lead_prospects`
+--
+
+CREATE TABLE `lead_prospects` (
+  `id` int(11) NOT NULL,
+  `lead_id` int(11) NOT NULL,
+  `site_survey_completed` tinyint(1) DEFAULT 0,
+  `site_survey_date` date DEFAULT NULL,
+  `site_survey_by` int(11) DEFAULT NULL COMMENT 'User ID who conducted survey',
+  `site_survey_notes` text DEFAULT NULL,
+  `engineering_review_required` tinyint(1) DEFAULT 0,
+  `engineering_review_completed` tinyint(1) DEFAULT 0,
+  `engineering_review_date` date DEFAULT NULL,
+  `engineering_review_by` int(11) DEFAULT NULL,
+  `engineering_notes` text DEFAULT NULL,
+  `estimated_system_size` decimal(8,2) DEFAULT NULL COMMENT 'kW or sq ft',
+  `system_type` varchar(100) DEFAULT NULL,
+  `equipment_specifications` text DEFAULT NULL,
+  `estimated_cost_low` decimal(10,2) DEFAULT NULL,
+  `estimated_cost_high` decimal(10,2) DEFAULT NULL,
+  `final_quoted_price` decimal(10,2) DEFAULT NULL,
+  `pricing_notes` text DEFAULT NULL,
+  `proposal_version` int(3) DEFAULT 1,
+  `proposal_sent_date` date DEFAULT NULL,
+  `proposal_valid_until` date DEFAULT NULL,
+  `proposal_status` enum('draft','sent','viewed','accepted','rejected','expired') DEFAULT 'draft',
+  `last_contact_date` date DEFAULT NULL,
+  `next_follow_up_date` date DEFAULT NULL,
+  `follow_up_method` enum('email','phone','meeting','site_visit') DEFAULT NULL,
+  `prospect_temperature` enum('hot','warm','cold') DEFAULT 'warm',
+  `prospect_notes` text DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lead_referrals`
+--
+
+CREATE TABLE `lead_referrals` (
+  `id` int(11) NOT NULL,
+  `lead_id` int(11) NOT NULL,
+  `referral_source_type` enum('partner','customer','employee','online','other') DEFAULT 'partner',
+  `referral_source_name` varchar(255) DEFAULT NULL,
+  `referral_contact_id` int(11) DEFAULT NULL COMMENT 'Links to contacts table',
+  `referral_code` varchar(50) DEFAULT NULL,
+  `commission_rate` decimal(5,2) DEFAULT NULL,
+  `commission_amount` decimal(10,2) DEFAULT NULL,
+  `commission_type` enum('percentage','fixed','tiered') DEFAULT 'percentage',
+  `commission_paid` tinyint(1) DEFAULT 0,
+  `commission_paid_date` date DEFAULT NULL,
+  `agreement_type` varchar(100) DEFAULT NULL,
+  `agreement_signed_date` date DEFAULT NULL,
+  `referral_notes` text DEFAULT NULL,
+  `follow_up_required` tinyint(1) DEFAULT 0,
+  `follow_up_date` date DEFAULT NULL,
+  `referral_status` enum('pending','qualified','converted','declined') DEFAULT 'pending',
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lead_structure_info`
+--
+
+CREATE TABLE `lead_structure_info` (
+  `id` int(11) NOT NULL,
+  `lead_id` int(11) NOT NULL,
+  `structure_type` tinyint(4) DEFAULT 1,
+  `structure_description` varchar(100) DEFAULT NULL,
+  `structure_other` varchar(255) DEFAULT NULL,
+  `structure_additional` text DEFAULT NULL,
+  `building_age` int(4) DEFAULT NULL,
+  `building_stories` int(2) DEFAULT NULL,
+  `roof_type` varchar(100) DEFAULT NULL,
+  `roof_condition` enum('excellent','good','fair','poor') DEFAULT NULL,
+  `roof_age` int(3) DEFAULT NULL,
+  `electrical_panel_type` varchar(100) DEFAULT NULL,
+  `electrical_capacity` varchar(50) DEFAULT NULL,
+  `hvac_type` varchar(100) DEFAULT NULL,
+  `special_requirements` text DEFAULT NULL,
+  `access_restrictions` text DEFAULT NULL,
+  `hoa_restrictions` text DEFAULT NULL,
+  `permit_requirements` text DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -653,6 +873,24 @@ ALTER TABLE `leads`
   ADD KEY `idx_leads_phone` (`cell_phone`);
 
 --
+-- Indexes for table `leads_backup_20241209`
+--
+ALTER TABLE `leads_backup_20241209`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_lead_source` (`lead_source`),
+  ADD KEY `idx_email` (`email`),
+  ADD KEY `idx_stage` (`stage`),
+  ADD KEY `idx_created_at` (`created_at`),
+  ADD KEY `idx_state` (`form_state`),
+  ADD KEY `idx_country` (`form_country`),
+  ADD KEY `idx_structure_type` (`structure_type`),
+  ADD KEY `idx_last_edited_by` (`last_edited_by`),
+  ADD KEY `idx_leads_timezone` (`timezone`),
+  ADD KEY `idx_leads_contact_id` (`contact_id`),
+  ADD KEY `idx_leads_email` (`email`),
+  ADD KEY `idx_leads_phone` (`cell_phone`);
+
+--
 -- Indexes for table `leads_contacts`
 --
 ALTER TABLE `leads_contacts`
@@ -690,6 +928,53 @@ ALTER TABLE `leads_notes`
 --
 ALTER TABLE `leads_old`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `lead_contracting`
+--
+ALTER TABLE `lead_contracting`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_lead_contract` (`lead_id`),
+  ADD KEY `idx_contract_number` (`contract_number`),
+  ADD KEY `idx_project_status` (`project_status`),
+  ADD KEY `idx_project_manager` (`project_manager_id`),
+  ADD KEY `idx_completion_date` (`estimated_completion_date`);
+
+--
+-- Indexes for table `lead_documents`
+--
+ALTER TABLE `lead_documents`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_lead_id` (`lead_id`),
+  ADD KEY `idx_document_type` (`document_type`),
+  ADD KEY `idx_category` (`document_category`);
+
+--
+-- Indexes for table `lead_prospects`
+--
+ALTER TABLE `lead_prospects`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_lead_prospect` (`lead_id`),
+  ADD KEY `idx_survey_date` (`site_survey_date`),
+  ADD KEY `idx_proposal_status` (`proposal_status`),
+  ADD KEY `idx_follow_up_date` (`next_follow_up_date`),
+  ADD KEY `idx_temperature` (`prospect_temperature`);
+
+--
+-- Indexes for table `lead_referrals`
+--
+ALTER TABLE `lead_referrals`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_lead_referral` (`lead_id`),
+  ADD KEY `idx_referral_contact` (`referral_contact_id`),
+  ADD KEY `idx_referral_status` (`referral_status`);
+
+--
+-- Indexes for table `lead_structure_info`
+--
+ALTER TABLE `lead_structure_info`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_lead_structure` (`lead_id`);
 
 --
 -- Indexes for table `notes`
@@ -808,6 +1093,12 @@ ALTER TABLE `leads`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `leads_backup_20241209`
+--
+ALTER TABLE `leads_backup_20241209`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `leads_contacts`
 --
 ALTER TABLE `leads_contacts`
@@ -829,6 +1120,36 @@ ALTER TABLE `leads_notes`
 -- AUTO_INCREMENT for table `leads_old`
 --
 ALTER TABLE `leads_old`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `lead_contracting`
+--
+ALTER TABLE `lead_contracting`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `lead_documents`
+--
+ALTER TABLE `lead_documents`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `lead_prospects`
+--
+ALTER TABLE `lead_prospects`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `lead_referrals`
+--
+ALTER TABLE `lead_referrals`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `lead_structure_info`
+--
+ALTER TABLE `lead_structure_info`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -908,6 +1229,37 @@ ALTER TABLE `leads_contacts`
 ALTER TABLE `leads_notes`
   ADD CONSTRAINT `leads_notes_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `leads_notes_ibfk_2` FOREIGN KEY (`note_id`) REFERENCES `notes` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `lead_contracting`
+--
+ALTER TABLE `lead_contracting`
+  ADD CONSTRAINT `lead_contracting_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `lead_documents`
+--
+ALTER TABLE `lead_documents`
+  ADD CONSTRAINT `lead_documents_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `lead_prospects`
+--
+ALTER TABLE `lead_prospects`
+  ADD CONSTRAINT `lead_prospects_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `lead_referrals`
+--
+ALTER TABLE `lead_referrals`
+  ADD CONSTRAINT `lead_referrals_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `lead_referrals_ibfk_2` FOREIGN KEY (`referral_contact_id`) REFERENCES `contacts` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `lead_structure_info`
+--
+ALTER TABLE `lead_structure_info`
+  ADD CONSTRAINT `lead_structure_info_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `phplist_subscribers`

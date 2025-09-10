@@ -98,3 +98,17 @@
         href="<?php echo CSS . "/style.css"; ?>">
   <link rel="stylesheet"
         href="<?php echo CSS . "/forms.css"; ?>">
+  <?php
+  // Summernote CSS Integration
+  try {
+    $editorHelper = EditorHelper::getInstance();
+    if ($editorHelper->shouldLoadEditor($dir ?? '', $page ?? '')) {
+      $cssIncludes = $editorHelper->getCssIncludes();
+      error_log("Summernote CSS Includes: " . $cssIncludes);
+      echo $cssIncludes;
+    }
+  } catch (Error $e) {
+    // Silently fail if EditorHelper is not available
+    error_log("EditorHelper not available: " . $e->getMessage());
+  }
+  ?>

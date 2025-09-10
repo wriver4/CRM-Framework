@@ -150,3 +150,69 @@ text-align: left;
 .dropdown-hover-all .dropdown-menu, .dropdown-hover > .dropdown-menu.dropend { 
 	margin-left:-1px !important;
  }
+
+/* Action Button System - Ensure Bootstrap grid works properly */
+td .row {
+	max-width: none !important;
+	width: 100% !important;
+}
+
+/* Override table-row-nav max-width for action buttons */
+td .row .col-1,
+td .row .col-2,
+td .row .col-3,
+td .row .col-4,
+td .row .col-5,
+td .row .col-6,
+td .row .col-7,
+td .row .col-8,
+td .row .col-9,
+td .row .col-10,
+td .row .col-11,
+td .row .col-12 {
+	max-width: none !important;
+}
+
+/* Action Button System - Square buttons for optimal mobile tapping */
+table.dataTable td .row .btn,
+.dataTables_wrapper td .row .btn,
+td .row .btn {
+	min-height: 60px !important;
+	height: 60px !important;
+	width: 60px !important;
+	min-width: 60px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	padding: 0 !important;
+	margin: 0 auto !important;
+}
+
+/* Add proper spacing and centering for button columns - DataTables specific */
+table.dataTable td .row .col-6,
+.dataTables_wrapper td .row .col-6,
+td .row .col-6 {
+	display: flex !important;
+	justify-content: center !important;
+	align-items: center !important;
+	padding-left: 4px !important;
+	padding-right: 4px !important;
+}
+
+/* Ensure the row container centers its columns */
+table.dataTable td .row,
+.dataTables_wrapper td .row,
+td .row {
+	display: flex !important;
+	justify-content: center !important;
+	align-items: center !important;
+	margin: 0 !important;
+	width: 100% !important;
+}
+
+/* Ensure icons are properly centered in square buttons */
+table.dataTable td .row .btn i,
+.dataTables_wrapper td .row .btn i,
+td .row .btn i {
+	font-size: 1.2rem !important;
+}

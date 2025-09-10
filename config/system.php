@@ -122,7 +122,11 @@ define("SECURITY", URL . "/security");
 
 // --- MODULE URLS ---
 // Performance-optimized constants for module navigation
+define("PROSPECTING", URL . "/prospecting");
 define("LEADS", URL . "/leads");
+define("REFERRALS", URL . "/referrals");
+define("PROSPECTS", URL . "/prospects");
+define("CONTRACTING", URL . "/contracting");
 define("CONTACTS", URL . "/contacts");
 define("ADMIN", URL . "/admin");
 define("REPORTS", URL . "/reports");

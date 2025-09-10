@@ -14,24 +14,17 @@
 class AdminLeadsList extends LeadsList
 {
     /**
-     * Override row navigation to show only edit button
-     * 
-     * @param mixed $value The lead ID value
-     * @param mixed $rid The row ID (unused in this implementation)
+     * Override to provide only Edit button (no View, no Delete)
      */
-    public function row_nav($value, $rid)
+    protected function getButtonsConfig($value)
     {
-        echo $this->row_nav_open;
-
-        // Only edit button - no view, no delete
-        echo $this->row_nav_button_open;
-        echo $this->row_nav_button_edit_class_enabled;
-        echo $this->row_nav_button_href_edit_open
-            . urlencode($value)
-            . $this->row_nav_button_href_close
-            . $this->row_nav_button_edit_icon
-            . $this->row_nav_button_close;
-
-        echo $this->row_nav_close;
+        return [
+            'edit' => [
+                'class' => $this->row_nav_button_edit_class_enabled,
+                'href_open' => $this->row_nav_button_href_edit_open,
+                'href_close' => $this->row_nav_button_href_close,
+                'icon' => $this->row_nav_button_edit_icon
+            ]
+        ];
     }
 }

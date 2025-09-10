@@ -8,11 +8,13 @@
 class Leads extends Database
 {
     private $contacts;
+    private $bridgeManager;
 
     public function __construct()
     {
         parent::__construct();
         $this->contacts = new Contacts();
+        $this->bridgeManager = new LeadBridgeManager();
     }
 
     // Helper method to get lead source options (1-6)
@@ -38,18 +40,24 @@ class Leads extends Database
         ];
     }
 
-    // Helper method to get lead stage options (1-9)
+    // Helper method to get lead stage options (1-15)
     public function get_lead_stage_array() {
         return [
             1 => 'Lead',
-            2 => 'Prospect', 
+            2 => 'Pre-Qualification',
             3 => 'Qualified',
-            4 => 'Proposal',
-            5 => 'Closing Conference',
-            6 => 'Completed Estimate',
-            7 => 'Closed Won',
-            8 => 'Closed Lost',
-            9 => 'Referral'
+            4 => 'Referral',
+            5 => 'Prospect',
+            6 => 'Prelim Design',
+            7 => 'Manufacturing Estimate',
+            8 => 'Contractor Estimate',
+            9 => 'Completed Estimate',
+            10 => 'Prospect Response',
+            11 => 'Closing Conference',
+            12 => 'Potential Client Response',
+            13 => 'Contracting',
+            14 => 'Closed Won',
+            15 => 'Closed Lost'
         ];
     }
 
@@ -58,17 +66,28 @@ class Leads extends Database
         switch ($stage_number) {
             case 1: // Lead
                 return 'badge bg-primary';
-            case 2: // Prospect
-            case 9: // Referral
+            case 2: // Pre-Qualification
                 return 'badge bg-info';
             case 3: // Qualified
-            case 4: // Proposal
                 return 'badge bg-warning';
-            case 5: // Closing Conference
-            case 6: // Completed Estimate
-            case 7: // Closed Won
+            case 4: // Referral
+                return 'badge bg-info';
+            case 5: // Prospect
+                return 'badge bg-warning';
+            case 6: // Prelim Design
+            case 7: // Manufacturing Estimate
+            case 8: // Contractor Estimate
+                return 'badge bg-warning';
+            case 9: // Completed Estimate
+            case 10: // Prospect Response
                 return 'badge bg-success';
-            case 8: // Closed Lost
+            case 11: // Closing Conference
+            case 12: // Potential Client Response
+                return 'badge bg-success';
+            case 13: // Contracting
+            case 14: // Closed Won
+                return 'badge bg-success';
+            case 15: // Closed Lost
                 return 'badge bg-danger';
             default:
                 return 'badge bg-secondary';
@@ -90,7 +109,7 @@ class Leads extends Database
     // Helper method to get all stages with multilingual support
     public function get_lead_stage_array_multilingual($lang = null) {
         $stages = [];
-        for ($i = 1; $i <= 9; $i++) {
+        for ($i = 1; $i <= 15; $i++) {
             $stages[$i] = $this->get_stage_display_name($i, $lang);
         }
         return $stages;
@@ -100,17 +119,82 @@ class Leads extends Database
     public function convert_text_stage_to_number($text_stage) {
         $mapping = [
             'lead' => 1,
-            'prospect' => 2,
+            'pre-qualification' => 2,
             'qualified' => 3,
-            'proposal' => 4,
-            'closing conference' => 5,
-            'completed estimate' => 6,
-            'closed won' => 7,
-            'closed lost' => 8,
-            'referral' => 9
+            'referral' => 4,
+            'prospect' => 5,
+            'prelim design' => 6,
+            'manufacturing estimate' => 7,
+            'contractor estimate' => 8,
+            'completed estimate' => 9,
+            'prospect response' => 10,
+            'closing conference' => 11,
+            'potential client response' => 12,
+            'contracting' => 13,
+            'closed won' => 14,
+            'closed lost' => 15
         ];
         
         return $mapping[strtolower(trim($text_stage))] ?? 1; // Default to Lead
+    }
+
+    // Helper method to get valid next stages for a given stage
+    public function get_valid_next_stages($current_stage) {
+        // Define valid stage progressions for the new module system
+        $stage_progressions = [
+            1 => [2, 3, 4, 15], // New Lead -> Contacted, Qualified, Referral, Closed Lost
+            2 => [3, 4, 5, 15], // Contacted -> Qualified, Referral, Prospect, Closed Lost
+            3 => [4, 5, 15],    // Qualified -> Referral, Prospect, Closed Lost
+            4 => [5, 15],       // Referral -> Prospect, Closed Lost
+            5 => [6, 15],       // Prospect -> Proposal, Closed Lost
+            6 => [7, 15],       // Proposal -> Negotiation, Closed Lost
+            7 => [8, 15],       // Negotiation -> Site Visit, Closed Lost
+            8 => [9, 15],       // Site Visit -> Engineering, Closed Lost
+            9 => [10, 15],      // Engineering -> Permitting, Closed Lost
+            10 => [11, 15],     // Permitting -> Pricing, Closed Lost
+            11 => [12, 15],     // Pricing -> Approval, Closed Lost
+            12 => [13, 15],     // Approval -> Contracting, Closed Lost
+            13 => [14, 15],     // Contracting -> Closed Won, Closed Lost
+            14 => [],           // Closed Won (final stage)
+            15 => []            // Closed Lost (final stage)
+        ];
+        
+        return $stage_progressions[$current_stage] ?? [];
+    }
+
+    // Helper method to check if a stage can be marked as lost
+    public function can_be_marked_lost($stage_number) {
+        // All stages except final states can be marked as lost
+        return !in_array($stage_number, [14, 15]); // Can't mark Won or Lost as Lost again
+    }
+
+    // Helper method to get stage category for grouping
+    public function get_stage_category($stage_number) {
+        switch ($stage_number) {
+            case 1:
+            case 2:
+            case 3:
+                return 'qualification';
+            case 4:
+                return 'referral';
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                return 'prospect_development';
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+                return 'closing';
+            case 14:
+                return 'won';
+            case 15:
+                return 'lost';
+            default:
+                return 'unknown';
+        }
     }
 
     // Helper method to get structure type options (1-6)
@@ -151,36 +235,38 @@ class Leads extends Database
 
             $data['full_address'] = implode("\n", $lines);
         }
-        // SQL to insert a new lead with updated structure
+
+        // Create base lead record (without bridge table fields)
+        $lead_id = $this->create_base_lead($data);
+        
+        if ($lead_id) {
+            // Create bridge table data
+            $this->bridgeManager->updateLeadData($lead_id, $data);
+        }
+        
+        return $lead_id;
+    }
+
+    /**
+     * Create base lead record without bridge table data
+     */
+    private function create_base_lead($data) {
         $sql = "INSERT INTO leads (
             lead_source, first_name, family_name, cell_phone, email, contact_type, notes, 
             lead_id, business_name, form_street_1, form_street_2, form_city, form_state, form_postcode, form_country, timezone, full_address,
-            services_interested_in, structure_type, structure_description, structure_other, structure_additional,
-            picture_submitted_1, picture_submitted_2, picture_submitted_3,
-            plans_submitted_1, plans_submitted_2, plans_submitted_3,
-            picture_upload_link, plans_upload_link, plans_and_pics, get_updates, hear_about, hear_about_other, stage, last_edited_by,
-            -- Keep existing business fields
-            full_name, full_address, contact_id
+            services_interested_in, get_updates, stage, last_edited_by, full_name, contact_id
         ) VALUES (
             :lead_source, :first_name, :family_name, :cell_phone, :email, :contact_type, :notes,
             :lead_id, :business_name, :form_street_1, :form_street_2, :form_city, :form_state, :form_postcode, :form_country, :timezone, :full_address,
-            :services_interested_in, :structure_type, :structure_description, :structure_other, :structure_additional,
-            :picture_submitted_1, :picture_submitted_2, :picture_submitted_3,
-            :plans_submitted_1, :plans_submitted_2, :plans_submitted_3,
-            :picture_upload_link, :plans_upload_link, :plans_and_pics, :get_updates, :hear_about, :hear_about_other, :stage, :last_edited_by,
-            -- Keep existing business fields
-            :full_name, :full_address, :contact_id
+            :services_interested_in, :get_updates, :stage, :last_edited_by, :full_name, :contact_id
         )";
-        // Define valid parameters that exist in the SQL query
+        
+        // Define valid parameters for base lead table
         $validParams = [
             'lead_source', 'first_name', 'family_name', 'cell_phone', 'email', 'contact_type', 'notes',
             'lead_id', 'business_name', 'form_street_1', 'form_street_2', 'form_city', 
             'form_state', 'form_postcode', 'form_country', 'timezone', 'full_address',
-            'services_interested_in', 'structure_type', 'structure_description', 'structure_other',
-            'structure_additional', 'picture_submitted_1', 'picture_submitted_2', 'picture_submitted_3',
-            'plans_submitted_1', 'plans_submitted_2', 'plans_submitted_3', 'picture_upload_link',
-            'plans_upload_link', 'plans_and_pics', 'get_updates', 'hear_about', 'hear_about_other',
-            'stage', 'last_edited_by', 'full_name', 'contact_id'
+            'services_interested_in', 'get_updates', 'stage', 'last_edited_by', 'full_name', 'contact_id'
         ];
         
         $stmt = $this->dbcrm()->prepare($sql);
@@ -189,7 +275,12 @@ class Leads extends Database
                 $stmt->bindValue(':' . $key, $value);
             }
         }
-        return $stmt->execute();
+        
+        if ($stmt->execute()) {
+            return $this->dbcrm()->lastInsertId();
+        }
+        
+        return false;
     }
 
     public function get_leads() {
@@ -199,8 +290,36 @@ class Leads extends Database
         return $stmt->fetchAll();
     }
 
+    public function get_leads_by_stage($stage) {
+        // SQL to fetch leads by specific stage
+        $sql = "SELECT * FROM leads WHERE stage = :stage ORDER BY updated_at DESC";
+        $stmt = $this->dbcrm()->prepare($sql);
+        $stmt->bindValue(':stage', $stage, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function get_leads_by_stages($stages) {
+        // SQL to fetch leads by multiple stages
+        $placeholders = str_repeat('?,', count($stages) - 1) . '?';
+        $sql = "SELECT * FROM leads WHERE stage IN ($placeholders) ORDER BY updated_at DESC";
+        $stmt = $this->dbcrm()->prepare($sql);
+        $stmt->execute($stages);
+        return $stmt->fetchAll();
+    }
+
     public function get_lead_by_id($id) {
-        // SQL to fetch a lead by ID
+        // Get complete lead data with bridge tables
+        $complete_data = $this->bridgeManager->getCompleteLeadData($id);
+        
+        // Return in array format for backward compatibility
+        return $complete_data ? [$complete_data] : [];
+    }
+
+    /**
+     * Get basic lead data without bridge tables (for performance)
+     */
+    public function get_lead_basic($id) {
         $sql = "SELECT * FROM leads WHERE id = :id";
         $stmt = $this->dbcrm()->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
@@ -245,7 +364,27 @@ class Leads extends Database
                 $data['full_address'] = implode("\n", $lines);
             }
 
-            // SQL to update a lead with new structure
+            // Update base lead record
+            $base_result = $this->update_base_lead($id, $data);
+            
+            if ($base_result) {
+                // Update bridge table data
+                $this->bridgeManager->updateLeadData($id, $data);
+            }
+            
+            return $base_result;
+            
+        } catch (Exception $e) {
+            // Log the error with form context
+            $this->logFormError('admin_leads_edit', $e->getMessage(), $data);
+            throw $e;
+        }
+    }
+
+    /**
+     * Update base lead record without bridge table data
+     */
+    private function update_base_lead($id, $data) {
         $sql = "UPDATE leads SET 
             lead_source = :lead_source, first_name = :first_name, family_name = :family_name, 
             cell_phone = :cell_phone, email = :email, contact_type = :contact_type,
@@ -253,81 +392,57 @@ class Leads extends Database
             form_street_1 = :form_street_1, form_street_2 = :form_street_2,
             form_city = :form_city, form_state = :form_state, form_postcode = :form_postcode, 
             form_country = :form_country, timezone = :timezone, full_address = :full_address,
-            services_interested_in = :services_interested_in, structure_type = :structure_type,
-            structure_description = :structure_description, structure_other = :structure_other,
-            structure_additional = :structure_additional,
-            eng_system_cost_low = :eng_system_cost_low, eng_system_cost_high = :eng_system_cost_high,
-            eng_protected_area = :eng_protected_area, sales_system_cost_low = :sales_system_cost_low,
-            sales_system_cost_high = :sales_system_cost_high, sales_protected_area = :sales_protected_area,
-            picture_submitted_1 = :picture_submitted_1, picture_submitted_2 = :picture_submitted_2, 
-            picture_submitted_3 = :picture_submitted_3, plans_submitted_1 = :plans_submitted_1, 
-            plans_submitted_2 = :plans_submitted_2, plans_submitted_3 = :plans_submitted_3, 
-            picture_upload_link = :picture_upload_link, plans_upload_link = :plans_upload_link, 
-            plans_and_pics = :plans_and_pics, get_updates = :get_updates, hear_about = :hear_about, 
-            hear_about_other = :hear_about_other, stage = :stage, last_edited_by = :last_edited_by, 
-            updated_at = CURRENT_TIMESTAMP, full_name = :full_name
+            services_interested_in = :services_interested_in, get_updates = :get_updates,
+            stage = :stage, last_edited_by = :last_edited_by, updated_at = CURRENT_TIMESTAMP, 
+            full_name = :full_name
         WHERE id = :id";
+        
         $data['id'] = $id;
         
-        // Define valid parameters that exist in the SQL query
+        // Define valid parameters for base lead table
         $validParams = [
             'lead_source', 'first_name', 'family_name', 'cell_phone', 'email', 'contact_type',
             'lead_id', 'business_name', 'project_name', 'form_street_1', 'form_street_2', 'form_city', 
             'form_state', 'form_postcode', 'form_country', 'timezone', 'full_address',
-            'services_interested_in', 'structure_type', 'structure_description', 'structure_other',
-            'structure_additional',
-            'eng_system_cost_low', 'eng_system_cost_high', 'eng_protected_area',
-            'sales_system_cost_low', 'sales_system_cost_high', 'sales_protected_area',
-            'picture_submitted_1', 'picture_submitted_2', 'picture_submitted_3',
-            'plans_submitted_1', 'plans_submitted_2', 'plans_submitted_3', 'picture_upload_link',
-            'plans_upload_link', 'plans_and_pics', 'get_updates', 'hear_about', 'hear_about_other',
-            'stage', 'last_edited_by', 'full_name', 'id'
+            'services_interested_in', 'get_updates', 'stage', 'last_edited_by', 'full_name', 'id'
         ];
         
-            // Prepare parameters for logging
-            $logParameters = [];
-            foreach ($validParams as $param) {
-                if (isset($data[$param])) {
-                    $logParameters[$param] = $data[$param];
-                } else {
-                    // Provide default values for missing parameters
-                    switch ($param) {
-                        case 'lead_source':
-                        case 'contact_type':
-                        case 'structure_type':
-                            $logParameters[$param] = 1;
-                            break;
-                        case 'stage':
-                            $logParameters[$param] = '1';
-                            break;
-                        case 'plans_and_pics':
-                        case 'get_updates':
-                            $logParameters[$param] = 0;
-                            break;
-                        case 'form_country':
-                            $logParameters[$param] = 'US';
-                            break;
-                        default:
-                            $logParameters[$param] = null;
-                            break;
-                    }
+        // Prepare parameters for logging
+        $logParameters = [];
+        foreach ($validParams as $param) {
+            if (isset($data[$param])) {
+                $logParameters[$param] = $data[$param];
+            } else {
+                // Provide default values for missing parameters
+                switch ($param) {
+                    case 'lead_source':
+                    case 'contact_type':
+                        $logParameters[$param] = 1;
+                        break;
+                    case 'stage':
+                        $logParameters[$param] = '1';
+                        break;
+                    case 'get_updates':
+                        $logParameters[$param] = 0;
+                        break;
+                    case 'form_country':
+                        $logParameters[$param] = 'US';
+                        break;
+                    default:
+                        $logParameters[$param] = null;
+                        break;
                 }
             }
-            
-            // Use the new logging system
-            $context = [
-                'operation' => 'update_lead',
-                'lead_id' => $id,
-                'form_source' => 'admin_leads_edit'
-            ];
-            
-            return $this->prepareAndExecute($sql, $logParameters, $context);
-            
-        } catch (Exception $e) {
-            // Log the error with form context
-            $this->logFormError('admin_leads_edit', $e->getMessage(), $data);
-            throw $e;
         }
+        
+        // Use the new logging system
+        $context = [
+            'operation' => 'update_lead',
+            'lead_id' => $id,
+            'form_source' => 'admin_leads_edit'
+        ];
+        
+        return $this->prepareAndExecute($sql, $logParameters, $context);
     }
 
     public function delete_lead($id) {
@@ -449,7 +564,7 @@ class Leads extends Database
     // Get all leads for list display
     public function get_all_active($filters = []) {
         $sql = "SELECT 
-            id, lead_source, first_name, family_name, business_name, email, cell_phone, 
+            id, lead_source, first_name, family_name, business_name, project_name, email, cell_phone, 
             stage, structure_type, contact_type, created_at, updated_at, last_edited_by,
             lead_id, form_street_1, form_city, form_state, form_postcode, full_address, contact_id
         FROM leads 
@@ -464,7 +579,7 @@ class Leads extends Database
         }
         
         if (!empty($filters['search'])) {
-            $sql .= " AND (first_name LIKE :search OR family_name LIKE :search OR email LIKE :search)";
+            $sql .= " AND (first_name LIKE :search OR family_name LIKE :search OR email LIKE :search OR project_name LIKE :search)";
             $params['search'] = '%' . $filters['search'] . '%';
         }
         
@@ -489,7 +604,7 @@ class Leads extends Database
         }
         
         if (!empty($filters['search'])) {
-            $sql .= " AND (first_name LIKE :search OR family_name LIKE :search OR email LIKE :search)";
+            $sql .= " AND (first_name LIKE :search OR family_name LIKE :search OR email LIKE :search OR project_name LIKE :search)";
             $params['search'] = '%' . $filters['search'] . '%';
         }
         
@@ -1215,5 +1330,23 @@ class Leads extends Database
                 'active_leads' => 0
             ];
         }
+    }
+
+    // =====================================================
+    // BRIDGE TABLE INTEGRATION METHODS
+    // =====================================================
+
+    /**
+     * Get leads by stage with bridge data
+     */
+    public function get_leads_by_stage_with_bridge_data($stage) {
+        return $this->bridgeManager->getLeadsByStageWithBridgeData($stage);
+    }
+
+    /**
+     * Migrate a lead to bridge tables
+     */
+    public function migrateLeadToBridgeTables($lead_id) {
+        return $this->bridgeManager->migrateLeadToBridgeTables($lead_id);
     }
 }

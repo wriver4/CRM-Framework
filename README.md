@@ -1,10 +1,5 @@
 # CRM Framework - Developer Documentation
 
-## 🚨 IMPORTANT: For AI Assistants and Internal Development
-**AI Assistants**: Read `repo.md` file first - it contains critical development guidelines and database credentials needed for development work.
-
-**Public Documentation**: This README.md contains public-facing documentation without sensitive information.
-
 ## Quick Start
 
 ### Prerequisites
@@ -68,10 +63,43 @@ npx playwright test
 - All models extend the `Database` class for connection access
 - Language files are stored in `public_html/admin/languages/`
 - Templates are included directly, not rendered through a template engine
-- **Routing**: Uses simple variable concatenation - avoid complex routing helper functions
+
+## 🚨 CRITICAL: READ ALL RULES FIRST 🚨
+
+**⚠️ BEFORE DOING ANYTHING, AI ASSISTANTS MUST READ ALL `.zencoder/rules/` FILES ⚠️**
+
+**This is MANDATORY - not optional. The rules contain critical information about:**
+- File ownership requirements (files MUST be owned by `democrm:democrm` on server)
+- Development patterns and conventions
+- Database operation requirements
+- Security protocols
+- Server access procedures
+
+**Failure to read rules first will result in:**
+- Broken file permissions causing web server access failures
+- Incorrect development patterns
+- Security vulnerabilities
+- Time wasted fixing preventable issues
+
+**📋 Required reading order:**
+1. `development.md` - Critical file ownership and development patterns
+2. `server-access.md` - File ownership and SSH procedures  
+3. `directory-structure.md` - Project organization
+4. All other rule files as relevant to the task
+
+**🔧 Most common issue: Creating files without proper ownership**
+- Files created through SFTP mount appear as `mark:users` locally
+- Server requires `democrm:democrm` ownership for web access
+- ALWAYS run: `ssh wswg "chown democrm:democrm /path/to/file"` after creating files
 
 ## Summary
-A PHP-based CRM (Customer Relationship Management) framework providing functionality for managing leads, contacts, users, and sales pipelines. **This is NOT a traditional MVC framework** - it follows a direct, procedural approach with object-oriented components. The architecture uses direct file routing (no URL rewriting), database inheritance patterns (all models extend a singleton Database class), and template inclusion rather than dependency injection or modern framework patterns. The application features a comprehensive multilingual system with language arrays stored in `admin/languages/` and a specialized `Helpers` class that generates translation-aware HTML components and form elements. It includes CRUD operations, role-based access control, audit trails, and reporting capabilities. The frontend uses Bootstrap 5, Bootstrap Icons, Font Awesome, jQuery, DataTables, and Validator.js for a modern user interface.
+A PHP-based CRM (Customer Relationship Management) framework providing functionality for managing leads, contacts, users, and sales pipelines. **This is NOT a traditional MVC framework** - it follows a direct, procedural approach with object-oriented components. The architecture uses direct file routing (no URL rewriting), database inheritance patterns (all models extend a singleton Database class), and template inclusion rather than dependency injection or modern framework patterns. 
+
+**🌍 MULTILINGUAL & MULTINATIONAL DESIGN**: The framework is architected for global deployment with comprehensive internationalization support. It features a robust multilingual system with language arrays stored in `admin/languages/`, a specialized `Helpers` class that generates translation-aware HTML components and form elements, and provisions for multinational business logic. While currently restricted to certain countries, all architectural decisions should prioritize global scalability and localization capabilities.
+
+📋 **For comprehensive internationalization guidelines, see:** `internationalization.md`
+
+The framework includes CRUD operations, role-based access control, audit trails, and reporting capabilities. The frontend uses Bootstrap 5, Bootstrap Icons, Font Awesome, jQuery, DataTables, and Validator.js for a modern user interface.
 
 ## Language & Runtime
 **Language**: PHP
@@ -87,15 +115,17 @@ A PHP-based CRM (Customer Relationship Management) framework providing functiona
 **Development Dependencies**:
 - Same as main dependencies
 
-## Structure
-- **classes/**: Core framework classes for database, security, and business logic
-- **config/**: Configuration files for system settings
-- **public_html/**: Web-accessible files including controllers and views
-- **scripts/**: Utility scripts for data migration
-- **sql/**: Database schema (`democrm_democrm_structure.sql`) and migration scripts
-- **vendor/**: Composer dependencies
-- **logs/**: Application logs
-- **templates/**: HTML templates and components
+## Directory Structure
+
+📁 **For detailed directory structure, see:** `directory-structure.md`
+
+**Key Directories:**
+- `classes/` - Core framework classes (Models, Views, Utilities, Logging)
+- `public_html/` - Web-accessible files with direct routing
+- `config/` - System configuration files
+- `sql/` - Database schema and migrations
+- `scripts/` - Automation and utility scripts
+- `tests/` - Comprehensive test suite (PHPUnit + Playwright)
 
 ## Entry Points
 **Main Entry**: public_html/index.php
@@ -107,6 +137,8 @@ A PHP-based CRM (Customer Relationship Management) framework providing functiona
 **Database Config**: Embedded in classes/Database.php
 **Path Constants**: Defined in config/system.php
 **Network Utilities**: Helpers class (IP detection, geolocation, session validation)
+**Session Security**: Prepared settings in config/system.php (commented out for safety)
+**Sessions Management**: Enhanced Sessions class in classes/Core/Sessions.php
 
 ### System Constants Reference
 All constants are defined in `config/system.php` for performance and consistency:
@@ -115,360 +147,145 @@ All constants are defined in `config/system.php` for performance and consistency
 - `DOCROOT` - Application root directory
 - `DOCPUBLIC` - Public HTML directory (`$_SERVER['DOCUMENT_ROOT']`)
 - `DOCTEMPLATES` - Templates directory path
-- `HEADER`, `BODY`, `NAV`, `FOOTER` - Template component paths
-- `LISTOPEN`, `LISTBUTTONS`, `LISTCLOSE` - List template components
-- `SECTIONOPEN`, `SECTIONCLOSE` - Section template components
+- `DOCCLASSES` - Classes directory path
+- `DOCCONFIG` - Configuration directory path
+- `DOCSQL` - SQL directory path
+- `DOCSCRIPTS` - Scripts directory path
 
-#### **URL Constants**
-- `URL` - Base application URL (`https://domain.com`)
-- `TEMPLATES` - Templates URL path
-- `ASSETS` - Static assets URL path
-- `IMG`, `CSS`, `JS` - Asset-specific URL paths
-- `SECURITY` - Security module URL
-
-#### **Module URL Constants** *(Performance Optimized)*
-- `LEADS` - Leads module URL (`/leads`)
-- `CONTACTS` - Contacts module URL (`/contacts`) 
-- `ADMIN` - Admin module URL (`/admin`)
-- `REPORTS` - Reports module URL (`/reports`)
+#### **Database Configuration**
+- `DB_HOST` - Database server hostname
+- `DB_NAME` - Database name
+- `DB_USER` - Database username
+- `DB_PASS` - Database password
 
 #### **Application Settings**
-- `LANG` - Language files directory
-- `LOGINLANG` - Login-specific language files
-- `VALIDEMAIL` - Email validation regex pattern
-- `NONCE_SECRET` - CSRF protection secret key
+- `APP_NAME` - Application display name
+- `APP_VERSION` - Current version number
+- `DEBUG_MODE` - Debug flag (true/false)
+- `LOG_LEVEL` - Logging level setting
 
-## Key Architectural Patterns
+#### **Security Settings**
+- `SESSION_TIMEOUT` - Session timeout in seconds
+- `CSRF_TOKEN_NAME` - CSRF token field name
+- `PASSWORD_MIN_LENGTH` - Minimum password length
+- `MAX_LOGIN_ATTEMPTS` - Maximum failed login attempts
 
-**Note**: This is **NOT** a traditional MVC framework. It follows a more direct, procedural approach with object-oriented components.
+#### **Email Configuration**
+- `SMTP_HOST` - SMTP server hostname
+- `SMTP_PORT` - SMTP server port
+- `SMTP_USER` - SMTP username
+- `SMTP_PASS` - SMTP password
+- `FROM_EMAIL` - Default sender email
+- `FROM_NAME` - Default sender name
 
-### Architecture Overview
-- **Direct File Structure**: Controllers are individual PHP files in `public_html/` directories
-- **Class-Based Models**: Business logic classes in `classes/` directory extending `Database`
-- **Template System**: Reusable HTML components in `templates/` directory
-- **Multilingual Support**: Centralized language files with `Helpers` class integration
+#### **🌍 Multilingual & International Support**
+- `DEFAULT_LANGUAGE` - Default language code (e.g., 'en')
+- `AVAILABLE_LANGUAGES` - Array of supported language codes
+- `LANGUAGE_PATH` - Path to language files
+- `DEFAULT_TIMEZONE` - Default timezone for the application
+- `DEFAULT_CURRENCY` - Default currency code (ISO 4217)
+- `DEFAULT_COUNTRY` - Default country code (ISO 3166-1)
+- `DATE_FORMAT` - Default date format pattern
+- `DECIMAL_SEPARATOR` - Decimal separator character
+- `THOUSANDS_SEPARATOR` - Thousands separator character
 
-### Core Patterns
-- **Entity Organization**: Each entity (leads, contacts, users) has its own directory with consistent file naming
-- **CRUD Operations**: Standardized `list.php`, `new.php`, `edit.php`, `view.php`, `delete.php` pattern
-- **Database Inheritance**: All models extend `classes/Database.php` for connection access
-- **Security Layer**: Centralized authentication in `classes/Security.php` and CSRF protection via `classes/Nonce.php`
-- **Multilingual Integration**: `Helpers` class provides translation-aware form generation and data handling
-- **Routing Variables**: Page-specific variables control conditional resource loading in templates
+#### **Frontend Assets**
+- `CSS_VERSION` - CSS cache-busting version
+- `JS_VERSION` - JavaScript cache-busting version
+- `BOOTSTRAP_VERSION` - Bootstrap framework version
+- `JQUERY_VERSION` - jQuery library version
 
-### Critical Framework Routing Pattern
-**REQUIRED**: All PHP files in `public_html/` must include the system configuration using this exact pattern:
+## Architecture Patterns
+
+### Database Access Pattern
+**Singleton Database Class**: All model classes extend the `Database` class, providing inherited access to the database connection through `$this->connection`. This eliminates the need for dependency injection while maintaining a single connection instance.
+
+### Direct File Routing
+**No URL Rewriting**: The application uses direct file access patterns:
+- `/leads/list.php` - Lead listing page
+- `/users/edit.php` - User editing page
+- `/contacts/new.php` - New contact creation
+
+### Template Inclusion Pattern
+**PHP Include-Based Templates**: Pages use PHP `include` statements to compose layouts:
 ```php
-require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
+include DOCTEMPLATES . '/header.php';
+include DOCTEMPLATES . '/nav.php';
+// Page content
+include DOCTEMPLATES . '/footer.php';
 ```
 
-**Why This Pattern:**
-- **Path Independence**: Works from any subdirectory depth (`/admin/`, `/admin/email/`, etc.)
-- **Server Compatibility**: Uses `$_SERVER['DOCUMENT_ROOT']` which Apache sets to `/home/democrm/public_html`
-- **Framework Foundation**: Loads autoloaders, constants, and core classes required by all pages
-- **Security**: Ensures proper class loading and authentication systems are available
+### 🌍 Internationalization Architecture
+**CRITICAL DESIGN PRINCIPLE**: All development must consider global deployment and multinational requirements.
 
-**Common Mistake**: Using relative paths like `../../config/system.php` breaks when directory structure changes
-
-### File Processing Flow
-1. **Request Routing**: Direct file access (e.g., `/leads/list.php`)
-2. **Authentication**: Security checks via `Security` class
-3. **Routing Variables**: Set page-specific variables for conditional resource loading
-4. **Language Loading**: Include appropriate language file from `admin/languages/`
-5. **Data Processing**: Use model classes extending `Database`
-6. **Template Rendering**: Include template components with language variables
-7. **Response**: Direct HTML output with multilingual content
-
-### Unique Characteristics
-- **No Framework Dependencies**: Pure PHP with minimal external libraries
-- **Direct Database Access**: PDO connections through inheritance rather than dependency injection
-- **Template Inclusion**: PHP `include` statements rather than template engines
-- **Language Arrays**: Simple PHP arrays for translations rather than complex i18n systems
-- **Static Connections**: Singleton database pattern for connection reuse
-
-## Routing & URL Generation
-
-### Simple Variable-Based Routing
-The framework uses a **simple variable-based approach** for routing and URL generation, avoiding complex routing functions:
-
+**Multilingual HTML Generation**: The `Helpers` class provides methods that automatically generate HTML with proper language support:
 ```php
-// Set routing variables at the top of each page
-$dir = 'contacts';           // Primary directory
-$subdir = '';                // Subdirectory (if applicable)
-$sub_subdir = '';            // Sub-subdirectory (if applicable)
-$page = 'list';              // Current page type
-
-// Build URLs directly from variables
-$list_url = '/' . $dir;
-if (!empty($subdir)) $list_url .= '/' . $subdir;
-if (!empty($sub_subdir)) $list_url .= '/' . $sub_subdir;
-$list_url .= '/list';
-
-$new_url = '/' . $dir;
-if (!empty($subdir)) $new_url .= '/' . $subdir;
-if (!empty($sub_subdir)) $new_url .= '/' . $sub_subdir;
-$new_url .= '/new';
+Helpers::generateFormField('text', 'name', $value, 'form_field_name');
+Helpers::generateButton('submit', 'save_button', 'btn-primary');
 ```
 
-### Template Integration
-- **Navigation active states**: `($dir == "users") ? ' active' : ''`
-- **Form validation**: `$_POST['dir'] == 'contacts' && $_POST['page'] == 'new'`
-- **Conditional resource loading**: `if ($dir == 'leads' && $page == 'new')`
-- **Button generation**: Templates use page variables directly for URL building
+**Global Considerations for Development**:
+- **Language Support**: All user-facing text must use translation keys
+- **Date/Time Formats**: Consider timezone and regional date formats
+- **Currency Handling**: Prepare for multiple currencies and formats
+- **Address Formats**: Support various international address structures
+- **Phone Number Formats**: Handle international phone number variations
+- **Legal Compliance**: Consider GDPR, data residency, and local regulations
+- **Cultural Adaptations**: UI/UX considerations for different cultures
 
-### Multi-Level Directory Support
-The system supports up to 4 levels of directory nesting:
-```php
-// Examples:
-// /users/list.php                    → $dir='users', $page='list'
-// /security/roles/list.php           → $dir='security', $subdir='roles', $page='list'
-// /admin/email/accounts/list.php     → $dir='admin', $subdir='email', $sub_subdir='accounts', $page='list'
-```
+### Security Implementation
+**Multi-Layer Security**:
+- CSRF protection via `Nonce` class
+- Session management via `Sessions` class
+- Role-based access control via `Security` class
+- SQL injection prevention via prepared statements
+- XSS protection via output escaping
 
-**Benefits:**
-- ✅ **Simple and direct** - No complex routing functions
-- ✅ **Easy to understand** - Clear variable-based approach
-- ✅ **Performance optimized** - No function call overhead
-- ✅ **Maintainable** - Easy to modify and debug
+### Audit Trail System
+**Comprehensive Logging**:
+- User actions logged via `Audit` class
+- System errors logged via `PhpErrorLog` class
+- Database errors logged via `SqlErrorLogger` class
+- Internal application errors via `InternalErrors` class
 
-## Email Processing System
+## Development Guidelines
 
-### Overview
-Automated email form processing system that monitors email accounts and converts form submissions into CRM leads. Supports three form types:
-- **Estimate Forms** - Fire protection system quotes
-- **LTR Forms** - Long-term retardant applications  
-- **Contact Forms** - General inquiries
+📋 **For detailed development guidelines, see:** `development-guidelines.md`
+🗄️ **For database credentials and access patterns, see:** `database-credentials.md`
+🔄 **For migration and workflow processes, see:** `workflows.md`
+🌍 **For internationalization requirements, see:** `internationalization.md`
 
-### Features
-- **Automated Processing**: IMAP monitoring with 5-minute cron intervals
-- **Form Parsing**: Structured data extraction from email content
-- **Lead Integration**: Direct integration with existing leads system
-- **Duplicate Detection**: Prevents duplicate lead creation
-- **Admin Interface**: Management dashboard at `/admin/email/system_status`
-- **REST API**: External integration support
-- **Multilingual Support**: Follows framework language patterns
+### Code Organization
+- **Models**: Business logic and data access in `classes/Models/`
+- **Views**: List display classes in `classes/Views/`
+- **Controllers**: Direct PHP files in `public_html/` directories
+- **Utilities**: Helper functions in `classes/Utilities/`
+- **Core**: Framework foundation in `classes/Core/`
 
-### Installation & Setup
-```bash
-# Install system
-php scripts/install_email_system.php
+### Testing Strategy
+- Unit tests for individual classes
+- Integration tests for workflows
+- Feature tests for complete user journeys
+- End-to-end tests with Playwright
 
-# Configure cron job
-*/5 * * * * php /home/democrm/scripts/email_cron.php >> logs/email_cron.log 2>&1
-```
-
-### Configuration
-- **Email Accounts**: Configured in `email_accounts_config` table
-- **Form Mapping**: Defined in `EmailFormMapper` class
-- **Processing Logic**: `EmailFormProcessor` class handles IMAP and lead creation
-- **Admin Access**: `/admin/email/email_import` for manual processing
-
-## phpList Marketing Integration
-
-### Overview
-Automated email marketing list management system that syncs lead data with phpList when users opt-in for updates. Uses a hybrid approach combining immediate flagging with batch processing for reliable, scalable marketing automation.
-
-### Architecture
-**Hybrid Processing Model:**
-1. **Immediate Flagging**: When lead created with `get_updates = 1`, subscriber record created in `phplist_subscribers` table with `sync_status = 'pending'`
-2. **Batch Processing**: Cron job runs every 15 minutes to sync pending subscribers with phpList via API
-
-### Database Tables
-- **`phplist_subscribers`**: Main tracking table with sync status, attempts, and segmentation data
-- **`phplist_config`**: Configuration for API credentials, sync settings, and list mappings
-- **`phplist_sync_log`**: Detailed logging for sync operations and debugging
-
-### Key Features
-- **Automatic List Segmentation**: Geographic (state), service type, and lead source segmentation
-- **Error Handling & Retry Logic**: Maximum retry attempts with detailed error logging
-- **Web-based Admin Interface**: Configuration, monitoring, and manual retry capabilities
-- **Graceful Degradation**: Lead creation never fails due to phpList issues
-
-### Installation & Setup
-```bash
-# 1. Run database migration
-php sql/migrations/run_phplist_migration.php
-
-# 2. Configure via admin interface
-# Access: /admin/phplist/config.php
-# - Set API credentials (URL, username, password)
-# - Configure list mappings for segmentation
-# - Enable sync and set frequency
-
-# 3. Set up cron job (every 15 minutes)
-*/15 * * * * php /home/democrm/scripts/phplist_sync.php
-
-# 4. Test integration
-# - Create lead with get_updates = 1
-# - Verify subscriber record created
-# - Run sync script manually
-# - Check subscriber appears in phpList
-```
-
-### Configuration Options
-**API Settings:**
-- `phplist_api_url`: Full URL to phpList admin directory
-- `phplist_api_username/password`: API credentials (password encrypted)
-- `api_timeout_seconds`: Request timeout (default: 30)
-
-**Sync Settings:**
-- `sync_enabled`: Enable/disable sync (1/0)
-- `sync_frequency_minutes`: Cron frequency (default: 15)
-- `max_sync_attempts`: Retry limit (default: 3)
-- `batch_size`: Records per sync batch (default: 50)
-
-**List Mapping (JSON):**
-```json
-{
-  "phplist_geographic_lists": {"US-CA": 2, "US-TX": 3, "US-CO": 4},
-  "phplist_service_lists": {"1": 10, "2": 11},
-  "phplist_source_lists": {"Internet search": 20, "Referral": 21}
-}
-```
-
-### Admin Management
-- **Subscribers**: `/admin/phplist/subscribers.php` - View, filter, search, retry failed syncs
-- **Configuration**: `/admin/phplist/config.php` - API settings, connection testing, statistics
-- **Sync Logs**: `/admin/phplist/sync_log.php` - Detailed operation logs and debugging
-
-### API Integration
-- **Requirements**: phpList 3.x with REST API enabled, HTTPS recommended
-- **Operations**: Add/update subscriber, get subscriber details, list management
-- **Custom Attributes**: Maps CRM data (name, location, source, business) to phpList attributes
-
-### Monitoring & Troubleshooting
-**Sync Status Types:**
-- `pending`: Waiting for sync
-- `synced`: Successfully synced to phpList
-- `failed`: Sync failed (check error message)
-- `skipped`: Intentionally skipped (invalid email, etc.)
-
-**Common Issues:**
-- API connection failures: Verify credentials and connectivity
-- Sync failures: Check error messages and API rate limits
-- Performance issues: Adjust batch size and timeout settings
-
-**Debug Mode**: Enable `debug_mode = 1` for detailed logging and API communication tracking
-
-### Security & Maintenance
-- API passwords encrypted in database
-- HTTPS recommended for API communication
-- Subscriber data only synced with explicit opt-in
-- Regular monitoring of sync status and error logs
-- Include phpList tables in database backups
-
-## SQL Error Logging System
-
-### Overview
-Comprehensive error logging and debugging system for tracking database-related issues across all operations.
-
-### Components
-- **SqlErrorLogger**: Main logging class (`/classes/Logging/SqlErrorLogger.php`)
-- **Enhanced Database**: Integrated logging in `Database` class
-- **Admin Interface**: Web-based log viewer (`/admin/system/sql-logs.php`)
-- **Configuration**: Debug settings in `config/system.php`
-
-### Features
-- **Error Tracking**: SQL errors, parameter mismatches, query failures
-- **Context Capture**: User info, request context, stack traces, timing data
-- **Security**: Sensitive data protection and access control
-- **Admin Dashboard**: Real-time log viewing with filtering and statistics
-
-### Usage
-```php
-// Automatic logging in Database class
-$this->logSqlError($e, $sql, $params, $context);
-
-// Manual logging
-$logger = new SqlErrorLogger();
-$logger->logError($exception, $sql, $params, $additionalContext);
-```
-
-## Testing Framework
-
-### Overview
-Comprehensive testing system with two complementary frameworks for different testing needs.
-
-### Testing Tools
-- **PHPUnit**: Unit, integration, and feature testing of PHP classes
-- **Playwright**: End-to-end web interface testing with browser automation
-
-### PHPUnit Testing
-```bash
-# Run all tests
-./vendor/bin/phpunit
-
-# Run specific test types
-./vendor/bin/phpunit tests/phpunit/Unit/          # Unit tests
-./vendor/bin/phpunit tests/phpunit/Integration/   # Integration tests
-./vendor/bin/phpunit tests/phpunit/Feature/       # Feature tests
-
-# Run specific test
-./vendor/bin/phpunit tests/phpunit/Unit/EmailFormProcessorTest.php
-```
-
-### Playwright Testing
-```bash
-# Install dependencies
-npm install
-
-# Run all tests
-npx playwright test
-
-# Run specific tests
-npx playwright test --grep "login"           # Test login functionality
-npx playwright test --grep "leads"           # Test leads-related UI
-npx playwright test --project=chromium       # Chrome-specific testing
-
-# Debug mode
-npx playwright test --debug                  # Step through tests
-npx playwright test --headed                 # See browser actions
-```
-
-### Test Structure
-- **Unit Tests**: Test individual classes and methods in isolation
-- **Integration Tests**: Test component interactions and database operations
-- **Feature Tests**: Test complete workflows and business logic
-- **E2E Tests**: Test full user workflows through browser interface
-
-### Development Workflow
-1. **Write Unit Tests**: For new classes and methods
-2. **Integration Tests**: For database operations and component interactions
-3. **Feature Tests**: For complete business workflows
-4. **E2E Tests**: For critical user paths and UI functionality
-
-## Development & Operations
-
-### File Ownership
-- **Application Files**: Must be owned by `democrm:democrm`
-- **Web Server**: Runs as `nobody` user (standard Apache configuration)
-- **Permissions**: `644` for files, `755` for directories
-
-### File Management Best Practices
-- **Prefer file tools** (`WriteFile`, `EditFile`) over shell commands for proper ownership
-- **Verify ownership** after shell-based file operations: `chown democrm:democrm /path/to/file`
-- **Check ownership**: `find /home/democrm -user root -name '*.php' | grep -v '.git'` (should return 0)
-
-### Performance Optimizations
-- **Constants Usage**: Use pre-compiled constants (`LEADS`, `CONTACTS`) instead of string concatenation
-- **Database Connections**: Singleton pattern for connection reuse
-- **Template Caching**: Direct PHP includes for optimal performance
-- **Opcache**: PHP opcache enabled for constant and class caching
-
-### Security Considerations
-- **CSRF Protection**: `Nonce` class for form security
-- **Permission Checks**: Role-based access control via `Security` class
-- **SQL Injection Prevention**: PDO prepared statements throughout
-- **Sensitive Data**: Automatic sanitization in logging systems
-- **Admin Access**: Separate admin permissions for system management tools
-
-### Maintenance Tasks
-- **Log Rotation**: SQL error logs rotate automatically when large
-- **Email Processing**: Cron job runs every 5 minutes for email import
-- **Database Cleanup**: Regular cleanup of processed email records
-- **Performance Monitoring**: SQL error logs track query performance
+This architecture provides a balance between simplicity and functionality, making it easy to understand and maintain while providing enterprise-level features for CRM operations.
 
 # Development Patterns & Conventions
+
+## 🚨 CRITICAL FILE OWNERSHIP RULES 🚨
+
+**⚠️ NEVER CREATE FILES AS ROOT UNLESS EXPLICITLY DIRECTED ⚠️**
+
+- **ALWAYS check file ownership after creating ANY file**
+- **IMMEDIATELY fix ownership using SSH**: `ssh wswg "chown democrm:democrm /path/to/file"`
+- **Files created through SFTP mount will show as `mark:users` locally but MUST be `democrm:democrm` on server**
+- **Web server CANNOT access files with wrong ownership - this breaks functionality**
+- **This is the #1 cause of "file not found" and permission errors**
+
+**Mandatory workflow for ANY file creation:**
+1. Create file using WriteFile or EditFile
+2. IMMEDIATELY run: `ssh wswg "chown democrm:democrm /path/to/new/file"`
+3. Verify: `ssh wswg "ls -la /path/to/new/file"`
 
 ## Database Operations
 - **Always use individual `bindValue()` calls** instead of `execute()` with parameter arrays
@@ -488,6 +305,8 @@ npx playwright test --headed                 # See browser actions
 - **Follow consistent CRUD operation patterns**
 - **Include language file at the top**: `$lang = include 'admin/languages/en.php';`
 - **Pass language arrays to templates**: Templates expect `$lang` variable
+- **Use Sessions class for session operations**: `Sessions::isLoggedIn()` instead of manual `$_SESSION` checks
+- **Use Helpers class for network utilities**: `$helper->get_client_ip()` instead of global functions
 
 ## Form Processing Flow
 - **Load language file first**: `$lang = include 'admin/languages/en.php';`
@@ -495,6 +314,22 @@ npx playwright test --headed                 # See browser actions
 - **Sanitize input data**: Always validate and sanitize user input
 - **Use Helpers class for multilingual forms**: `$helpers->select_role($lang, $role_id)`
 - **Include templates with language context**: `include 'templates/header.php';`
+
+## Session Management Patterns
+- **Use Sessions class methods**: `Sessions::isLoggedIn()`, `Sessions::getUserId()`, etc.
+- **Login process**: Use `Sessions::create($userData, $permissions)` after authentication
+- **Logout process**: Use `Sessions::destroyClean()` for complete cleanup
+- **Security checks**: Use `Sessions::isValid($timeout)` for session timeout validation
+- **Mixed usage supported**: Can still use `$_SESSION[]` directly when needed
+- **Session security**: Settings prepared in `config/system.php` (commented out for safety)
+
+## Routing & URL Generation Patterns
+- **Use simple variable concatenation**: Avoid complex routing functions
+- **Set routing variables at page top**: `$dir`, `$subdir`, `$sub_subdir`, `$page`
+- **Build URLs directly**: `$url = '/' . $dir . '/' . $subdir . '/list'`
+- **Navigation active states**: Use `($dir == "users") ? ' active' : ''`
+- **Form validation**: Check `$_POST['dir'] == 'contacts' && $_POST['page'] == 'new'`
+- **Template URL building**: Build URLs in templates using page variables, not functions
 
 ## Error Handling Patterns
 - **Check logs location**: `logs/php_errors.log` for PHP errors
@@ -545,6 +380,7 @@ npx playwright test --headed                 # See browser actions
 - **Include path issues**: Use absolute paths or proper relative paths for includes
 - **PDO unbuffered query errors**: Use `fetchAll()` to consume results before executing new queries
 - **Array offset on int errors**: Check that `$lang` variable is properly loaded as array in templates
+- **Function already defined errors**: Avoid complex routing helper functions - use simple variable concatenation instead
 
 ### Development Environment Issues
 - **PHP version compatibility**: Requires PHP 8.4.8+ for proper functionality
@@ -1163,20 +999,19 @@ $helpers->select_role($lang, $current_role_id);
 - Error messages and notifications
 - Button labels and actions
 
-## Network & Geolocation Services
+## Geolocation Services
 
 The application includes IP geolocation functionality for audit logging and user tracking. The system uses free geolocation services with fallback support.
 
-**Configuration Location**: `classes/Utilities/Helpers.php`
+**Configuration Location**: `config/helpers.php`
 
 **Services Used**:
 - **ip-api.com** (primary) - Free tier with 1000 requests/month
 - **freeiplookupapi.com** (fallback) - Free service
 
-**Key Methods**:
-- `$helper->get_client_ip()` - Detects client IP from various sources (proxy-aware)
-- `$helper->country_by_ip()` - Returns country code from IP address using fallback services
-- `$helper->isValidSessionId($id)` - Validates session ID format according to PHP configuration
+**Key Functions**:
+- `get_client_ip()` - Detects client IP from various sources (proxy-aware)
+- `country_by_ip()` - Returns country code from IP address using fallback services
 
 **Features**:
 - **Multiple fallback services**: Ensures reliability if one service fails
@@ -1563,7 +1398,89 @@ The lead management system follows a specific information flow from creation to 
 - `leads/list.php` - Lead listing with search/filter
 - `leads/delete.php` - Lead deletion with cascade handling
 
+# Database Migration Workflow
+
+## Development Mode Detection
+The system detects development mode via the `.development` file in the project root. When this file exists, the system is in development mode.
+
+## Migration Process
+
+### 1. Create Migration
+**❌ DO NOT CREATE PHP MIGRATION RUNNER SCRIPTS**:
+- Do not create `run_*_migration.php` files
+- Do not write PHP scripts that execute SQL migrations
+- Do not bypass the system configuration for database connections
+
+**✅ CORRECT MIGRATION APPROACH**:
+1. **Create SQL-only migration files** in `sql/migrations/` directory
+2. **Use descriptive filenames** like `add_screening_estimates_fields.sql`
+3. **Include clear comments** explaining the purpose and fields being added
+4. **Use proper SQL syntax** with individual ALTER TABLE statements
+5. **Let the developer run the migration manually** using their preferred method
+
+**Example Migration File Structure**:
+```sql
+-- Migration: Add Screening Estimates fields to leads table
+-- Date: 2025-01-27
+-- Description: Add 6 fields for screening estimates
+
+-- Add engineering screening estimate fields
+ALTER TABLE leads
+ADD COLUMN eng_system_cost_low INT DEFAULT NULL COMMENT 'Engineering estimate - system cost low range (whole dollars)';
+
+ALTER TABLE leads
+ADD COLUMN eng_system_cost_high INT DEFAULT NULL COMMENT 'Engineering estimate - system cost high range (whole dollars)';
+
+-- Continue with remaining fields...
+```
+
+### 2. Test Migration
+- Developer tests the migration in development environment
+- Verify all fields are created correctly
+- Test any dependent functionality
+
+### 3. Archive Completed Migration
+**When developer says "migration done":**
+1. **Move migration file** from `sql/migrations/` to `Archive/sql/migrations/`
+2. **Update main structure file**: `sql/democrm_democrm_structure.sql`
+3. **Update directory structure documentation** by running:
+   ```bash
+   php scripts/update_directory_tree.php
+   ```
+
+### 4. AI Assistant Response Format
+**Example Response Format**:
+```
+I've created the migration file `sql/migrations/add_screening_estimates_fields.sql` with the following content:
+
+[SQL content here]
+
+To run this migration:
+1. Copy the SQL content from the file
+2. Execute it using your preferred database tool (phpMyAdmin, MySQL CLI, etc.)
+3. Set file ownership: `ssh wswg "chown -R democrm:democrm /home/democrm/"`
+
+When you've completed the migration, let me know and I'll move it to the Archive.
+```
+
 This workflow ensures clear separation between initial data collection (creation) and ongoing lead management (editing), with appropriate data ownership and editing permissions for each phase.
+
+# Testing Workflow
+
+For comprehensive testing guidelines, patterns, and best practices, see the dedicated [Testing Workflow](testing-workflow.md) document.
+
+**Key Testing Principles:**
+- **Check existing tests first** before creating new ones
+- **Ask before adding** new test coverage
+- **Use established patterns** and infrastructure
+- **Follow the "Check First, Ask Second, Write Last" approach**
+
+**Quick Testing Commands:**
+```bash
+./run-tests simple    # Basic functionality tests
+./run-tests phpunit   # PHPUnit test suite
+./run-tests all       # Complete test suite
+```
 
 ## Core Components
 **Business Logic Classes** (extend Database for inheritance-based connection access):
@@ -1582,6 +1499,111 @@ This workflow ensures clear separation between initial data collection (creation
 - Individual PHP files in `public_html/` directories (users/, leads/, contacts/)
 - Direct file access pattern: `/leads/list.php`, `/users/edit.php`
 - Language-aware form processing with template inclusion
+
+## Directory Tree Maintenance Workflow
+
+### Purpose
+Maintain accurate directory structure documentation in `.zencoder/rules/directory-structure.md` to reduce AI assistant search time and improve development efficiency.
+
+### Automated Update Process
+
+**When to Update:**
+- After adding new files or directories
+- After moving or renaming files/directories  
+- After deleting files or directories
+- Before committing structural changes
+
+**Update Command:**
+```bash
+# Check if directory tree needs updating
+php scripts/update_directory_tree.php --check-only
+
+# Update directory tree documentation
+php scripts/update_directory_tree.php
+```
+
+**Integration Points:**
+1. **Pre-commit Hook** (recommended):
+   ```bash
+   # Add to .git/hooks/pre-commit
+   php scripts/update_directory_tree.php --check-only
+   if [ $? -ne 0 ]; then
+     echo "Directory tree documentation is outdated"
+     echo "Run: php scripts/update_directory_tree.php"
+     exit 1
+   fi
+   ```
+
+2. **Development Workflow**:
+   - Run after structural changes during development
+   - Include in deployment checklist
+   - Verify before creating pull requests
+
+**Script Features:**
+- **Gitignore Integration**: Uses `.gitignore` patterns to filter irrelevant files
+- **Smart Comparison**: Only updates when actual changes are detected
+- **Backup Safety**: Preserves existing documentation structure
+- **Error Handling**: Provides clear feedback on success/failure
+- **Check Mode**: Validate without making changes
+
+**Benefits:**
+- **Reduced Search Time**: AI assistants can quickly understand project structure
+- **Accurate Documentation**: Always reflects current repository state
+- **Development Efficiency**: Faster onboarding and code navigation
+- **Consistency**: Standardized directory tree format across documentation
+
+### Manual Override
+If automatic updates fail or need customization:
+
+1. **Generate Raw Tree**:
+   ```bash
+   tree /path/to/democrm -I 'vendor|node_modules|.git|logs|Archive' -L 4
+   ```
+
+2. **Edit Documentation**: Manually update the tree section in `.zencoder/rules/directory-structure.md`
+
+3. **Validate**: Run `php scripts/update_directory_tree.php --check-only` to verify
+
+This workflow ensures the directory structure documentation remains current and useful for development and AI assistance.
+
+## Database Migration Workflow
+
+### Purpose
+Manage database migrations during development and archive them after completion to maintain a clean working directory.
+
+### Development Mode Detection
+The system detects development mode by checking for the presence of `.development` file in the project root.
+
+### Migration Management Process
+
+**During Development:**
+1. **Create Migration**: Place new migration files in `/sql/migrations/`
+2. **Test Migration**: Execute and verify migration works correctly
+3. **Developer Confirmation**: When developer says "migration done"
+
+**After Migration Completion:**
+1. **Archive Migration**: Move completed migration from `/sql/migrations/` to `/Archive/sql/migrations/`
+2. **Update Structure**: Update main database structure file (`sql/democrm_democrm_structure.sql`)
+3. **Clean Working Directory**: Keep `/sql/migrations/` clean for active development
+
+### Workflow Rules
+
+**In Development Mode** (`.development` file exists):
+- New migrations go to `/sql/migrations/`
+- When developer confirms "migration done":
+  - Move migration file to `/Archive/sql/migrations/`
+  - Remind developer to update main structure file
+  - Keep working migrations directory clean
+
+**In Production Mode** (no `.development` file):
+- Migrations should be pre-tested and archived
+- `/sql/migrations/` should remain empty or contain only critical hotfixes
+
+### Benefits
+- **Clean Development Environment**: Active migrations directory only contains current work
+- **Historical Archive**: All completed migrations preserved in Archive
+- **Clear Status**: Easy to see what migrations are active vs. completed
+- **Structured Process**: Consistent workflow for migration management
 
 # Server & Access Configuration
 
@@ -1651,9 +1673,9 @@ This server hosts multiple projects. When working with this repository:
 - Check ownership/permissions if encountering access issues
 - Use the SSH alias `wswg` for consistent access
 
-## File Operations
+## 🚨 CRITICAL FILE OPERATIONS 🚨
 
-### File Ownership
+### ⚠️ MANDATORY File Ownership Rules ⚠️
 - **File Ownership**: 
   - **Local Machine**: Files should be owned by `mark:users` user and group
   - **Remote Server**: Files should be owned by `democrm:democrm` user and group
@@ -1702,153 +1724,11 @@ ls -la /path/to/new/file
 - **Files created through SFTP mount** will show as `mark:users` locally but are `democrm:democrm` on server
 - **Web server requires specific ownership** for proper access and security
 
-## 🚨 CRITICAL DEVELOPMENT GUIDELINES
-
-### ⚠️ MANDATORY: Read This Section First
-**ALL AI assistants and developers MUST read and follow these guidelines before making ANY changes to the codebase.**
-
-### 🔒 System Configuration Pattern - NEVER CHANGE
-**CRITICAL**: The system configuration include pattern is the foundation of this framework and must NEVER be modified:
-
-```php
-require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
-```
-
-**❌ NEVER DO THIS**:
-- Change the include path to relative paths like `../../config/system.php`
-- Use different include methods like `require_once __DIR__ . '/../../config/system.php'`
-- Bypass system.php for "simpler" database connections
-- Create direct PDO connections in migration scripts
-
-**✅ ALWAYS DO THIS**:
-- Use the exact pattern above in ALL PHP files in `public_html/`
-- Understand that this pattern works from any subdirectory depth
-- Trust that this pattern loads all necessary autoloaders, constants, and classes
-- Use the Database class for all database operations
-
-**Why This Matters**:
-- **Path Independence**: Works from any subdirectory depth (`/admin/`, `/admin/email/`, etc.)
-- **Server Compatibility**: Uses `$_SERVER['DOCUMENT_ROOT']` which Apache sets correctly
-- **Framework Foundation**: Loads autoloaders, constants, security, and core classes
-- **Consistency**: Ensures all pages have the same foundation and capabilities
-
-### 🗄️ Database Migration Guidelines
-
-**❌ DO NOT CREATE PHP MIGRATION RUNNER SCRIPTS**:
-- Do not create `run_*_migration.php` files
-- Do not write PHP scripts that execute SQL migrations
-- Do not bypass the system configuration for database connections
-
-**✅ CORRECT MIGRATION APPROACH**:
-1. **Create SQL-only migration files** in `sql/migrations/` directory
-2. **Use descriptive filenames** like `add_screening_estimates_fields.sql`
-3. **Include clear comments** explaining the purpose and fields being added
-4. **Use proper SQL syntax** with individual ALTER TABLE statements
-5. **Let the developer run the migration manually** using their preferred method
-
-**Example Migration File Structure**:
-```sql
--- Migration: Add Screening Estimates fields to leads table
--- Date: 2025-01-27
--- Description: Add 6 fields for screening estimates
-
--- Add engineering screening estimate fields
-ALTER TABLE leads
-ADD COLUMN eng_system_cost_low INT DEFAULT NULL COMMENT 'Engineering estimate - system cost low range (whole dollars)';
-
-ALTER TABLE leads
-ADD COLUMN eng_system_cost_high INT DEFAULT NULL COMMENT 'Engineering estimate - system cost high range (whole dollars)';
-
--- Continue with remaining fields...
-```
-
-### 💰 Data Type Guidelines for Financial and Measurement Fields
-
-**Money Fields (Costs, Prices, Estimates)**:
-- **Use INT for whole dollar amounts** (no cents needed)
-- **Frontend Display**: Add dollar sign icon (`$`) before the field
-- **Example**: `$25000` for a $25,000 estimate
-
-**Area/Measurement Fields**:
-- **Use INT for square footage** (no decimal precision needed)
-- **Frontend Display**: Add "SQFT" text after the field
-- **Example**: `2500 SQFT` for 2,500 square feet
-
-**Multilingual Considerations**:
-- **Currency symbols and units must be translatable**
-- **Use language files for currency symbols** (some countries use different symbols)
-- **Use language files for measurement units** (some countries use metric)
-
-### 🌍 Multilingual Framework Requirements
-
-**This is a multinational application requiring full multilingual support**:
-
-**Language File Structure**:
-- All user-facing text must be in language files: `public_html/admin/languages/`
-- Use the `Helpers` class for translation-aware form generation
-- Never hardcode English text in templates or PHP files
-
-**Form Field Labels and Text**:
-- Use language variables for all labels, buttons, and messages
-- Currency symbols and measurement units must be translatable
-- Error messages and validation text must support multiple languages
-
-**Database Considerations**:
-- Use UTF-8 encoding for all text fields
-- Consider cultural differences in data formats (dates, numbers, addresses)
-- Plan for right-to-left languages in UI design
-
-### 📋 Code Review Checklist
-
-**Before submitting any code changes, verify**:
-- [ ] System configuration include pattern is unchanged
-- [ ] No PHP migration runner scripts created
-- [ ] Financial fields use INT with proper frontend formatting
-- [ ] All user-facing text uses language variables
-- [ ] Database fields have proper UTF-8 encoding
-- [ ] File ownership will be set correctly after creation
-- [ ] Code follows the framework's direct, procedural approach
-- [ ] No complex routing functions or modern framework patterns introduced
-
-### 🎯 Quick Reference for AI Assistants
-
-**When asked to add database fields**:
-1. Create SQL-only migration file in `sql/migrations/`
-2. Use INT for money (whole dollars) and measurements (square feet)
-3. Include clear comments explaining the purpose
-4. Do not create PHP runner scripts
-
-**When asked to modify existing PHP files**:
-1. Never change the system configuration include pattern
-2. Use the existing Database class for all database operations
-3. Follow the framework's direct, procedural approach
-4. Ensure all text is translatable via language files
-
-**When asked about the framework architecture**:
-1. This is NOT a traditional MVC framework
-2. It uses direct file routing with no URL rewriting
-3. Templates are included directly, not rendered through engines
-4. Database connections use inheritance patterns, not dependency injection
-
-### 🔄 Migration Workflow Summary
-
-**For AI Assistants - Complete Workflow**:
-1. **Create SQL migration file** in `sql/migrations/` with descriptive name
-2. **Use INT for financial/measurement fields** (whole dollars, square feet)
-3. **Include comprehensive comments** explaining purpose and field usage
-4. **Provide the SQL content in response** for developer to copy/paste
-5. **Do NOT create PHP runner scripts** - let developer handle execution
-6. **Remind about file ownership** - developer will handle via SSH
-
-**Example Response Format**:
-```
-I've created the migration file `sql/migrations/add_screening_estimates_fields.sql` with the following content:
-
-[SQL content here]
-
-To run this migration:
-1. Copy the SQL content from the file
-2. Execute it using your preferred database tool (phpMyAdmin, MySQL CLI, etc.)
-3. Set file ownership: `ssh wswg "chown -R democrm:democrm /home/democrm/"`
+**Example for SQL migration files**:
+```bash
+# After creating multiple migration files
+chown -R democrm:democrm /home/democrm/
+chgrp nobody /home/democrm/public_html
+ls -la /home/democrm/sql/migrations/  # verify ownership
 ```
 

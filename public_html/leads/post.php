@@ -41,6 +41,24 @@ function sanitize_input($data) {
     return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
 }
 
+// Function to determine redirect URL based on stage
+function getRedirectUrlForStage($stage, $lead_id) {
+    switch ((int)$stage) {
+        case 1: case 2: case 3: // New Lead, Contacted, Qualified
+            return "/prospecting/view.php?id=" . $lead_id;
+        case 4: // Referral
+            return "/referrals/view.php?id=" . $lead_id;
+        case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: // Prospect stages
+            return "/prospects/view.php?id=" . $lead_id;
+        case 13: // Contracting
+            return "/contracting/view.php?id=" . $lead_id;
+        case 14: case 15: // Closed Won/Lost
+            return "/leads/view.php?id=" . $lead_id; // Keep closed leads in main leads module
+        default:
+            return "/leads/view.php?id=" . $lead_id; // Default fallback
+    }
+}
+
 // Check if this is a POST request
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: list.php');
@@ -87,26 +105,7 @@ try {
         
         // Project information
         'services_interested_in' => sanitize_input($_POST['services_interested_in'] ?? ''),
-        'structure_type' => (int)($_POST['structure_type'] ?? 1),
-        'structure_description' => sanitize_input($_POST['structure_description'] ?? ''),
-        'structure_other' => sanitize_input($_POST['structure_other'] ?? ''),
-        'structure_additional' => sanitize_input($_POST['structure_additional'] ?? ''),
-        
-        // File uploads
-        'picture_submitted_1' => sanitize_input($_POST['picture_submitted_1'] ?? ''),
-        'picture_submitted_2' => sanitize_input($_POST['picture_submitted_2'] ?? ''),
-        'picture_submitted_3' => sanitize_input($_POST['picture_submitted_3'] ?? ''),
-        'plans_submitted_1' => sanitize_input($_POST['plans_submitted_1'] ?? ''),
-        'plans_submitted_2' => sanitize_input($_POST['plans_submitted_2'] ?? ''),
-        'plans_submitted_3' => sanitize_input($_POST['plans_submitted_3'] ?? ''),
-        'picture_upload_link' => sanitize_input($_POST['picture_upload_link'] ?? ''),
-        'plans_upload_link' => sanitize_input($_POST['plans_upload_link'] ?? ''),
-        'plans_and_pics' => sanitize_input($_POST['plans_and_pics'] ?? ''),
-        
-        // Marketing information
         'get_updates' => isset($_POST['get_updates']) ? 1 : 0,
-        'hear_about' => sanitize_input($_POST['hear_about'] ?? ''),
-        'hear_about_other' => sanitize_input($_POST['hear_about_other'] ?? ''),
         
         // Lead management
         'stage' => (int)($_POST['stage'] ?? 1),
@@ -114,8 +113,46 @@ try {
         
         // Additional fields
         'full_name' => trim(($_POST['first_name'] ?? '') . ' ' . ($_POST['family_name'] ?? '')),
-        'full_address' => sanitize_input($_POST['full_address'] ?? '')
+        'full_address' => sanitize_input($_POST['full_address'] ?? ''),
+        
+        // Bridge table data
+        'structure_info' => [
+            'structure_type' => (int)($_POST['structure_type'] ?? 1),
+            'structure_description' => sanitize_input($_POST['structure_description'] ?? ''),
+            'structure_other' => sanitize_input($_POST['structure_other'] ?? ''),
+            'structure_additional' => sanitize_input($_POST['structure_additional'] ?? '')
+        ],
+        
+        'referral' => [
+            'referral_source_type' => sanitize_input($_POST['hear_about'] ?? ''),
+            'referral_source_name' => sanitize_input($_POST['hear_about_other'] ?? ''),
+            'referral_notes' => 'Created from lead form'
+        ],
+        
+        'documents' => []
     ];
+    
+    // Handle file uploads for documents
+    $document_fields = [
+        'picture_submitted_1', 'picture_submitted_2', 'picture_submitted_3',
+        'plans_submitted_1', 'plans_submitted_2', 'plans_submitted_3',
+        'picture_upload_link', 'plans_upload_link'
+    ];
+    
+    foreach ($document_fields as $field) {
+        if (!empty($_POST[$field])) {
+            $doc_type = (strpos($field, 'picture') !== false) ? 'picture' : 'plan';
+            $category = (strpos($field, 'upload_link') !== false) ? 'initial_submission' : 'submitted_files';
+            
+            $data['documents'][] = [
+                'document_type' => $doc_type,
+                'document_category' => $category,
+                'file_name' => basename($_POST[$field]),
+                'file_path' => sanitize_input($_POST[$field]),
+                'description' => "Uploaded via lead form - {$field}"
+            ];
+        }
+    }
 
     // Validate required fields
     $validation_errors = $leadsEnhanced->validate_lead_with_contact_data($data);
@@ -149,7 +186,9 @@ try {
                 "Lead updated with contact integration"        // data
             );
             
-            header('Location: view.php?id=' . $lead_id);
+            // Determine redirect based on new stage
+            $redirect_url = getRedirectUrlForStage($data['stage'], $lead_id);
+            header('Location: ' . $redirect_url);
         } else {
             $_SESSION['error_message'] = $result['message'] . (isset($result['error']) ? ': ' . $result['error'] : '');
             $_SESSION['form_data'] = $_POST;
@@ -229,7 +268,13 @@ try {
             // Clear any preserved form data
             unset($_SESSION['form_data']);
             
-            header('Location: view.php?id=' . $result['lead_id']);
+            // Check submit action to determine redirect
+            $submit_action = $_POST['submit_action'] ?? 'submit';
+            if ($submit_action === 'submit_and_next') {
+                header('Location: new.php');
+            } else {
+                header('Location: list.php');
+            }
         } else {
             $_SESSION['error_message'] = $result['message'] . (isset($result['error']) ? ': ' . $result['error'] : '');
             $_SESSION['form_data'] = $_POST; // Preserve form data
