@@ -7,6 +7,7 @@
  */
 
 require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
+// Direct routing variables - these determine page navigation and template inclusion
 $dir = 'public_html';
 $page = 'login';
 

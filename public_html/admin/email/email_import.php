@@ -10,6 +10,7 @@
 require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 
 // Set routing variables for template system
+// Direct routing variables - these determine page navigation and template inclusion
 $dir = 'admin';
 $subdir = 'email';
 $sub_subdir = '';

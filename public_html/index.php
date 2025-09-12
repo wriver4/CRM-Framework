@@ -2,6 +2,7 @@
 require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 $not->loggedin();
 
+// Direct routing variables - these determine page navigation and template inclusion
 $dir = basename(dirname(__FILE__));
 $page = substr(basename(__FILE__), 0, strrpos(basename(__FILE__), '.'));
 

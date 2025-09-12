@@ -14,6 +14,7 @@ if (!in_array(8, $_SESSION['permissions'] ?? [])) {
     exit;
 }
 
+// Direct routing variables - these determine page navigation and template inclusion
 $dir = 'admin/languages';
 $subdir = 'list';
 $page = 'list';

@@ -3,6 +3,7 @@ require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 $not->loggedin();
 require_once '../classes/Models/Leads.php';
 
+// Direct routing variables - these determine page navigation and template inclusion
 $page = 'dashboard';
 
 // Initialize Leads class and get dashboard data

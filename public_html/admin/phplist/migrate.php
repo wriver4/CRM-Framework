@@ -153,6 +153,7 @@ try {
 }
 
 // Page variables
+// Direct routing variables - these determine page navigation and template inclusion
 $dir = 'admin';
 $subdir = 'phplist';
 $page = 'migrate';

@@ -1,6 +1,7 @@
 <?php
 require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 $not->loggedin();
+// Direct routing variables - these determine page navigation and template inclusion
 $dir = 'users';
 $page = 'delete';
 

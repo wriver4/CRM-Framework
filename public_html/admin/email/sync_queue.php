@@ -12,7 +12,7 @@ require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 $security = new Security();
 $security->check_user_permissions('admin', 'read');
 
-// Set page variables for navigation
+// Direct routing variables - these determine page navigation and template inclusion
 $dir = 'admin';
 $subdir = 'email';
 $sub_subdir = '';

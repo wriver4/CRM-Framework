@@ -1,6 +1,7 @@
 <?php
 require_once '/mnt/Local/newwgadmin.local/config/system.php';
 
+// Direct routing variables - these determine page navigation and template inclusion
 $dir = basename(dirname(__FILE__));
 $page = substr(basename(__FILE__), 0, strrpos(basename(__FILE__), '.'));
 $title = "New Role";
