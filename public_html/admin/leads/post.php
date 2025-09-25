@@ -123,7 +123,7 @@ try {
     $data['hear_about_other'] = $_POST['hear_about_other'] ?? '';
     
     // System fields
-    $data['stage'] = $_POST['stage'] ?? '1';
+    $data['stage'] = $_POST['stage'] ?? '10'; // Default to new Lead stage (10)
     $data['last_edited_by'] = $_SESSION['user_id'] ?? null;
     $data['updated_at'] = date('Y-m-d H:i:s');
     

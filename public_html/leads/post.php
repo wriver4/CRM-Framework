@@ -41,22 +41,41 @@ function sanitize_input($data) {
     return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
 }
 
-// Function to determine redirect URL based on stage
-function getRedirectUrlForStage($stage, $lead_id) {
-    switch ((int)$stage) {
-        case 1: case 2: case 3: // New Lead, Contacted, Qualified
-            return "/prospecting/view.php?id=" . $lead_id;
-        case 4: // Referral
-            return "/referrals/view.php?id=" . $lead_id;
-        case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: // Prospect stages
-            return "/prospects/view.php?id=" . $lead_id;
-        case 13: // Contracting
-            return "/contracting/view.php?id=" . $lead_id;
-        case 14: case 15: // Closed Won/Lost
-            return "/leads/view.php?id=" . $lead_id; // Keep closed leads in main leads module
-        default:
-            return "/leads/view.php?id=" . $lead_id; // Default fallback
+// Function to check if stage change requires notification
+function checkStageChangeNotification($old_stage, $new_stage) {
+    $trigger_stages = [40, 50, 140]; // Referral, Prospect, Closed Lost
+    
+    // Only notify if stage actually changed and new stage is a trigger stage
+    if ($old_stage != $new_stage && in_array((int)$new_stage, $trigger_stages)) {
+        switch ((int)$new_stage) {
+            case 40: // Referral
+                return [
+                    'moved' => true,
+                    'stage_name' => 'Referral',
+                    'module' => 'referrals',
+                    'url' => '/referrals/list.php',
+                    'message' => 'This lead has been moved to Referral stage and is now available in the Referrals module.'
+                ];
+            case 50: // Prospect
+                return [
+                    'moved' => true,
+                    'stage_name' => 'Prospect',
+                    'module' => 'prospects',
+                    'url' => '/prospects/list.php',
+                    'message' => 'This lead has been moved to Prospect stage and is now available in the Prospects module.'
+                ];
+            case 140: // Closed Lost
+                return [
+                    'moved' => true,
+                    'stage_name' => 'Closed Lost',
+                    'module' => 'leads',
+                    'url' => '/leads/list.php?filter=lost',
+                    'message' => 'This lead has been marked as Closed Lost and can be found in the Lost leads filter.'
+                ];
+        }
     }
+    
+    return ['moved' => false];
 }
 
 // Check if this is a POST request
@@ -108,7 +127,7 @@ try {
         'get_updates' => isset($_POST['get_updates']) ? 1 : 0,
         
         // Lead management
-        'stage' => (int)($_POST['stage'] ?? 1),
+        'stage' => (int)($_POST['stage'] ?? 10), // Default to new Lead stage (10)
         'last_edited_by' => $_SESSION['user_id'] ?? 1,
         
         // Additional fields
@@ -168,11 +187,21 @@ try {
     $lead_id = $_POST['id'] ?? null;
     
     if ($lead_id) {
+        // Get the current stage before updating to check for changes
+        $current_lead = $leadsEnhanced->get_lead_by_id($lead_id);
+        $old_stage = $current_lead['stage'] ?? null;
+        
         // Update existing lead
         $result = $leadsEnhanced->update_lead_with_contact($lead_id, $data);
         
         if ($result['success']) {
             $_SESSION['success_message'] = 'Lead and contact updated successfully';
+            
+            // Check if stage was changed to a trigger stage
+            $stage_notification = checkStageChangeNotification($old_stage, $data['stage']);
+            if ($stage_notification['moved']) {
+                $_SESSION['stage_moved'] = $stage_notification;
+            }
             
             // Log the update
             $audit = new Audit();
@@ -183,12 +212,11 @@ try {
                 $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown',     // useragent
                 $_SERVER['REMOTE_ADDR'] ?? 'Unknown',         // ip
                 $lead_id,                                      // location
-                "Lead updated with contact integration"        // data
+                "Lead updated with contact integration" . ($stage_notification['moved'] ? " - Stage changed to {$stage_notification['stage_name']}" : "") // data
             );
             
-            // Determine redirect based on new stage
-            $redirect_url = getRedirectUrlForStage($data['stage'], $lead_id);
-            header('Location: ' . $redirect_url);
+            // Always redirect to leads list after editing
+            header('Location: list.php');
         } else {
             $_SESSION['error_message'] = $result['message'] . (isset($result['error']) ? ': ' . $result['error'] : '');
             $_SESSION['form_data'] = $_POST;

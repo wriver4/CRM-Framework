@@ -161,7 +161,7 @@ if ($dir == 'admin/leads' && $page == 'edit') {
         $navigation = $leads->get_lead_navigation($id);
         
         // System fields
-        $stage_raw = $result["stage"] ?? 1;
+        $stage_raw = $result["stage"] ?? 10; // Default to new Lead stage (10)
         // Convert stage to number if it's a text value
         if (is_numeric($stage_raw)) {
             $stage = (int)$stage_raw;

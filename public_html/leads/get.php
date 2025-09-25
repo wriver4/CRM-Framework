@@ -52,7 +52,17 @@ if (isset($_GET['action'])) {
 
 // Handle page-specific logic
 if ($dir == 'leads' && $page == 'list') {
-    $results = $leads->get_all_active();
+    // Check for filter parameter
+    $filter = $_GET['filter'] ?? null;
+    
+    if ($filter === 'lost') {
+        // Get only Closed Lost leads (stage 140)
+        $results = $leads->get_leads_by_stage(140);
+    } else {
+        // Get all active leads (default behavior)
+        $results = $leads->get_all_active();
+    }
+    
     $list = new LeadsList($results, $lang);
     $list->create_table();
 }

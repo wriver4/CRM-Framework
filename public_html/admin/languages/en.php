@@ -427,7 +427,24 @@ $lang = [
   'leads_list' => 'Leads List',
   'lead_stage' => 'Stage',
   
-  // Lead Stage Names (numbered)
+  // Lead Stage Names (new numbering with 10-unit increments)
+  'stage_10' => 'Lead',
+  'stage_20' => 'Pre-Qualification',
+  'stage_30' => 'Qualified',
+  'stage_40' => 'Referral',
+  'stage_50' => 'Prospect',
+  'stage_60' => 'Prelim Design',
+  'stage_70' => 'Manufacturing Estimate',
+  'stage_80' => 'Contractor Estimate',
+  'stage_90' => 'Completed Estimate',
+  'stage_100' => 'Prospect Response',
+  'stage_110' => 'Closing Conference',
+  'stage_120' => 'Potential Client Response',
+  'stage_130' => 'Closed Won',
+  'stage_140' => 'Closed Lost',
+  'stage_150' => 'Contracting',
+  
+  // Legacy stage names (for backward compatibility during transition)
   'stage_1' => 'Lead',
   'stage_2' => 'Pre-Qualification',
   'stage_3' => 'Qualified',
@@ -437,7 +454,6 @@ $lang = [
   'stage_7' => 'Manufacturing Estimate',
   'stage_8' => 'Contractor Estimate',
   'stage_9' => 'Completed Estimate',
-  'stage_10' => 'Prospect Response',
   'stage_11' => 'Closing Conference',
   'stage_12' => 'Potential Client Response',
   'stage_13' => 'Contracting',

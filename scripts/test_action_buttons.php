@@ -15,7 +15,7 @@ try {
         [
             'id' => 1,
             'lead_id' => '12345',
-            'stage' => 1,
+            'stage' => 10, // Updated to new Lead stage numbering
             'first_name' => 'Test',
             'family_name' => 'User',
             'project_name' => 'Test Project',

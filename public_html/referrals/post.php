@@ -127,7 +127,7 @@ try {
         'hear_about_other' => sanitize_input($_POST['hear_about_other'] ?? ''),
         
         // Lead management
-        'stage' => (int)($_POST['stage'] ?? 1),
+        'stage' => (int)($_POST['stage'] ?? 10), // Default to new Lead stage (10)
         'last_edited_by' => $_SESSION['user_id'] ?? 1,
         
         // Additional fields

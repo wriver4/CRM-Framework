@@ -21,6 +21,11 @@
       <file>tests/phpunit/Integration/EmailProcessingIntegrationTest.php</file>
       <file>tests/phpunit/Feature/EmailProcessingWorkflowTest.php</file>
     </testsuite>
+    <testsuite name="EditLeadWorkflow">
+      <file>tests/phpunit/Unit/EditLeadWorkflowTest.php</file>
+      <file>tests/phpunit/Integration/EditLeadWorkflowIntegrationTest.php</file>
+      <file>tests/phpunit/Feature/EditLeadWorkflowFeatureTest.php</file>
+    </testsuite>
   </testsuites>
   <php>
     <!-- Environment variables for testing -->

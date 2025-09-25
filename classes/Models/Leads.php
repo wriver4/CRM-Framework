@@ -40,58 +40,23 @@ class Leads extends Database
         ];
     }
 
-    // Helper method to get lead stage options (1-15)
+    // Helper method to get lead stage options (new numbering system)
     public function get_lead_stage_array() {
-        return [
-            1 => 'Lead',
-            2 => 'Pre-Qualification',
-            3 => 'Qualified',
-            4 => 'Referral',
-            5 => 'Prospect',
-            6 => 'Prelim Design',
-            7 => 'Manufacturing Estimate',
-            8 => 'Contractor Estimate',
-            9 => 'Completed Estimate',
-            10 => 'Prospect Response',
-            11 => 'Closing Conference',
-            12 => 'Potential Client Response',
-            13 => 'Contracting',
-            14 => 'Closed Won',
-            15 => 'Closed Lost'
-        ];
+        require_once dirname(__DIR__, 2) . '/scripts/stage_remapping.php';
+        
+        $stages = [];
+        foreach (StageRemapping::getNewStageMapping() as $stageNumber => $data) {
+            $stages[$stageNumber] = $data['name'];
+        }
+        return $stages;
     }
 
     // Helper method to get stage badge class
     public function get_stage_badge_class($stage_number) {
-        switch ($stage_number) {
-            case 1: // Lead
-                return 'badge bg-primary';
-            case 2: // Pre-Qualification
-                return 'badge bg-info';
-            case 3: // Qualified
-                return 'badge bg-warning';
-            case 4: // Referral
-                return 'badge bg-info';
-            case 5: // Prospect
-                return 'badge bg-warning';
-            case 6: // Prelim Design
-            case 7: // Manufacturing Estimate
-            case 8: // Contractor Estimate
-                return 'badge bg-warning';
-            case 9: // Completed Estimate
-            case 10: // Prospect Response
-                return 'badge bg-success';
-            case 11: // Closing Conference
-            case 12: // Potential Client Response
-                return 'badge bg-success';
-            case 13: // Contracting
-            case 14: // Closed Won
-                return 'badge bg-success';
-            case 15: // Closed Lost
-                return 'badge bg-danger';
-            default:
-                return 'badge bg-secondary';
-        }
+        require_once dirname(__DIR__, 2) . '/scripts/stage_remapping.php';
+        
+        $badgeClasses = StageRemapping::getStageBadgeClasses();
+        return $badgeClasses[$stage_number] ?? 'badge bg-secondary';
     }
 
     // Helper method to get stage display name with multilingual support
@@ -108,93 +73,73 @@ class Leads extends Database
 
     // Helper method to get all stages with multilingual support
     public function get_lead_stage_array_multilingual($lang = null) {
+        require_once dirname(__DIR__, 2) . '/scripts/stage_remapping.php';
+        
         $stages = [];
-        for ($i = 1; $i <= 15; $i++) {
-            $stages[$i] = $this->get_stage_display_name($i, $lang);
+        foreach (StageRemapping::getNewStageMapping() as $stageNumber => $data) {
+            $stages[$stageNumber] = $this->get_stage_display_name($stageNumber, $lang);
         }
         return $stages;
     }
 
     // Helper method to convert old text stages to numbers (for migration)
     public function convert_text_stage_to_number($text_stage) {
+        require_once dirname(__DIR__, 2) . '/scripts/stage_remapping.php';
+        
         $mapping = [
-            'lead' => 1,
-            'pre-qualification' => 2,
-            'qualified' => 3,
-            'referral' => 4,
-            'prospect' => 5,
-            'prelim design' => 6,
-            'manufacturing estimate' => 7,
-            'contractor estimate' => 8,
-            'completed estimate' => 9,
-            'prospect response' => 10,
-            'closing conference' => 11,
-            'potential client response' => 12,
-            'contracting' => 13,
-            'closed won' => 14,
-            'closed lost' => 15
+            'lead' => 10,
+            'pre-qualification' => 20,
+            'qualified' => 30,
+            'referral' => 40,
+            'prospect' => 50,
+            'prelim design' => 60,
+            'manufacturing estimate' => 70,
+            'contractor estimate' => 80,
+            'completed estimate' => 90,
+            'prospect response' => 100,
+            'closing conference' => 110,
+            'potential client response' => 120,
+            'contracting' => 150,
+            'closed won' => 130,
+            'closed lost' => 140
         ];
         
-        return $mapping[strtolower(trim($text_stage))] ?? 1; // Default to Lead
+        return $mapping[strtolower(trim($text_stage))] ?? 10; // Default to Lead
     }
 
     // Helper method to get valid next stages for a given stage
     public function get_valid_next_stages($current_stage) {
-        // Define valid stage progressions for the new module system
-        $stage_progressions = [
-            1 => [2, 3, 4, 15], // New Lead -> Contacted, Qualified, Referral, Closed Lost
-            2 => [3, 4, 5, 15], // Contacted -> Qualified, Referral, Prospect, Closed Lost
-            3 => [4, 5, 15],    // Qualified -> Referral, Prospect, Closed Lost
-            4 => [5, 15],       // Referral -> Prospect, Closed Lost
-            5 => [6, 15],       // Prospect -> Proposal, Closed Lost
-            6 => [7, 15],       // Proposal -> Negotiation, Closed Lost
-            7 => [8, 15],       // Negotiation -> Site Visit, Closed Lost
-            8 => [9, 15],       // Site Visit -> Engineering, Closed Lost
-            9 => [10, 15],      // Engineering -> Permitting, Closed Lost
-            10 => [11, 15],     // Permitting -> Pricing, Closed Lost
-            11 => [12, 15],     // Pricing -> Approval, Closed Lost
-            12 => [13, 15],     // Approval -> Contracting, Closed Lost
-            13 => [14, 15],     // Contracting -> Closed Won, Closed Lost
-            14 => [],           // Closed Won (final stage)
-            15 => []            // Closed Lost (final stage)
-        ];
+        require_once dirname(__DIR__, 2) . '/scripts/stage_remapping.php';
         
-        return $stage_progressions[$current_stage] ?? [];
+        return StageRemapping::getNewStageProgressions()[$current_stage] ?? [];
     }
 
     // Helper method to check if a stage can be marked as lost
     public function can_be_marked_lost($stage_number) {
         // All stages except final states can be marked as lost
-        return !in_array($stage_number, [14, 15]); // Can't mark Won or Lost as Lost again
+        return !in_array($stage_number, [130, 140]); // Can't mark Won or Lost as Lost again
+    }
+
+    // Helper method to check if a stage is a trigger stage (for future action implementation)
+    public function is_trigger_stage($stage_number) {
+        require_once dirname(__DIR__, 2) . '/scripts/stage_remapping.php';
+        
+        return in_array($stage_number, StageRemapping::getTriggerStages());
     }
 
     // Helper method to get stage category for grouping
     public function get_stage_category($stage_number) {
-        switch ($stage_number) {
-            case 1:
-            case 2:
-            case 3:
-                return 'qualification';
-            case 4:
-                return 'referral';
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-                return 'prospect_development';
-            case 10:
-            case 11:
-            case 12:
-            case 13:
-                return 'closing';
-            case 14:
-                return 'won';
-            case 15:
-                return 'lost';
-            default:
-                return 'unknown';
+        require_once dirname(__DIR__, 2) . '/scripts/stage_remapping.php';
+        
+        $categories = StageRemapping::getStageCategories();
+        
+        foreach ($categories as $category => $stages) {
+            if (in_array($stage_number, $stages)) {
+                return $category;
+            }
         }
+        
+        return 'unknown';
     }
 
     // Helper method to get structure type options (1-6)
@@ -501,9 +446,15 @@ class Leads extends Database
             $errors[] = 'Invalid structure type';
         }
         
-        // Validate stage is within range (1-9)
-        if (!empty($data['stage']) && (!is_numeric($data['stage']) || $data['stage'] < 1 || $data['stage'] > 9)) {
-            $errors[] = 'Invalid stage';
+        // Validate stage is within valid range (new numbering system)
+        if (!empty($data['stage']) && is_numeric($data['stage'])) {
+            require_once dirname(__DIR__, 2) . '/scripts/stage_remapping.php';
+            $validStages = array_keys(StageRemapping::getNewStageMapping());
+            if (!in_array((int)$data['stage'], $validStages)) {
+                $errors[] = 'Invalid stage';
+            }
+        } elseif (!empty($data['stage'])) {
+            $errors[] = 'Stage must be numeric';
         }
         
         // Validate field length constraints
@@ -561,35 +512,43 @@ class Leads extends Database
         return $stmt->fetchAll();
     }
 
-    // Get all leads for list display
+    // Get all leads for list display (using new stage filtering)
     public function get_all_active($filters = []) {
+        require_once dirname(__DIR__, 2) . '/scripts/stage_remapping.php';
+        
+        // Get leads module stages (10, 20, 30, 40, 50, 140)
+        $moduleFilters = StageRemapping::getModuleStageFilters();
+        $leadStages = $moduleFilters['leads'];
+        $placeholders = str_repeat('?,', count($leadStages) - 1) . '?';
+        
         $sql = "SELECT 
             id, lead_source, first_name, family_name, business_name, project_name, email, cell_phone, 
             stage, structure_type, contact_type, created_at, updated_at, last_edited_by,
             lead_id, form_street_1, form_city, form_state, form_postcode, full_address, contact_id
         FROM leads 
-        WHERE stage NOT IN (7, 8, 9)";
+        WHERE stage IN ($placeholders)";
         
-        $params = [];
+        $params = $leadStages;
         
         // Add filters if needed
         if (!empty($filters['stage'])) {
-            $sql .= " AND stage = :stage";
-            $params['stage'] = $filters['stage'];
+            $sql .= " AND stage = ?";
+            $params[] = $filters['stage'];
         }
         
         if (!empty($filters['search'])) {
-            $sql .= " AND (first_name LIKE :search OR family_name LIKE :search OR email LIKE :search OR project_name LIKE :search)";
-            $params['search'] = '%' . $filters['search'] . '%';
+            $sql .= " AND (first_name LIKE ? OR family_name LIKE ? OR email LIKE ? OR project_name LIKE ?)";
+            $searchTerm = '%' . $filters['search'] . '%';
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
+            $params[] = $searchTerm;
         }
         
         $sql .= " ORDER BY updated_at DESC";
         
         $stmt = $this->dbcrm()->prepare($sql);
-        foreach ($params as $key => $value) {
-            $stmt->bindValue(':' . $key, $value);
-        }
-        $stmt->execute();
+        $stmt->execute($params);
         return $stmt->fetchAll();
     }
 
@@ -1296,9 +1255,9 @@ class Leads extends Database
                 $closedLost = 0;
                 
                 foreach ($stageCounts as $stage) {
-                    if ($stage['stage_number'] == 7) { // Closed Won
+                    if ($stage['stage_number'] == 130) { // Closed Won (new numbering)
                         $closedWon = $stage['count'];
-                    } elseif ($stage['stage_number'] == 8) { // Closed Lost
+                    } elseif ($stage['stage_number'] == 140) { // Closed Lost (new numbering)
                         $closedLost = $stage['count'];
                     }
                 }

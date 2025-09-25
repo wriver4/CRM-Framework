@@ -132,8 +132,10 @@ class LeadBridgeManager extends Database
         }
 
         // Migrate prospect data (based on stage and cost estimates)
-        $stage = $lead_data['stage'] ?? 1;
-        if (in_array($stage, ['5', '6', '7', '8', '9', '10', '11', '12'])) {
+        $stage = $lead_data['stage'] ?? 10; // Default to new Lead stage (10)
+        // Check if stage is in prospect range (new numbering: 50-120)
+        if (in_array($stage, [50, 60, 70, 80, 90, 100, 110, 120]) || 
+            in_array($stage, ['50', '60', '70', '80', '90', '100', '110', '120'])) {
             $prospect_data = [
                 'estimated_cost_low' => $lead_data['sales_system_cost_low'] ?? $lead_data['eng_system_cost_low'] ?? null,
                 'estimated_cost_high' => $lead_data['sales_system_cost_high'] ?? $lead_data['eng_system_cost_high'] ?? null,
@@ -144,12 +146,12 @@ class LeadBridgeManager extends Database
             $migration_results['prospect'] = $this->prospects->create_prospect($lead_id, $prospect_data);
         }
 
-        // Migrate contracting data (for stages 13-14)
-        if (in_array($stage, ['13', '14'])) {
+        // Migrate contracting data (for stages 130, 140, 150 - Won, Lost, Contracting)
+        if (in_array($stage, [130, 140, 150]) || in_array($stage, ['130', '140', '150'])) {
             $contract_data = [
                 'contract_type' => (in_array($lead_data['structure_type'] ?? 1, [2, 3])) ? 'commercial' : 'standard',
                 'contract_value' => $lead_data['sales_system_cost_high'] ?? $lead_data['eng_system_cost_high'] ?? null,
-                'project_status' => ($stage == '14') ? 'completed' : 'pending',
+                'project_status' => ($stage == 130 || $stage == '130') ? 'completed' : 'pending', // 130 = Closed Won
                 'project_notes' => 'Migrated from leads table',
                 'deliverables' => json_encode(['System Installation', 'Documentation', 'Training'])
             ];

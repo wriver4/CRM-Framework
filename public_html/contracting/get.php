@@ -51,8 +51,10 @@ if (isset($_GET['action'])) {
 
 // Handle page-specific logic
 if ($dir == 'contracting' && $page == 'list') {
-    // Contracting includes stage 13 (Contracting)
-    $results = $leads->get_leads_by_stage(13);
+    // Contracting includes stage 150 (Contracting) - new numbering
+    require_once dirname(__DIR__, 2) . '/scripts/stage_remapping.php';
+    $moduleFilters = StageRemapping::getModuleStageFilters();
+    $results = $leads->get_leads_by_stages($moduleFilters['contracting']);
     $list = new LeadsList($results, $lang);
     $list->create_table();
 }

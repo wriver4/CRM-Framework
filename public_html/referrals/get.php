@@ -51,7 +51,10 @@ if (isset($_GET['action'])) {
 
 // Handle page-specific logic
 if ($dir == 'referrals' && $page == 'list') {
-    $results = $leads->get_leads_by_stage(4); // Stage 4 = Referral
+    // Referrals include stage 40 (Referral) - new numbering
+    require_once dirname(__DIR__, 2) . '/scripts/stage_remapping.php';
+    $moduleFilters = StageRemapping::getModuleStageFilters();
+    $results = $leads->get_leads_by_stages($moduleFilters['referrals']);
     $list = new LeadsList($results, $lang);
     $list->create_table();
 }
