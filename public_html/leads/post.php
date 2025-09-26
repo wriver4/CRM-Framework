@@ -148,6 +148,14 @@ try {
             'referral_notes' => 'Created from lead form'
         ],
         
+        'prospect' => [
+            'eng_system_cost_low' => !empty($_POST['eng_system_cost_low']) ? (int)$_POST['eng_system_cost_low'] : null,
+            'eng_system_cost_high' => !empty($_POST['eng_system_cost_high']) ? (int)$_POST['eng_system_cost_high'] : null,
+            'eng_protected_area' => !empty($_POST['eng_protected_area']) ? (int)$_POST['eng_protected_area'] : null,
+            'eng_cabinets' => !empty($_POST['eng_cabinets']) ? (int)$_POST['eng_cabinets'] : null,
+            'eng_total_pumps' => !empty($_POST['eng_total_pumps']) ? (int)$_POST['eng_total_pumps'] : null
+        ],
+        
         'documents' => []
     ];
     

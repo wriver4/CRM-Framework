@@ -8,7 +8,7 @@ $page = 'delete';
 $table_page = false;
 
 require LANG . '/en.php';
-$title = $lang['lead_delete'] ?? 'Delete Lead';
+$title = $lang['lead_delete'];
 $title_icon = '<i class="fa-solid fa-trash"></i>';
 
 require 'get.php';

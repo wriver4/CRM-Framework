@@ -9,8 +9,8 @@ $table_page = false;
 $button_new = true;
 
 require LANG . '/en.php';
-$title = $lang['lead_edit'] ?? 'Edit Lead';
-$new_button = $lang['contact_new'] ?? 'New Contact';
+$title = $lang['lead_edit'];
+$new_button = $lang['contact_new'];
 $new_icon = '<i class="fa-solid fa-address-book"></i>';
 $title_icon = '<i class="fa-solid fa-edit"></i>';
 
@@ -58,15 +58,19 @@ require SECTIONOPEN;
   <div class="card mb-4">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
       <h5 class="mb-0">
-        <i class="fa-solid fa-user me-2"></i><?= $lang['lead_contact_information'] ?? 'Contact Information'; ?>
+        <i class="fa-solid fa-user me-2"></i><?= $lang['lead_contact_information']; ?>
       </h5>
       <div class="d-flex align-items-center gap-3">
         <?php if (isset($property_contacts) && count($property_contacts) > 1): ?>
         <div class="d-flex align-items-center">
-          <label for="contact_selector" class="form-label text-white me-2 mb-0">
+          <label for="contact_selector"
+                 class="form-label text-white me-2 mb-0">
             <i class="fa-solid fa-users me-1"></i>Contact:
           </label>
-          <select name="contact_selector" id="contact_selector" class="form-select form-select-sm" style="min-width: 200px;">
+          <select name="contact_selector"
+                  id="contact_selector"
+                  class="form-select form-select-sm"
+                  style="min-width: 200px;">
             <?php foreach ($property_contacts as $contact): ?>
             <option value="<?= htmlspecialchars($contact['id']) ?>"
                     data-full-name="<?= htmlspecialchars($contact['full_name']) ?>"
@@ -84,7 +88,7 @@ require SECTIONOPEN;
            tabindex="0"
            role="button"
            aria-pressed="false">
-          <i class="fa-solid fa-address-book"></i>&ensp;<?= $lang['contact_new'] ?? 'New Contact'; ?>
+          <i class="fa-solid fa-address-book"></i>&ensp;<?= $lang['contact_new']; ?>
         </a>
       </div>
     </div>
@@ -94,7 +98,7 @@ require SECTIONOPEN;
       <div class="row mb-3">
         <div class="col">
           <div class="form-group">
-            <label class="form-label fw-bold text-muted"><?= $lang['lead_full_name'] ?? 'Full Name'; ?></label>
+            <label class="form-label fw-bold text-muted"><?= $lang['lead_full_name']; ?></label>
             <div class="bg-light p-2 rounded border">
               <i class="fa-solid fa-user text-primary me-2"></i><?= htmlspecialchars($full_name ?? '-') ?>
             </div>
@@ -105,7 +109,7 @@ require SECTIONOPEN;
         </div>
         <div class="col">
           <div class="form-group">
-            <label class="form-label fw-bold text-muted"><?= $lang['lead_cell_phone'] ?? 'Cell Phone'; ?></label>
+            <label class="form-label fw-bold text-muted"><?= $lang['lead_cell_phone']; ?></label>
             <div class="bg-light p-2 rounded border">
               <i class="fa-solid fa-phone text-success me-2"></i><?= htmlspecialchars($cell_phone ?? '-') ?>
             </div>
@@ -116,7 +120,7 @@ require SECTIONOPEN;
         </div>
         <div class="col">
           <div class="form-group">
-            <label class="form-label fw-bold text-muted"><?= $lang['lead_email'] ?? 'Email'; ?></label>
+            <label class="form-label fw-bold text-muted"><?= $lang['lead_email']; ?></label>
             <div class="bg-light p-2 rounded border">
               <i class="fa-solid fa-envelope text-info me-2"></i><?= htmlspecialchars($email ?? '-') ?>
             </div>
@@ -131,7 +135,7 @@ require SECTIONOPEN;
       <div class="row">
         <div class="col">
           <div class="form-group">
-            <label class="form-label fw-bold text-muted"><?= $lang['lead_contact_type'] ?? 'Contact Type'; ?></label>
+            <label class="form-label fw-bold text-muted"><?= $lang['lead_contact_type']; ?></label>
             <?php
             $contact_types = $leads->get_lead_contact_type_array();
             $contact_type_display = $contact_types[$contact_type] ?? '-';
@@ -146,7 +150,7 @@ require SECTIONOPEN;
         </div>
         <div class="col">
           <div class="form-group">
-            <label class="form-label fw-bold text-muted"><?= $lang['lead_business_name'] ?? 'Business Name'; ?></label>
+            <label class="form-label fw-bold text-muted"><?= $lang['lead_business_name']; ?></label>
             <div class="bg-light p-2 rounded border">
               <i class="fa-solid fa-building text-secondary me-2"></i><?= htmlspecialchars($business_name ?? '-') ?>
             </div>
@@ -158,7 +162,7 @@ require SECTIONOPEN;
         <div class="col">
           <div class="form-group">
             <label for="project_name"
-                   class="form-label fw-bold text-muted"><?= $lang['lead_project_name'] ?? 'Project Name'; ?></label>
+                   class="form-label fw-bold text-muted"><?= $lang['lead_project_name']; ?></label>
             <div class="input-group">
               <span class="input-group-text"><i class="fa-solid fa-project-diagram text-primary"></i></span>
               <input type="text"
@@ -168,7 +172,7 @@ require SECTIONOPEN;
                      class="form-control"
                      value="<?= htmlspecialchars($project_name ?? '') ?>"
                      autocomplete="off"
-                     placeholder="<?= $lang['placeholder_project_name'] ?? 'Enter project name...'; ?>">
+                     placeholder="<?= $lang['placeholder_project_name']; ?>">
             </div>
           </div>
         </div>
@@ -182,7 +186,7 @@ require SECTIONOPEN;
   <div class="card mb-4">
     <div class="card-header bg-primary text-white">
       <h5 class="mb-0">
-        <i class="fa-solid fa-map-marker-alt me-2"></i><?= $lang['address'] ?? 'Address'; ?>
+        <i class="fa-solid fa-map-marker-alt me-2"></i><?= $lang['address']; ?>
       </h5>
     </div>
     <div class="card-body">
@@ -214,7 +218,7 @@ require SECTIONOPEN;
             <?php if ($full_address_display): ?>
             <?= str_replace("\n", ", ", htmlspecialchars($full_address_display)) ?>
             <?php else: ?>
-            <em class="text-muted"><?= $lang['message_no_address'] ?? 'No address provided'; ?></em>
+            <em class="text-muted"><?= $lang['message_no_address']; ?></em>
             <?php endif; ?>
           </div>
         </div>
@@ -265,14 +269,14 @@ require SECTIONOPEN;
   }
   ?>
   <div class="card mb-4">
-    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center" 
+    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center"
          style="cursor: pointer;"
          data-bs-toggle="collapse"
          data-bs-target="#servicesInterestedCollapse"
          aria-expanded="false"
          aria-controls="servicesInterestedCollapse">
       <h5 class="mb-0 d-flex align-items-center">
-        <i class="fa-solid fa-cogs me-2"></i><?= $lang['lead_services_interested_in'] ?? 'Services Interested In'; ?>
+        <i class="fa-solid fa-cogs me-2"></i><?= $lang['lead_services_interested_in']; ?>
       </h5>
       <i class="fa-solid fa-chevron-down collapse-icon"
          style="transition: transform 0.3s ease; cursor: pointer;"></i>
@@ -294,7 +298,7 @@ require SECTIONOPEN;
           <div class="d-flex align-items-center">
             <i class="fa-solid fa-tools text-muted me-3 fa-lg"></i>
             <div class="services-content text-muted">
-              <em><?= $lang['message_no_services'] ?? 'No services selected'; ?></em>
+              <em><?= $lang['message_no_services']; ?></em>
             </div>
           </div>
         </div>
@@ -324,14 +328,14 @@ require SECTIONOPEN;
   ?>
   <?php if ($has_structure_content): ?>
   <div class="card mb-4">
-    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center" 
+    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center"
          style="cursor: pointer;"
          data-bs-toggle="collapse"
          data-bs-target="#structureInformationCollapse"
          aria-expanded="false"
          aria-controls="structureInformationCollapse">
       <h5 class="mb-0 d-flex align-items-center">
-        <i class="fa-solid fa-building me-2"></i><?= $lang['lead_structure_information'] ?? 'Structure Information'; ?>
+        <i class="fa-solid fa-building me-2"></i><?= $lang['lead_structure_information']; ?>
       </h5>
       <i class="fa-solid fa-chevron-up collapse-icon"
          style="transition: transform 0.3s ease; cursor: pointer;"></i>
@@ -346,7 +350,7 @@ require SECTIONOPEN;
         $structure_type_display = $structure_types[$structure_type] ?? $structure_type ?? '-';
         ?>
           <p class="mb-0">
-            <strong class="text-muted"><?= $lang['lead_structure_type'] ?? 'Structure Type' ?>:</strong>
+            <strong class="text-muted"><?= $lang['lead_structure_type'] ?>:</strong>
             <span class="ms-2">
               <i class="fa-solid fa-building text-warning me-1"></i><?= htmlspecialchars($structure_type_display) ?>
             </span>
@@ -360,7 +364,7 @@ require SECTIONOPEN;
         <?php if ($structure_description_display): ?>
         <div class="mb-3">
           <label
-                 class="form-label fw-bold text-muted"><?= $lang['lead_structure_description'] ?? 'Structure Description' ?></label>
+                 class="form-label fw-bold text-muted"><?= $lang['lead_structure_description'] ?></label>
           <div class="bg-light p-3 rounded border">
             <div class="d-flex align-items-center">
               <i class="fa-solid fa-blueprint text-warning me-3 fa-lg"></i>
@@ -379,7 +383,7 @@ require SECTIONOPEN;
         <?php if (!empty($structure_other)): ?>
         <div class="mb-3">
           <label
-                 class="form-label fw-bold text-muted"><?= $lang['lead_structure_other'] ?? 'Other Description' ?></label>
+                 class="form-label fw-bold text-muted"><?= $lang['lead_structure_other'] ?></label>
           <div class="bg-light p-3 rounded border">
             <div class="d-flex align-items-center">
               <i class="fa-solid fa-plus-circle text-secondary me-3 fa-lg"></i>
@@ -398,7 +402,7 @@ require SECTIONOPEN;
         <?php if (!empty($structure_additional)): ?>
         <div class="mb-3">
           <label
-                 class="form-label fw-bold text-muted"><?= $lang['lead_structure_additional'] ?? 'Additional Buildings' ?></label>
+                 class="form-label fw-bold text-muted"><?= $lang['lead_structure_additional'] ?></label>
           <div class="bg-light p-3 rounded border">
             <div class="d-flex align-items-start">
               <i class="fa-solid fa-comment-alt text-info me-3 mt-1 fa-lg"></i>
@@ -419,7 +423,8 @@ require SECTIONOPEN;
 
   <!-- File Upload Links -->
   <div class="card mb-4">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="cursor: pointer;">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+         style="cursor: pointer;">
       <h5 class="mb-0">
         <button class="btn p-0 text-start text-white border-0 bg-transparent d-flex align-items-center w-100"
                 type="button"
@@ -428,7 +433,7 @@ require SECTIONOPEN;
                 aria-expanded="false"
                 aria-controls="fileUploadLinksCollapse"
                 style="box-shadow: none; cursor: pointer;">
-          <i class="fa-solid fa-upload me-2"></i><?= $lang['lead_file_upload_links'] ?? 'File Upload Links'; ?>
+          <i class="fa-solid fa-upload me-2"></i><?= $lang['lead_file_upload_links']; ?>
         </button>
       </h5>
       <i class="fa-solid fa-chevron-up collapse-icon"
@@ -442,7 +447,7 @@ require SECTIONOPEN;
           <div class="col-12">
             <div class="form-group">
               <label
-                     class="form-label fw-bold text-muted"><?= $lang['lead_plans_upload_link'] ?? 'Plans Upload Link'; ?></label>
+                     class="form-label fw-bold text-muted"><?= $lang['lead_plans_upload_link']; ?></label>
               <div class="bg-light p-3 rounded border">
                 <div class="d-flex align-items-center">
                   <i class="fa-solid fa-file-alt text-info me-3 fa-lg"></i>
@@ -450,7 +455,8 @@ require SECTIONOPEN;
                     <?php if (!empty($plans_upload_link)): ?>
                     <span class="text-break"><?= htmlspecialchars($plans_upload_link) ?></span>
                     <?php else: ?>
-                    <em class="text-muted"><?= $lang['message_no_plans_link'] ?? 'No plans upload link provided'; ?></em>
+                    <em
+                        class="text-muted"><?= $lang['message_no_plans_link']; ?></em>
                     <?php endif; ?>
                   </div>
                 </div>
@@ -467,7 +473,7 @@ require SECTIONOPEN;
           <div class="col-12">
             <div class="form-group">
               <label
-                     class="form-label fw-bold text-muted"><?= $lang['lead_pictures_upload_link'] ?? 'Pictures Upload Link'; ?></label>
+                     class="form-label fw-bold text-muted"><?= $lang['lead_pictures_upload_link']; ?></label>
               <div class="bg-light p-3 rounded border">
                 <div class="d-flex align-items-center">
                   <i class="fa-solid fa-image text-primary me-3 fa-lg"></i>
@@ -475,7 +481,8 @@ require SECTIONOPEN;
                     <?php if (!empty($picture_upload_link)): ?>
                     <span class="text-break"><?= htmlspecialchars($picture_upload_link) ?></span>
                     <?php else: ?>
-                    <em class="text-muted"><?= $lang['message_no_pictures_link'] ?? 'No pictures upload link provided'; ?></em>
+                    <em
+                        class="text-muted"><?= $lang['message_no_pictures_link']; ?></em>
                     <?php endif; ?>
                   </div>
                 </div>
@@ -490,7 +497,7 @@ require SECTIONOPEN;
     </div>
   </div>
 
-  <!-- Screening Estimates -->
+  <!-- Screening Estimate -->
   <?php
   // Check if user has permission to edit engineering or sales estimates
   $user_role = $_SESSION['user_role'] ?? 'user';
@@ -506,16 +513,16 @@ require SECTIONOPEN;
   $default_expanded = $has_engineering_data ? 'show' : '';
   $chevron_direction = $has_engineering_data ? 'up' : 'down';
   ?>
-  
+
   <div class="card mb-4">
-    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center" 
+    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center"
          style="cursor: pointer;"
          data-bs-toggle="collapse"
          data-bs-target="#screeningEstimatesCollapse"
          aria-expanded="<?= $has_engineering_data ? 'true' : 'false' ?>"
          aria-controls="screeningEstimatesCollapse">
       <h5 class="mb-0 d-flex align-items-center">
-        <i class="fa-solid fa-calculator me-2"></i><?= $lang['screening_estimates'] ?? 'Screening Estimates'; ?>
+        <i class="fa-solid fa-calculator me-2"></i><?= $lang['screening_estimates']; ?>
       </h5>
       <i class="fa-solid fa-chevron-<?= $chevron_direction ?> collapse-icon"
          style="transition: transform 0.3s ease; cursor: pointer;"></i>
@@ -523,18 +530,18 @@ require SECTIONOPEN;
     <div class="collapse <?= $default_expanded ?>"
          id="screeningEstimatesCollapse">
       <div class="card-body">
-        
-        <!-- Engineering Estimates Row -->
+
+        <!-- Engineering Estimate Row -->
         <div class="row mb-4">
           <div class="col-12">
             <h6 class="text-muted mb-3">
-              <i class="fa-solid fa-cogs me-2"></i><?= $lang['engineering_estimates'] ?? 'Engineering Estimates'; ?>
+              <i class="fa-solid fa-cogs me-2"></i><?= $lang['engineering_estimates']; ?>
             </h6>
             <div class="row">
               <!-- Engineering System Cost -->
               <div class="col-md-8">
                 <div class="form-group">
-                  <label class="form-label fw-bold text-muted"><?= $lang['system_cost'] ?? 'System Cost'; ?></label>
+                  <label class="form-label fw-bold text-muted"><?= $lang['system_cost']; ?></label>
                   <div class="row">
                     <div class="col-6">
                       <div class="input-group">
@@ -544,7 +551,7 @@ require SECTIONOPEN;
                                id="eng_system_cost_low"
                                class="form-control"
                                value="<?= htmlspecialchars($eng_system_cost_low ?? '') ?>"
-                               placeholder="<?= $lang['system_cost_low'] ?? 'Low' ?>"
+                               placeholder="<?= $lang['system_cost_low']; ?>"
                                min="0"
                                step="1"
                                <?= !$can_edit_engineering && !$can_edit_admin_leads ? 'readonly' : '' ?>>
@@ -559,7 +566,7 @@ require SECTIONOPEN;
                                id="eng_system_cost_high"
                                class="form-control"
                                value="<?= htmlspecialchars($eng_system_cost_high ?? '') ?>"
-                               placeholder="<?= $lang['system_cost_high'] ?? 'High' ?>"
+                               placeholder="<?= $lang['system_cost_high']; ?>"
                                min="0"
                                step="1"
                                <?= !$can_edit_engineering && !$can_edit_admin_leads ? 'readonly' : '' ?>>
@@ -573,7 +580,7 @@ require SECTIONOPEN;
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="eng_protected_area"
-                         class="form-label fw-bold text-muted"><?= $lang['protected_area'] ?? 'Protected Area'; ?></label>
+                         class="form-label fw-bold text-muted"><?= $lang['protected_area']; ?></label>
                   <div class="input-group">
                     <input type="number"
                            name="eng_protected_area"
@@ -584,84 +591,57 @@ require SECTIONOPEN;
                            min="0"
                            step="1"
                            <?= !$can_edit_engineering && !$can_edit_admin_leads ? 'readonly' : '' ?>>
-                    <span class="input-group-text"><?= $lang['protected_area_sqft'] ?? 'SQFT' ?></span>
+                    <span class="input-group-text"><?= $lang['protected_area_sqft']; ?></span>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        
-        <hr class="my-4">
-        
-        <!-- Sales Estimates Row -->
-        <div class="row">
-          <div class="col-12">
-            <h6 class="text-muted mb-3">
-              <i class="fa-solid fa-handshake me-2"></i><?= $lang['sales_estimates'] ?? 'Sales Estimates'; ?>
-            </h6>
-            <div class="row">
-              <!-- Sales System Cost -->
-              <div class="col-md-8">
-                <div class="form-group">
-                  <label class="form-label fw-bold text-muted"><?= $lang['system_cost'] ?? 'System Cost'; ?></label>
-                  <div class="row">
-                    <div class="col-6">
-                      <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number"
-                               name="sales_system_cost_low"
-                               id="sales_system_cost_low"
-                               class="form-control"
-                               value="<?= htmlspecialchars($sales_system_cost_low ?? '') ?>"
-                               placeholder="<?= $lang['system_cost_low'] ?? 'Low' ?>"
-                               min="0"
-                               step="1"
-                               <?= !$can_edit_sales && !$can_edit_admin_leads ? 'readonly' : '' ?>>
-                      </div>
 
-                    </div>
-                    <div class="col-6">
-                      <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number"
-                               name="sales_system_cost_high"
-                               id="sales_system_cost_high"
-                               class="form-control"
-                               value="<?= htmlspecialchars($sales_system_cost_high ?? '') ?>"
-                               placeholder="<?= $lang['system_cost_high'] ?? 'High' ?>"
-                               min="0"
-                               step="1"
-                               <?= !$can_edit_sales && !$can_edit_admin_leads ? 'readonly' : '' ?>>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Sales Protected Area -->
-              <div class="col-md-4">
+            <!-- Additional Fields Row -->
+            <div class="row mt-3">
+              <!-- Cabinets -->
+              <div class="col-md-6">
                 <div class="form-group">
-                  <label for="sales_protected_area"
-                         class="form-label fw-bold text-muted"><?= $lang['protected_area'] ?? 'Protected Area'; ?></label>
+                  <label for="eng_cabinets"
+                         class="form-label fw-bold text-muted"><?= $lang['cabinets']; ?></label>
                   <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-archive text-secondary"></i></span>
                     <input type="number"
-                           name="sales_protected_area"
-                           id="sales_protected_area"
+                           name="eng_cabinets"
+                           id="eng_cabinets"
                            class="form-control"
-                           value="<?= htmlspecialchars($sales_protected_area ?? '') ?>"
+                           value="<?= htmlspecialchars($eng_cabinets ?? '') ?>"
                            placeholder="0"
                            min="0"
                            step="1"
-                           <?= !$can_edit_sales && !$can_edit_admin_leads ? 'readonly' : '' ?>>
-                    <span class="input-group-text"><?= $lang['protected_area_sqft'] ?? 'SQFT' ?></span>
+                           <?= !$can_edit_engineering && !$can_edit_admin_leads ? 'readonly' : '' ?>>
+                  </div>
+                </div>
+              </div>
+              <!-- Total Pumps -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="eng_total_pumps"
+                         class="form-label fw-bold text-muted"><?= $lang['total_pumps']; ?></label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-cog text-primary"></i></span>
+                    <input type="number"
+                           name="eng_total_pumps"
+                           id="eng_total_pumps"
+                           class="form-control"
+                           value="<?= htmlspecialchars($eng_total_pumps ?? '') ?>"
+                           placeholder="0"
+                           min="0"
+                           step="1"
+                           <?= !$can_edit_engineering && !$can_edit_admin_leads ? 'readonly' : '' ?>>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
+
+
       </div>
     </div>
   </div>
@@ -714,17 +694,17 @@ require SECTIONOPEN;
     <div class="card-body">
       <div class="row mb-3">
         <div class="col-12">
-          <label class="form-label fw-bold"><?= $lang['label_current_action'] ?? 'Current Action'; ?></label>
+          <label class="form-label fw-bold"><?= $lang['label_current_action']; ?></label>
           <div>
             <?php 
             // 🌍 Internationalized note source array with desired order and options
             $custom_note_sources = [
-                1 => $lang['note_source_phone_call'] ?? 'Phone Call',
-                2 => $lang['note_source_email'] ?? 'Email',
-                3 => $lang['note_source_text_message'] ?? 'Text Message',
-                5 => $lang['note_source_virtual_meeting'] ?? 'Virtual Meeting',
-                6 => $lang['note_source_in_person'] ?? 'In-Person',
-                4 => $lang['note_source_internal_note'] ?? 'Internal Note'
+                1 => $lang['note_source_phone_call'],
+                2 => $lang['note_source_email'],
+                3 => $lang['note_source_text_message'],
+                5 => $lang['note_source_virtual_meeting'],
+                6 => $lang['note_source_in_person'],
+                4 => $lang['note_source_internal_note']
             ];
             foreach ($custom_note_sources as $key => $value): ?>
             <div class="form-check form-check-inline">
@@ -749,22 +729,22 @@ require SECTIONOPEN;
                     id="note_text"
                     class="form-control"
                     rows="2"
-                    placeholder="<?= $lang['placeholder_questions_asked'] ?? 'Questions Asked'; ?>"></textarea>
+                    placeholder="<?= $lang['placeholder_questions_asked']; ?>"></textarea>
         </div>
       </div>
       <div class="row mb-3">
         <div class="col-12">
-          <label class="form-label fw-bold"><?= $lang['label_next_action'] ?? 'Next Action'; ?></label>
+          <label class="form-label fw-bold"><?= $lang['label_next_action']; ?></label>
           <div>
             <?php 
             // 🌍 Internationalized next action source array with desired order and options (matching Current Action)
             $next_action_sources = [
-                1 => $lang['note_source_phone_call'] ?? 'Phone Call',
-                2 => $lang['note_source_email'] ?? 'Email',
-                3 => $lang['note_source_text_message'] ?? 'Text Message',
-                5 => $lang['note_source_virtual_meeting'] ?? 'Virtual Meeting',
-                6 => $lang['note_source_in_person'] ?? 'In-Person',
-                4 => $lang['note_source_internal_note'] ?? 'Internal Note'
+                1 => $lang['note_source_phone_call'],
+                2 => $lang['note_source_email'],
+                3 => $lang['note_source_text_message'],
+                5 => $lang['note_source_virtual_meeting'],
+                6 => $lang['note_source_in_person'],
+                4 => $lang['note_source_internal_note']
             ];
             foreach ($next_action_sources as $key => $value): ?>
             <div class="form-check form-check-inline">
@@ -788,7 +768,7 @@ require SECTIONOPEN;
                     id="next_action_notes"
                     class="form-control"
                     rows="2"
-                    placeholder="<?= $lang['placeholder_what_promised'] ?? 'What you promised...'; ?>"></textarea>
+                    placeholder="<?= $lang['placeholder_what_promised']; ?>"></textarea>
         </div>
       </div>
       <div class="row mb-3">
@@ -802,12 +782,13 @@ require SECTIONOPEN;
         </div>
         <div class="col-md-6">
           <label for="next_action_time"
-                 class="form-label fw-bold"><?= $lang['label_time_optional'] ?? 'Time'; ?> <small class="text-muted"><?= $lang['label_time_note'] ?? '(optional - anytime during working day if not specified)'; ?></small></label>
+                 class="form-label fw-bold"><?= $lang['label_time_optional']; ?> <small
+                   class="text-muted"><?= $lang['label_time_note']; ?></small></label>
           <input type="time"
                  name="next_action_time"
                  id="next_action_time"
                  class="form-control"
-                 placeholder="<?= $lang['placeholder_optional'] ?? 'Optional'; ?>">
+                 placeholder="<?= $lang['placeholder_optional']; ?>">
         </div>
       </div>
       <div class="row mb-3">
@@ -848,7 +829,7 @@ require SECTIONOPEN;
             <input type="text"
                    class="form-control"
                    id="notesSearch"
-                   placeholder="<?= $lang['placeholder_search_notes'] ?? 'Search notes...'; ?>"
+                   placeholder="<?= $lang['placeholder_search_notes']; ?>"
                    value="<?= htmlspecialchars($search) ?>">
             <button class="btn btn-outline-secondary"
                     type="button"
@@ -1000,7 +981,7 @@ require SECTIONOPEN;
     <div class="col-6">
       <div class="form-group pb-2">
         <label for="stage"
-               class="pb-1"><?= $lang['lead_stage'] ?? 'Stage'; ?></label>
+               class="pb-1"><?= $lang['lead_stage']; ?></label>
         <select name="stage"
                 id="stage"
                 class="form-select"
@@ -1067,7 +1048,10 @@ require SECTIONOPEN;
          name="current_stage"
          value="<?= htmlspecialchars($stage ?? '') ?>">
   <!-- Hidden field for selected contact ID (for notes) -->
-  <input type="hidden" name="note_contact_id" id="note_contact_id" value="<?= htmlspecialchars($selected_contact_id ?? '') ?>">
+  <input type="hidden"
+         name="note_contact_id"
+         id="note_contact_id"
+         value="<?= htmlspecialchars($selected_contact_id ?? '') ?>">
 
   <p></p>
   <a href="list"
@@ -1075,14 +1059,14 @@ require SECTIONOPEN;
      role="button"
      aria-pressed="false"
      tabindex="0">
-    <?= $lang['lead_cancel'] ?? 'Cancel'; ?>
+    <?= $lang['lead_cancel']; ?>
   </a>
   <button type="submit"
           class="btn btn-success"
           role="button"
           value="submit"
           tabindex="0">
-    <?= $lang['lead_update'] ?? 'Update Lead'; ?>
+    <?= $lang['lead_update']; ?>
   </button>
 </form>
 
@@ -1483,8 +1467,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Auto-expand screening estimates when user enters data
   const screeningInputs = [
-    'eng_system_cost_low', 'eng_system_cost_high', 'eng_protected_area',
-    'sales_system_cost_low', 'sales_system_cost_high', 'sales_protected_area'
+    'eng_system_cost_low', 'eng_system_cost_high', 'eng_protected_area', 'eng_cabinets', 'eng_total_pumps'
   ];
 
   screeningInputs.forEach(inputId => {
@@ -1502,8 +1485,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Format currency inputs with commas
   const currencyInputs = [
-    'eng_system_cost_low', 'eng_system_cost_high', 
-    'sales_system_cost_low', 'sales_system_cost_high'
+    'eng_system_cost_low', 'eng_system_cost_high'
   ];
 
   currencyInputs.forEach(inputId => {
@@ -1512,12 +1494,12 @@ document.addEventListener('DOMContentLoaded', function() {
       input.addEventListener('input', function(e) {
         // Remove non-numeric characters except for existing commas
         let value = e.target.value.replace(/[^\d]/g, '');
-        
+
         // Add commas for thousands
         if (value) {
           value = parseInt(value).toLocaleString();
         }
-        
+
         e.target.value = value;
       });
 
@@ -1535,18 +1517,26 @@ function handleStageChange(newStage) {
   const currentStage = <?= $selected_stage ?? 1 ?>;
   const stageNames = <?= json_encode($leads->get_lead_stage_array()) ?>;
   const leadId = '<?= htmlspecialchars($lead_id ?? '') ?>';
-  
+
   if (newStage != currentStage) {
     let message = '';
     let redirectUrl = '';
-    
+
     // Determine where the record will move based on new stage
     switch (parseInt(newStage)) {
       case 4: // Referral
         message = `This lead will be moved to the Referrals list when you save.`;
         redirectUrl = '/referrals/list';
         break;
-      case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: // Prospect stages
+      case 5:
+      case 6:
+      case 7:
+      case 8:
+      case 9:
+      case 10:
+      case 11:
+      case 12:
+      case 13: // Prospect stages
         message = `This lead will be moved to the Prospects list when you save.`;
         redirectUrl = '/prospects/list';
         break;
@@ -1561,10 +1551,12 @@ function handleStageChange(newStage) {
         message = `This lead will be marked as Closed Lost.`;
         break;
     }
-    
+
     if (message) {
       // Show confirmation dialog
-      if (confirm(`Stage Change: ${stageNames[currentStage]} → ${stageNames[newStage]}\n\n${message}\n\nDo you want to continue?`)) {
+      if (confirm(
+          `Stage Change: ${stageNames[currentStage]} → ${stageNames[newStage]}\n\n${message}\n\nDo you want to continue?`
+        )) {
         // User confirmed, let the form submission handle the stage change
         return true;
       } else {

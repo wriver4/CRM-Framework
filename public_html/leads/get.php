@@ -59,8 +59,10 @@ if ($dir == 'leads' && $page == 'list') {
         // Get only Closed Lost leads (stage 140)
         $results = $leads->get_leads_by_stage(140);
     } else {
-        // Get all active leads (default behavior)
-        $results = $leads->get_all_active();
+        // Use stage remapping to get proper leads stages
+        require_once dirname(__DIR__, 2) . '/scripts/stage_remapping.php';
+        $moduleFilters = StageRemapping::getModuleStageFilters();
+        $results = $leads->get_leads_by_stages($moduleFilters['leads']);
     }
     
     $list = new LeadsList($results, $lang);
@@ -163,6 +165,15 @@ if ($dir == 'leads' && $page == 'edit') {
         
         $hear_about = $referral_info["referral_source_type"] ?? null;
         $hear_about_other = $referral_info["referral_source_name"] ?? null;
+        
+        // Extract screening estimates data from prospect_info
+        $eng_system_cost_low = $prospect_info["eng_system_cost_low"] ?? null;
+        $eng_system_cost_high = $prospect_info["eng_system_cost_high"] ?? null;
+        $eng_protected_area = $prospect_info["eng_protected_area"] ?? null;
+        $eng_cabinets = $prospect_info["eng_cabinets"] ?? null;
+        $eng_total_pumps = $prospect_info["eng_total_pumps"] ?? null;
+        
+
     }
     
     // Get contacts associated with this lead for the contact dropdown in notes

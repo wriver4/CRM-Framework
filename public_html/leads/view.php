@@ -8,7 +8,7 @@ $page = 'view';
 $table_page = false;
 
 require LANG . '/en.php';
-$title = $lang['lead_view'] ?? 'View Lead';
+$title = $lang['lead_view'];
 $title_icon = '<i class="fa-solid fa-eye"></i>';
 
 require 'get.php';
@@ -56,23 +56,23 @@ require __DIR__ . '/../templates/section_header.php';
       <div class="card-body">
         <div class="row">
           <div class="col-md-6">
-            <h6 class="text-muted"><?= $lang['lead_contact_information'] ?? 'Contact Information' ?></h6>
-            <p><strong><?= $lang['lead_name'] ?? 'Name' ?>:</strong> <?= htmlspecialchars($first_name . ' ' . $family_name) ?></p>
-            <p><strong><?= $lang['email'] ?? 'Email' ?>:</strong>
+            <h6 class="text-muted"><?= $lang['lead_contact_information'] ?></h6>
+            <p><strong><?= $lang['lead_name'] ?>:</strong> <?= htmlspecialchars($first_name . ' ' . $family_name) ?></p>
+            <p><strong><?= $lang['email'] ?>:</strong>
               <?php if ($email): ?>
               <a href="mailto:<?= htmlspecialchars($email) ?>"><?= htmlspecialchars($email) ?></a>
               <?php else: ?>
               <span class="text-muted">-</span>
               <?php endif; ?>
             </p>
-            <p><strong><?= $lang['lead_phone'] ?? 'Phone' ?>:</strong>
+            <p><strong><?= $lang['lead_phone'] ?>:</strong>
               <?php if ($cell_phone): ?>
               <a href="tel:<?= htmlspecialchars($cell_phone) ?>"><?= htmlspecialchars($cell_phone) ?></a>
               <?php else: ?>
               <span class="text-muted">-</span>
               <?php endif; ?>
             </p>
-            <p><strong><?= $lang['lead_contact_type'] ?? 'Contact Type' ?>:</strong>
+            <p><strong><?= $lang['lead_contact_type'] ?>:</strong>
               <?php 
                             $contact_types = $leads->get_lead_contact_type_array();
                             echo $contact_types[$contact_type] ?? $contact_type ?? '-';
@@ -80,19 +80,19 @@ require __DIR__ . '/../templates/section_header.php';
             </p>
             <?php if (!empty($picture_upload_link) || !empty($plans_upload_link)): ?>
             <div class="mt-3">
-              <p class="mb-2"><strong><?= $lang['lead_upload_links'] ?? 'Upload Links' ?>:</strong></p>
+              <p class="mb-2"><strong><?= $lang['lead_upload_links'] ?>:</strong></p>
               <div class="d-flex flex-wrap gap-3">
                 <?php if (!empty($picture_upload_link)): ?>
                 <div class="d-flex align-items-center">
                   <a href="<?= htmlspecialchars($picture_upload_link) ?>"
                      target="_blank"
                      class="text-decoration-none me-2">
-                    <i class="fa-solid fa-camera me-1"></i><?= $lang['lead_pictures_upload_link'] ?? 'Pictures Upload Link' ?>
+                    <i class="fa-solid fa-camera me-1"></i><?= $lang['lead_pictures_upload_link'] ?>
                   </a>
                   <button type="button"
                           class="btn btn-sm btn-link p-0"
                           onclick="copyToClipboard('<?= htmlspecialchars($picture_upload_link, ENT_QUOTES) ?>', this)"
-                          title="<?= $lang['lead_copy_link'] ?? 'Copy link' ?>">
+                          title="<?= $lang['lead_copy_link'] ?>">
                     <i class="fa-solid fa-copy"></i>
                   </button>
                 </div>
@@ -103,12 +103,12 @@ require __DIR__ . '/../templates/section_header.php';
                   <a href="<?= htmlspecialchars($plans_upload_link) ?>"
                      target="_blank"
                      class="text-decoration-none me-2">
-                    <i class="fa-solid fa-upload me-1"></i><?= $lang['lead_plans_upload_link'] ?? 'Plans Upload Link' ?>
+                    <i class="fa-solid fa-upload me-1"></i><?= $lang['lead_plans_upload_link'] ?>
                   </a>
                   <button type="button"
                           class="btn btn-sm btn-link p-0"
                           onclick="copyToClipboard('<?= htmlspecialchars($plans_upload_link, ENT_QUOTES) ?>', this)"
-                          title="<?= $lang['lead_copy_link'] ?? 'Copy link' ?>">
+                          title="<?= $lang['lead_copy_link'] ?>">
                     <i class="fa-solid fa-copy"></i>
                   </button>
                 </div>
@@ -119,17 +119,17 @@ require __DIR__ . '/../templates/section_header.php';
           </div>
           <div class="col-md-6">
             <?php if ($lead_id): ?>
-            <p><strong><?= $lang['lead_id'] ?? 'Lead #' ?>:</strong>
+            <p><strong><?= $lang['lead_id'] ?>:</strong>
               <span class="badge bg-primary text-white">#<?= htmlspecialchars($lead_id) ?></span>
             </p>
             <?php endif; ?>
-            <p><strong><?= $lang['lead_source'] ?? 'Source' ?>:</strong>
+            <p><strong><?= $lang['lead_source'] ?>:</strong>
               <?php 
                             $lead_sources = $leads->get_lead_source_array();
                             echo $lead_sources[$lead_source] ?? $lead_source ?? '-';
                             ?>
             </p>
-            <p><strong><?= $lang['lead_stage'] ?? 'Stage' ?>:</strong>
+            <p><strong><?= $lang['lead_stage'] ?>:</strong>
               <?php
                             // Get the proper stage display name using language translations
                             $stage_display = $leads->get_stage_display_name($stage, $lang);
@@ -137,7 +137,7 @@ require __DIR__ . '/../templates/section_header.php';
                             ?>
               <span class="<?= $badge_class ?>"><?= htmlspecialchars($stage_display) ?></span>
             </p>
-            <p><strong><?= $lang['lead_structure_type'] ?? 'Structure Type' ?>:</strong>
+            <p><strong><?= $lang['lead_structure_type'] ?>:</strong>
               <?php 
                             $structure_types = $leads->get_lead_structure_type_array();
                             echo $structure_types[$structure_type] ?? $structure_type ?? '-';
@@ -163,7 +163,7 @@ require __DIR__ . '/../templates/section_header.php';
             <?php if ($has_structure_details): ?>
             <div class="mt-2">
               <?php if (!empty($structure_description_display)): ?>
-              <p class="mb-1"><strong><?= $lang['lead_structure_description'] ?? 'Description' ?>:</strong>
+              <p class="mb-1"><strong><?= $lang['lead_structure_description'] ?>:</strong>
                 <?php 
                 $desc_preview = strlen($structure_description_display) > 80 ? 
                     substr($structure_description_display, 0, 80) . '...' : 
@@ -174,14 +174,14 @@ require __DIR__ . '/../templates/section_header.php';
                         class="btn btn-link btn-sm p-0 ms-1"
                         data-bs-toggle="modal"
                         data-bs-target="#structureModal">
-                  <?= $lang['lead_more'] ?? 'more' ?>
+                  <?= $lang['lead_more'] ?>
                 </button>
                 <?php endif; ?>
               </p>
               <?php endif; ?>
 
               <?php if (!empty($structure_other)): ?>
-              <p class="mb-1"><strong><?= $lang['lead_structure_other'] ?? 'Other Description' ?>:</strong>
+              <p class="mb-1"><strong><?= $lang['lead_structure_other'] ?>:</strong>
                 <?php 
                 $other_preview = strlen($structure_other) > 60 ? 
                     substr($structure_other, 0, 60) . '...' : 
@@ -192,14 +192,14 @@ require __DIR__ . '/../templates/section_header.php';
                         class="btn btn-link btn-sm p-0 ms-1"
                         data-bs-toggle="modal"
                         data-bs-target="#structureModal">
-                  <?= $lang['lead_more'] ?? 'more' ?>
+                  <?= $lang['lead_more'] ?>
                 </button>
                 <?php endif; ?>
               </p>
               <?php endif; ?>
 
               <?php if (!empty($structure_additional)): ?>
-              <p class="mb-1"><strong><?= $lang['lead_structure_additional'] ?? 'Additional Buildings' ?>:</strong>
+              <p class="mb-1"><strong><?= $lang['lead_structure_additional'] ?>:</strong>
                 <?php 
                 $additional_preview = strlen($structure_additional) > 60 ? 
                     substr($structure_additional, 0, 60) . '...' : 
@@ -210,7 +210,7 @@ require __DIR__ . '/../templates/section_header.php';
                         class="btn btn-link btn-sm p-0 ms-1"
                         data-bs-toggle="modal"
                         data-bs-target="#structureModal">
-                  <?= $lang['lead_more'] ?? 'more' ?>
+                  <?= $lang['lead_more'] ?>
                 </button>
                 <?php endif; ?>
               </p>
@@ -223,15 +223,14 @@ require __DIR__ . '/../templates/section_header.php';
             <?php
             // Check if any screening estimates data exists
             $has_eng_data = !empty($eng_system_cost_low) || !empty($eng_system_cost_high) || !empty($eng_protected_area);
-            $has_sales_data = !empty($sales_system_cost_low) || !empty($sales_system_cost_high) || !empty($sales_protected_area);
-            $has_screening_data = $has_eng_data || $has_sales_data;
+            $has_screening_data = $has_eng_data;
             ?>
             
             <?php if ($has_screening_data): ?>
             <!-- Screening Estimates Section -->
             <div class="mt-4">
               <h6 class="text-muted mb-3">
-                <i class="fa-solid fa-calculator me-2"></i><?= $lang['screening_estimates'] ?? 'Screening Estimates'; ?>
+                <i class="fa-solid fa-calculator me-2"></i><?= $lang['screening_estimates']; ?>
               </h6>
               
               <div class="row">
@@ -241,67 +240,48 @@ require __DIR__ . '/../templates/section_header.php';
                   <div class="card border-info">
                     <div class="card-header bg-info text-white py-2">
                       <h6 class="mb-0">
-                        <i class="fa-solid fa-cogs me-2"></i><?= $lang['engineering_estimates'] ?? 'Engineering Estimates'; ?>
+                        <i class="fa-solid fa-cogs me-2"></i><?= $lang['engineering_estimates']; ?>
                       </h6>
                     </div>
                     <div class="card-body">
                       <?php if (!empty($eng_system_cost_low) || !empty($eng_system_cost_high)): ?>
                       <p class="mb-2">
-                        <strong><?= $lang['system_cost'] ?? 'System Cost'; ?>:</strong>
+                        <strong><?= $lang['system_cost']; ?>:</strong>
                         <?php if (!empty($eng_system_cost_low) && !empty($eng_system_cost_high)): ?>
                           $<?= number_format($eng_system_cost_low) ?> - $<?= number_format($eng_system_cost_high) ?>
                         <?php elseif (!empty($eng_system_cost_low)): ?>
-                          $<?= number_format($eng_system_cost_low) ?> (<?= $lang['system_cost_low'] ?? 'Low' ?>)
+                          $<?= number_format($eng_system_cost_low) ?> (<?= $lang['system_cost_low'] ?>)
                         <?php elseif (!empty($eng_system_cost_high)): ?>
-                          $<?= number_format($eng_system_cost_high) ?> (<?= $lang['system_cost_high'] ?? 'High' ?>)
+                          $<?= number_format($eng_system_cost_high) ?> (<?= $lang['system_cost_high'] ?>)
                         <?php endif; ?>
                       </p>
                       <?php endif; ?>
                       
                       <?php if (!empty($eng_protected_area)): ?>
-                      <p class="mb-0">
-                        <strong><?= $lang['protected_area'] ?? 'Protected Area'; ?>:</strong>
-                        <?= number_format($eng_protected_area) ?> <?= $lang['protected_area_sqft'] ?? 'SQFT' ?>
-                      </p>
-                      <?php endif; ?>
-                    </div>
-                  </div>
-                </div>
-                <?php endif; ?>
-                
-                <?php if ($has_sales_data): ?>
-                <!-- Sales Estimates -->
-                <div class="col-md-6 mb-3">
-                  <div class="card border-success">
-                    <div class="card-header bg-success text-white py-2">
-                      <h6 class="mb-0">
-                        <i class="fa-solid fa-handshake me-2"></i><?= $lang['sales_estimates'] ?? 'Sales Estimates'; ?>
-                      </h6>
-                    </div>
-                    <div class="card-body">
-                      <?php if (!empty($sales_system_cost_low) || !empty($sales_system_cost_high)): ?>
                       <p class="mb-2">
-                        <strong><?= $lang['system_cost'] ?? 'System Cost'; ?>:</strong>
-                        <?php if (!empty($sales_system_cost_low) && !empty($sales_system_cost_high)): ?>
-                          $<?= number_format($sales_system_cost_low) ?> - $<?= number_format($sales_system_cost_high) ?>
-                        <?php elseif (!empty($sales_system_cost_low)): ?>
-                          $<?= number_format($sales_system_cost_low) ?> (<?= $lang['system_cost_low'] ?? 'Low' ?>)
-                        <?php elseif (!empty($sales_system_cost_high)): ?>
-                          $<?= number_format($sales_system_cost_high) ?> (<?= $lang['system_cost_high'] ?? 'High' ?>)
-                        <?php endif; ?>
+                        <strong><?= $lang['protected_area']; ?>:</strong>
+                        <?= number_format($eng_protected_area) ?> <?= $lang['protected_area_sqft'] ?>
                       </p>
                       <?php endif; ?>
                       
-                      <?php if (!empty($sales_protected_area)): ?>
+                      <?php if (!empty($eng_cabinets)): ?>
+                      <p class="mb-2">
+                        <strong><?= $lang['cabinets']; ?>:</strong>
+                        <?= number_format($eng_cabinets) ?>
+                      </p>
+                      <?php endif; ?>
+                      
+                      <?php if (!empty($eng_total_pumps)): ?>
                       <p class="mb-0">
-                        <strong><?= $lang['protected_area'] ?? 'Protected Area'; ?>:</strong>
-                        <?= number_format($sales_protected_area) ?> <?= $lang['protected_area_sqft'] ?? 'SQFT' ?>
+                        <strong><?= $lang['total_pumps']; ?>:</strong>
+                        <?= number_format($eng_total_pumps) ?>
                       </p>
                       <?php endif; ?>
                     </div>
                   </div>
                 </div>
                 <?php endif; ?>
+
               </div>
             </div>
             <?php endif; ?>
@@ -683,7 +663,7 @@ function copyToClipboard(text, button) {
         <h5 class="modal-title"
             id="structureModalLabel">
           <i
-             class="fa-solid fa-building me-2"></i><?= $lang['lead_structure_information'] ?? 'Structure Information'; ?>
+             class="fa-solid fa-building me-2"></i><?= $lang['lead_structure_information']; ?>
         </h5>
         <button type="button"
                 class="btn-close"
@@ -695,7 +675,7 @@ function copyToClipboard(text, button) {
         <div class="mb-4">
           <h6 class="text-muted mb-2">
             <i
-               class="fa-solid fa-blueprint text-warning me-2"></i><?= $lang['lead_structure_description'] ?? 'Structure Description'; ?>
+               class="fa-solid fa-blueprint text-warning me-2"></i><?= $lang['lead_structure_description']; ?>
           </h6>
           <div class="bg-light p-3 rounded border">
             <?= htmlspecialchars($structure_description_display) ?>
@@ -707,7 +687,7 @@ function copyToClipboard(text, button) {
         <div class="mb-4">
           <h6 class="text-muted mb-2">
             <i
-               class="fa-solid fa-plus-circle text-secondary me-2"></i><?= $lang['lead_structure_other'] ?? 'Other Description'; ?>
+               class="fa-solid fa-plus-circle text-secondary me-2"></i><?= $lang['lead_structure_other']; ?>
           </h6>
           <div class="bg-light p-3 rounded border">
             <?= htmlspecialchars($structure_other) ?>
@@ -719,7 +699,7 @@ function copyToClipboard(text, button) {
         <div class="mb-0">
           <h6 class="text-muted mb-2">
             <i
-               class="fa-solid fa-building text-info me-2"></i><?= $lang['lead_structure_additional'] ?? 'Additional Buildings'; ?>
+               class="fa-solid fa-building text-info me-2"></i><?= $lang['lead_structure_additional']; ?>
           </h6>
           <div class="bg-light p-3 rounded border">
             <?= nl2br(htmlspecialchars($structure_additional)) ?>

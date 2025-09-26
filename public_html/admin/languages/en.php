@@ -485,13 +485,14 @@ $lang = [
   'contracting_cancel' => 'Cancel',
   'contracting_update' => 'Update Contract',
   
-  // Screening Estimates
-  'screening_estimates' => 'Screening Estimates',
-  'engineering_estimates' => 'Engineering Estimates',
-  'sales_estimates' => 'Sales Estimates',
+  // Screening Estimate
+  'screening_estimates' => 'Screening Estimate',
+  'engineering_estimates' => 'Engineering Estimate',
   'system_cost' => 'System Cost',
   'protected_area' => 'Protected Area',
   'protected_area_sqft' => 'SQFT',
+  'cabinets' => 'Cabinets',
+  'total_pumps' => 'Total Pumps',
   
   'lead_notes' => 'Notes',
   'created_at' => 'Created At',

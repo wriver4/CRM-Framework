@@ -119,7 +119,7 @@ class StageRemapping {
      */
     public static function getModuleStageFilters() {
         return [
-            'leads' => [10, 20, 30, 40, 50, 140],      // Lead through Prospect + Closed Lost
+            'leads' => [10, 20, 30, 40, 140],          // Lead through Referral + Closed Lost
             'prospects' => [50, 60, 70, 80, 90, 100, 110, 120, 150], // Prospect through Contracting
             'referrals' => [40],                        // Referral only
             'contracting' => [150],                     // Contracting only

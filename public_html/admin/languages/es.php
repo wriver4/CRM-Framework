@@ -285,9 +285,25 @@ $lang = [
   'lead_hear_mass_mailing' => 'Envío masivo por correo',
   'lead_hear_tv_radio' => 'Anuncio de TV/radio',
   'lead_hear_internet_search' => 'Búsqueda en internet',
-  'lead_hear_neighbor' => 'Vecino',
+  'lead_hear_neighbor' => 'Vecino/Amigo',
   'lead_hear_trade_home_show' => 'Feria comercial/del hogar',
+  'lead_hear_insurance' => 'Compañía de Seguros',
+  'lead_hear_referral' => 'Referencia Profesional',
   'lead_hear_about_other' => 'Otro (¿Cómo se enteró de nosotros?)',
+  
+  // Marketing channel descriptions for database storage
+  'marketing_channel_mass_mailing' => 'Envío Masivo por Correo',
+  'marketing_channel_tv_radio' => 'Publicidad TV/Radio',
+  'marketing_channel_internet' => 'Búsqueda en Internet',
+  'marketing_channel_neighbor' => 'Referencia de Vecino/Amigo',
+  'marketing_channel_trade_show' => 'Feria Comercial/del Hogar',
+  'marketing_channel_insurance' => 'Compañía de Seguros',
+  'marketing_channel_referral' => 'Referencia Profesional',
+  'marketing_channel_other' => 'Otro',
+  
+  // Special marketing automation labels
+  'marketing_automation_referral_eligible' => 'Elegible para Agradecimiento por Referencia',
+  'marketing_automation_insurance_followup' => 'Seguimiento de Seguros Requerido',
   'lead_cancel' => 'Cancelar',
   'lead_submit' => 'Enviar',
   'lead_submit_and_next' => 'Enviar y Siguiente',
@@ -348,5 +364,46 @@ $lang = [
   'transaction_failed' => 'Transacción fallida',
   'recovery_mode_active' => 'Modo de recuperación activo',
   'yes' => 'Sí',
-  'no' => 'No'
+  'no' => 'No',
+  
+  // Note source options
+  'note_source_phone_call' => 'Llamada Telefónica',
+  'note_source_email' => 'Correo Electrónico',
+  'note_source_text_message' => 'Mensaje de Texto',
+  'note_source_virtual_meeting' => 'Reunión Virtual',
+  'note_source_in_person' => 'En Persona',
+  'note_source_internal_note' => 'Nota Interna',
+  
+  // Placeholder text
+  'placeholder_project_name' => 'Ingrese nombre del proyecto...',
+  'placeholder_questions_asked' => 'Preguntas Realizadas',
+  'placeholder_what_promised' => 'Lo que prometió...',
+  'placeholder_optional' => 'Opcional',
+  'placeholder_search_notes' => 'Buscar notas...',
+  
+  // Estimates
+  'screening_estimates' => 'Estimación de Evaluación',
+  'engineering_estimates' => 'Estimación de Ingeniería',
+  'system_cost' => 'Costo del Sistema',
+  'system_cost_low' => 'Costo Bajo',
+  'system_cost_high' => 'Costo Alto',
+  'protected_area' => 'Área Protegida',
+  'protected_area_sqft' => 'PIES²',
+  'cabinets' => 'Gabinetes',
+  'total_pumps' => 'Total de Bombas',
+  
+  // Labels and messages
+  'label_current_action' => 'Acción Actual',
+  'label_next_action' => 'Próxima Acción',
+  'label_time_optional' => 'Hora',
+  'label_time_note' => '(opcional - cualquier momento durante el día laboral si no se especifica)',
+  'message_no_address' => 'No se proporcionó dirección',
+  'message_no_services' => 'No se seleccionaron servicios',
+  'message_no_plans_link' => 'No se proporcionó enlace de subida de planos',
+  'message_no_pictures_link' => 'No se proporcionó enlace de subida de fotos',
+  
+  // Additional lead fields
+  'lead_full_name' => 'Nombre Completo',
+  'lead_project_name' => 'Nombre del Proyecto',
+  'project_name' => 'Nombre del Proyecto'
 ];

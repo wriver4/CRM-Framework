@@ -1,30 +1,11 @@
--- phpMyAdmin SQL Dump
--- version 5.1.1
--- https://www.phpmyadmin.net/
---
--- Host: localhost
--- Generation Time: Sep 09, 2025 at 08:12 PM
--- Server version: 10.11.9-MariaDB
--- PHP Version: 7.2.30
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Database: `democrm_democrm`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `audit`
---
 
 CREATE TABLE `audit` (
   `id` int(11) NOT NULL,
@@ -37,12 +18,6 @@ CREATE TABLE `audit` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`data`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `contacts`
---
 
 CREATE TABLE `contacts` (
   `id` int(11) NOT NULL,
@@ -85,12 +60,6 @@ CREATE TABLE `contacts` (
   `created_at` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `countries`
---
-
 CREATE TABLE `countries` (
   `id` int(11) NOT NULL,
   `alpha_2` char(2) NOT NULL DEFAULT '',
@@ -128,12 +97,6 @@ CREATE TABLE `countries` (
   `zh-tw` varchar(75) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `crm_sync_queue`
---
-
 CREATE TABLE `crm_sync_queue` (
   `id` int(11) NOT NULL,
   `lead_id` int(11) NOT NULL COMMENT 'Lead to sync to external CRM',
@@ -150,12 +113,6 @@ CREATE TABLE `crm_sync_queue` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT 'Last update time'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Queue for syncing leads to external CRM systems';
 
--- --------------------------------------------------------
-
---
--- Table structure for table `email_accounts_config`
---
-
 CREATE TABLE `email_accounts_config` (
   `id` int(11) NOT NULL,
   `email_address` varchar(255) NOT NULL COMMENT 'Email address to monitor',
@@ -170,12 +127,6 @@ CREATE TABLE `email_accounts_config` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() COMMENT 'When account was added',
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT 'Last update time'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Configuration for email accounts to monitor';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `email_form_processing`
---
 
 CREATE TABLE `email_form_processing` (
   `id` int(11) NOT NULL,
@@ -193,12 +144,6 @@ CREATE TABLE `email_form_processing` (
   `error_message` text DEFAULT NULL COMMENT 'Error details if processing failed'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Log of email form processing activities';
 
--- --------------------------------------------------------
-
---
--- Table structure for table `languages`
---
-
 CREATE TABLE `languages` (
   `id` int(11) NOT NULL,
   `iso_code` char(2) NOT NULL COMMENT 'ISO 639-1 language code (e.g., en, es, fr)',
@@ -213,17 +158,11 @@ CREATE TABLE `languages` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `leads`
---
-
 CREATE TABLE `leads` (
   `id` int(11) NOT NULL,
   `contact_id` int(11) DEFAULT NULL,
   `lead_id` int(11) DEFAULT NULL,
-  `stage` varchar(20) DEFAULT 'Lead',
+  `stage` int(11) DEFAULT 1,
   `first_name` varchar(100) NOT NULL DEFAULT '',
   `family_name` varchar(255) DEFAULT NULL,
   `full_name` varchar(200) DEFAULT NULL,
@@ -248,9 +187,8 @@ CREATE TABLE `leads` (
   `eng_system_cost_low` int(11) DEFAULT NULL COMMENT 'Engineering estimate - system cost low range (whole dollars)',
   `eng_system_cost_high` int(11) DEFAULT NULL COMMENT 'Engineering estimate - system cost high range (whole dollars)',
   `eng_protected_area` int(11) DEFAULT NULL COMMENT 'Engineering estimate - protected area (square feet)',
-  `sales_system_cost_low` int(11) DEFAULT NULL COMMENT 'Sales estimate - system cost low range (whole dollars)',
-  `sales_system_cost_high` int(11) DEFAULT NULL COMMENT 'Sales estimate - system cost high range (whole dollars)',
-  `sales_protected_area` int(11) DEFAULT NULL COMMENT 'Sales estimate - protected area (square feet)',
+  `eng_cabinets` int(11) DEFAULT NULL COMMENT 'Engineering estimate - number of cabinets',
+  `eng_total_pumps` int(11) DEFAULT NULL COMMENT 'Engineering estimate - total number of pumps',
   `picture_submitted_1` varchar(255) DEFAULT NULL,
   `picture_submitted_2` varchar(255) DEFAULT NULL,
   `picture_submitted_3` varchar(255) DEFAULT NULL,
@@ -270,12 +208,6 @@ CREATE TABLE `leads` (
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `leads_backup_20241209`
---
 
 CREATE TABLE `leads_backup_20241209` (
   `id` int(11) NOT NULL,
@@ -329,12 +261,6 @@ CREATE TABLE `leads_backup_20241209` (
   `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `leads_contacts`
---
-
 CREATE TABLE `leads_contacts` (
   `id` int(11) NOT NULL,
   `lead_id` int(11) NOT NULL,
@@ -345,16 +271,10 @@ CREATE TABLE `leads_contacts` (
   `status` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `leads_extras`
---
-
 CREATE TABLE `leads_extras` (
   `id` int(11) NOT NULL,
   `estimate_number` int(11) DEFAULT NULL,
-  `stage` varchar(20) DEFAULT 'Lead',
+  `stage` int(11) DEFAULT 1,
   `first_name` varchar(100) NOT NULL DEFAULT '',
   `family_name` varchar(255) DEFAULT NULL,
   `fullname` varchar(200) NOT NULL,
@@ -416,24 +336,12 @@ CREATE TABLE `leads_extras` (
   `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `leads_notes`
---
-
 CREATE TABLE `leads_notes` (
   `id` int(11) NOT NULL,
   `lead_id` int(11) NOT NULL,
   `note_id` int(11) NOT NULL,
   `date_linked` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `leads_old`
---
 
 CREATE TABLE `leads_old` (
   `id` int(11) NOT NULL,
@@ -480,12 +388,6 @@ CREATE TABLE `leads_old` (
   `plans_and_pics` varchar(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `lead_contracting`
---
-
 CREATE TABLE `lead_contracting` (
   `id` int(11) NOT NULL,
   `lead_id` int(11) NOT NULL,
@@ -525,12 +427,6 @@ CREATE TABLE `lead_contracting` (
   `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `lead_documents`
---
-
 CREATE TABLE `lead_documents` (
   `id` int(11) NOT NULL,
   `lead_id` int(11) NOT NULL,
@@ -546,12 +442,6 @@ CREATE TABLE `lead_documents` (
   `is_active` tinyint(1) DEFAULT 1,
   `sort_order` int(3) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `lead_prospects`
---
 
 CREATE TABLE `lead_prospects` (
   `id` int(11) NOT NULL,
@@ -585,12 +475,6 @@ CREATE TABLE `lead_prospects` (
   `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `lead_referrals`
---
-
 CREATE TABLE `lead_referrals` (
   `id` int(11) NOT NULL,
   `lead_id` int(11) NOT NULL,
@@ -612,12 +496,6 @@ CREATE TABLE `lead_referrals` (
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `lead_structure_info`
---
 
 CREATE TABLE `lead_structure_info` (
   `id` int(11) NOT NULL,
@@ -642,12 +520,6 @@ CREATE TABLE `lead_structure_info` (
   `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `notes`
---
-
 CREATE TABLE `notes` (
   `id` int(11) NOT NULL,
   `source` int(11) NOT NULL DEFAULT 1,
@@ -658,12 +530,6 @@ CREATE TABLE `notes` (
   `form_source` varchar(50) DEFAULT 'leads'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `permissions`
---
-
 CREATE TABLE `permissions` (
   `id` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
@@ -672,12 +538,6 @@ CREATE TABLE `permissions` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `phplist_config`
---
 
 CREATE TABLE `phplist_config` (
   `id` int(11) NOT NULL,
@@ -688,12 +548,6 @@ CREATE TABLE `phplist_config` (
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='phpList integration configuration';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `phplist_subscribers`
---
 
 CREATE TABLE `phplist_subscribers` (
   `id` int(11) NOT NULL,
@@ -717,12 +571,6 @@ CREATE TABLE `phplist_subscribers` (
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='phpList subscriber management and sync tracking';
 
--- --------------------------------------------------------
-
---
--- Table structure for table `phplist_sync_log`
---
-
 CREATE TABLE `phplist_sync_log` (
   `id` int(11) NOT NULL,
   `subscriber_id` int(11) DEFAULT NULL COMMENT 'Reference to phplist_subscribers table',
@@ -734,12 +582,6 @@ CREATE TABLE `phplist_sync_log` (
   `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='phpList sync operation logging';
 
--- --------------------------------------------------------
-
---
--- Table structure for table `roles`
---
-
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
   `rid` int(11) NOT NULL,
@@ -748,24 +590,12 @@ CREATE TABLE `roles` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `roles_permissions`
---
-
 CREATE TABLE `roles_permissions` (
   `rid` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
   `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
@@ -781,20 +611,11 @@ CREATE TABLE `users` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Indexes for dumped tables
---
 
---
--- Indexes for table `audit`
---
 ALTER TABLE `audit`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
---
--- Indexes for table `contacts`
---
 ALTER TABLE `contacts`
   ADD PRIMARY KEY (`id`),
   ADD KEY `prop_id` (`lead_id`),
@@ -803,15 +624,9 @@ ALTER TABLE `contacts`
   ADD KEY `idx_contacts_email` (`personal_email`),
   ADD KEY `idx_contacts_phone` (`cell_phone`);
 
---
--- Indexes for table `countries`
---
 ALTER TABLE `countries`
   ADD PRIMARY KEY (`id`);
 
---
--- Indexes for table `crm_sync_queue`
---
 ALTER TABLE `crm_sync_queue`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_sync_status` (`sync_status`),
@@ -820,9 +635,6 @@ ALTER TABLE `crm_sync_queue`
   ADD KEY `idx_lead_id` (`lead_id`),
   ADD KEY `idx_created_at` (`created_at`);
 
---
--- Indexes for table `email_accounts_config`
---
 ALTER TABLE `email_accounts_config`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email_address` (`email_address`),
@@ -830,9 +642,6 @@ ALTER TABLE `email_accounts_config`
   ADD KEY `idx_form_type` (`form_type`),
   ADD KEY `idx_is_active` (`is_active`);
 
---
--- Indexes for table `email_form_processing`
---
 ALTER TABLE `email_form_processing`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_email_account` (`email_account`),
@@ -843,9 +652,6 @@ ALTER TABLE `email_form_processing`
   ADD KEY `idx_message_id` (`message_id`),
   ADD KEY `fk_email_processing_lead_id` (`lead_id`);
 
---
--- Indexes for table `languages`
---
 ALTER TABLE `languages`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_locale` (`locale_code`),
@@ -854,9 +660,6 @@ ALTER TABLE `languages`
   ADD KEY `idx_active` (`is_active`),
   ADD KEY `idx_default` (`is_default`);
 
---
--- Indexes for table `leads`
---
 ALTER TABLE `leads`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_lead_source` (`lead_source`),
@@ -872,9 +675,6 @@ ALTER TABLE `leads`
   ADD KEY `idx_leads_email` (`email`),
   ADD KEY `idx_leads_phone` (`cell_phone`);
 
---
--- Indexes for table `leads_backup_20241209`
---
 ALTER TABLE `leads_backup_20241209`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_lead_source` (`lead_source`),
@@ -890,9 +690,6 @@ ALTER TABLE `leads_backup_20241209`
   ADD KEY `idx_leads_email` (`email`),
   ADD KEY `idx_leads_phone` (`cell_phone`);
 
---
--- Indexes for table `leads_contacts`
---
 ALTER TABLE `leads_contacts`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_lead_contact_relationship` (`lead_id`,`contact_id`,`relationship_type`),
@@ -900,9 +697,6 @@ ALTER TABLE `leads_contacts`
   ADD KEY `idx_contact_id` (`contact_id`),
   ADD KEY `idx_relationship_type` (`relationship_type`);
 
---
--- Indexes for table `leads_extras`
---
 ALTER TABLE `leads_extras`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_lead_source` (`lead_source`),
@@ -914,24 +708,15 @@ ALTER TABLE `leads_extras`
   ADD KEY `idx_structure_type` (`structure_type`),
   ADD KEY `idx_last_edited_by` (`last_edited_by`);
 
---
--- Indexes for table `leads_notes`
---
 ALTER TABLE `leads_notes`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_lead_note` (`lead_id`,`note_id`),
   ADD KEY `idx_lead_id` (`lead_id`),
   ADD KEY `idx_note_id` (`note_id`);
 
---
--- Indexes for table `leads_old`
---
 ALTER TABLE `leads_old`
   ADD PRIMARY KEY (`id`);
 
---
--- Indexes for table `lead_contracting`
---
 ALTER TABLE `lead_contracting`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_lead_contract` (`lead_id`),
@@ -940,18 +725,12 @@ ALTER TABLE `lead_contracting`
   ADD KEY `idx_project_manager` (`project_manager_id`),
   ADD KEY `idx_completion_date` (`estimated_completion_date`);
 
---
--- Indexes for table `lead_documents`
---
 ALTER TABLE `lead_documents`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_lead_id` (`lead_id`),
   ADD KEY `idx_document_type` (`document_type`),
   ADD KEY `idx_category` (`document_category`);
 
---
--- Indexes for table `lead_prospects`
---
 ALTER TABLE `lead_prospects`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_lead_prospect` (`lead_id`),
@@ -960,49 +739,31 @@ ALTER TABLE `lead_prospects`
   ADD KEY `idx_follow_up_date` (`next_follow_up_date`),
   ADD KEY `idx_temperature` (`prospect_temperature`);
 
---
--- Indexes for table `lead_referrals`
---
 ALTER TABLE `lead_referrals`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_lead_referral` (`lead_id`),
   ADD KEY `idx_referral_contact` (`referral_contact_id`),
   ADD KEY `idx_referral_status` (`referral_status`);
 
---
--- Indexes for table `lead_structure_info`
---
 ALTER TABLE `lead_structure_info`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_lead_structure` (`lead_id`);
 
---
--- Indexes for table `notes`
---
 ALTER TABLE `notes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_date_created` (`date_created`),
   ADD KEY `idx_user_id` (`user_id`),
   ADD KEY `idx_contact_id` (`contact_id`);
 
---
--- Indexes for table `permissions`
---
 ALTER TABLE `permissions`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `pid` (`pid`) USING BTREE,
   ADD KEY `pobject` (`pobject`) USING BTREE;
 
---
--- Indexes for table `phplist_config`
---
 ALTER TABLE `phplist_config`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `config_key` (`config_key`);
 
---
--- Indexes for table `phplist_subscribers`
---
 ALTER TABLE `phplist_subscribers`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `unique_lead_email` (`lead_id`,`email`),
@@ -1014,9 +775,6 @@ ALTER TABLE `phplist_subscribers`
   ADD KEY `idx_last_sync_attempt` (`last_sync_attempt`),
   ADD KEY `idx_sync_pending` (`sync_status`,`sync_attempts`,`last_sync_attempt`);
 
---
--- Indexes for table `phplist_sync_log`
---
 ALTER TABLE `phplist_sync_log`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_subscriber_id` (`subscriber_id`),
@@ -1024,259 +782,133 @@ ALTER TABLE `phplist_sync_log`
   ADD KEY `idx_status` (`status`),
   ADD KEY `idx_created_at` (`created_at`);
 
---
--- Indexes for table `roles`
---
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `rname` (`rname`),
   ADD UNIQUE KEY `rid` (`rid`) USING BTREE;
 
---
--- Indexes for table `roles_permissions`
---
 ALTER TABLE `roles_permissions`
   ADD PRIMARY KEY (`rid`,`pid`);
 
---
--- Indexes for table `users`
---
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`),
   ADD KEY `idx_users_language` (`language_id`);
 
---
--- AUTO_INCREMENT for dumped tables
---
 
---
--- AUTO_INCREMENT for table `audit`
---
 ALTER TABLE `audit`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `contacts`
---
 ALTER TABLE `contacts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `crm_sync_queue`
---
 ALTER TABLE `crm_sync_queue`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `email_accounts_config`
---
 ALTER TABLE `email_accounts_config`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `email_form_processing`
---
 ALTER TABLE `email_form_processing`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `languages`
---
 ALTER TABLE `languages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `leads`
---
 ALTER TABLE `leads`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `leads_backup_20241209`
---
 ALTER TABLE `leads_backup_20241209`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `leads_contacts`
---
 ALTER TABLE `leads_contacts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `leads_extras`
---
 ALTER TABLE `leads_extras`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `leads_notes`
---
 ALTER TABLE `leads_notes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `leads_old`
---
 ALTER TABLE `leads_old`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `lead_contracting`
---
 ALTER TABLE `lead_contracting`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `lead_documents`
---
 ALTER TABLE `lead_documents`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `lead_prospects`
---
 ALTER TABLE `lead_prospects`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `lead_referrals`
---
 ALTER TABLE `lead_referrals`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `lead_structure_info`
---
 ALTER TABLE `lead_structure_info`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `notes`
---
 ALTER TABLE `notes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `permissions`
---
 ALTER TABLE `permissions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `phplist_config`
---
 ALTER TABLE `phplist_config`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `phplist_subscribers`
---
 ALTER TABLE `phplist_subscribers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `phplist_sync_log`
---
 ALTER TABLE `phplist_sync_log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `roles`
---
 ALTER TABLE `roles`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `users`
---
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- Constraints for dumped tables
---
 
---
--- Constraints for table `crm_sync_queue`
---
 ALTER TABLE `crm_sync_queue`
   ADD CONSTRAINT `fk_crm_sync_lead_id` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `email_form_processing`
---
 ALTER TABLE `email_form_processing`
   ADD CONSTRAINT `fk_email_processing_lead_id` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE SET NULL;
 
---
--- Constraints for table `leads`
---
 ALTER TABLE `leads`
   ADD CONSTRAINT `fk_leads_contact_id` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE SET NULL;
 
---
--- Constraints for table `leads_contacts`
---
 ALTER TABLE `leads_contacts`
   ADD CONSTRAINT `fk_leads_contacts_contact_id` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_leads_contacts_lead_id` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `leads_notes`
---
 ALTER TABLE `leads_notes`
   ADD CONSTRAINT `leads_notes_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `leads_notes_ibfk_2` FOREIGN KEY (`note_id`) REFERENCES `notes` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `lead_contracting`
---
 ALTER TABLE `lead_contracting`
   ADD CONSTRAINT `lead_contracting_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `lead_documents`
---
 ALTER TABLE `lead_documents`
   ADD CONSTRAINT `lead_documents_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `lead_prospects`
---
 ALTER TABLE `lead_prospects`
   ADD CONSTRAINT `lead_prospects_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `lead_referrals`
---
 ALTER TABLE `lead_referrals`
   ADD CONSTRAINT `lead_referrals_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `lead_referrals_ibfk_2` FOREIGN KEY (`referral_contact_id`) REFERENCES `contacts` (`id`) ON DELETE SET NULL;
 
---
--- Constraints for table `lead_structure_info`
---
 ALTER TABLE `lead_structure_info`
   ADD CONSTRAINT `lead_structure_info_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `phplist_subscribers`
---
 ALTER TABLE `phplist_subscribers`
   ADD CONSTRAINT `fk_phplist_subscribers_contact` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `fk_phplist_subscribers_lead` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `phplist_sync_log`
---
 ALTER TABLE `phplist_sync_log`
   ADD CONSTRAINT `fk_phplist_sync_log_subscriber` FOREIGN KEY (`subscriber_id`) REFERENCES `phplist_subscribers` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `users`
---
 ALTER TABLE `users`
   ADD CONSTRAINT `fk_users_language` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`) ON DELETE SET NULL;
 

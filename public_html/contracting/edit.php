@@ -592,75 +592,7 @@ require SECTIONOPEN;
           </div>
         </div>
         
-        <hr class="my-4">
-        
-        <!-- Sales Estimates Row -->
-        <div class="row">
-          <div class="col-12">
-            <h6 class="text-muted mb-3">
-              <i class="fa-solid fa-handshake me-2"></i><?= $lang['sales_estimates'] ?? 'Sales Estimates'; ?>
-            </h6>
-            <div class="row">
-              <!-- Sales System Cost -->
-              <div class="col-md-8">
-                <div class="form-group">
-                  <label class="form-label fw-bold text-muted"><?= $lang['system_cost'] ?? 'System Cost'; ?></label>
-                  <div class="row">
-                    <div class="col-6">
-                      <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number"
-                               name="sales_system_cost_low"
-                               id="sales_system_cost_low"
-                               class="form-control"
-                               value="<?= htmlspecialchars($sales_system_cost_low ?? '') ?>"
-                               placeholder="<?= $lang['system_cost_low'] ?? 'Low' ?>"
-                               min="0"
-                               step="1"
-                               <?= !$can_edit_sales && !$can_edit_admin_leads ? 'readonly' : '' ?>>
-                      </div>
 
-                    </div>
-                    <div class="col-6">
-                      <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number"
-                               name="sales_system_cost_high"
-                               id="sales_system_cost_high"
-                               class="form-control"
-                               value="<?= htmlspecialchars($sales_system_cost_high ?? '') ?>"
-                               placeholder="<?= $lang['system_cost_high'] ?? 'High' ?>"
-                               min="0"
-                               step="1"
-                               <?= !$can_edit_sales && !$can_edit_admin_leads ? 'readonly' : '' ?>>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Sales Protected Area -->
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="sales_protected_area"
-                         class="form-label fw-bold text-muted"><?= $lang['protected_area'] ?? 'Protected Area'; ?></label>
-                  <div class="input-group">
-                    <input type="number"
-                           name="sales_protected_area"
-                           id="sales_protected_area"
-                           class="form-control"
-                           value="<?= htmlspecialchars($sales_protected_area ?? '') ?>"
-                           placeholder="0"
-                           min="0"
-                           step="1"
-                           <?= !$can_edit_sales && !$can_edit_admin_leads ? 'readonly' : '' ?>>
-                    <span class="input-group-text"><?= $lang['protected_area_sqft'] ?? 'SQFT' ?></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         
       </div>
     </div>
@@ -1483,8 +1415,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Auto-expand screening estimates when user enters data
   const screeningInputs = [
-    'eng_system_cost_low', 'eng_system_cost_high', 'eng_protected_area',
-    'sales_system_cost_low', 'sales_system_cost_high', 'sales_protected_area'
+    'eng_system_cost_low', 'eng_system_cost_high', 'eng_protected_area'
   ];
 
   screeningInputs.forEach(inputId => {
@@ -1502,8 +1433,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Format currency inputs with commas
   const currencyInputs = [
-    'eng_system_cost_low', 'eng_system_cost_high', 
-    'sales_system_cost_low', 'sales_system_cost_high'
+    'eng_system_cost_low', 'eng_system_cost_high'
   ];
 
   currencyInputs.forEach(inputId => {

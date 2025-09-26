@@ -17,8 +17,8 @@ $button_back = false;
 $button_refresh = true;
 
 require LANG . '/en.php';
-$title = $lang['leads'] ?? 'Leads';   
-$new_button = $lang['lead_new'] ?? 'New Lead';
+$title = $lang['leads'];   
+$new_button = $lang['lead_new'];
 
 $title_icon = '<i class="fa-solid fa-users-line" aria-hidden="true"></i>';
 $new_icon = '<i class="fa-solid fa-user-plus" aria-hidden="true"></i>';

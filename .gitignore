@@ -28,3 +28,24 @@ request_2.log
 conf.json
 passwd
 repo.md
+
+## Testing Results
+# PHPUnit
+.phpunit.cache/
+.phpunit.result.cache
+phpunit-report.xml
+coverage/
+coverage.xml
+coverage.clover
+
+# Playwright
+playwright-report/
+test-results/
+test-results.json
+screenshots/
+videos/
+
+# General test artifacts
+*.log
+test-output/
+test_results/

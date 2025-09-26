@@ -40,7 +40,7 @@ require SECTIONOPEN;
     <div class="col-6">
       <div class="form-group pb-2">
         <label for="lead_source"
-               class="required pb-1"><?= $lang['lead_source'] ?? 'Lead Source'; ?></label>
+               class="required pb-1"><?= $lang['lead_source']; ?></label>
         <select name="lead_source"
                 id="lead_source"
                 class="form-select"
@@ -59,12 +59,12 @@ require SECTIONOPEN;
     <div class="col-6">
       <div class="form-group pb-2">
         <label for="lead_id"
-               class="required pb-1"><?= $lang['lead_id'] ?? 'Lead ID'; ?></label>
+               class="required pb-1"><?= $lang['lead_id']; ?></label>
         <input type="text"
                name="lead_id"
                id="lead_id"
                class="form-control"
-               placeholder="<?= ($lang['lead_last_number_placeholder_hint'] ?? 'Last lead ID was') . ' ' . $last_lead_id; ?>"
+               placeholder="<?= $lang['lead_last_number_placeholder_hint'] . ' ' . $last_lead_id; ?>"
                autocomplete="off"
                required>
       </div>
@@ -160,7 +160,7 @@ require SECTIONOPEN;
     <div class="col">
       <div class="form-group pb-2">
         <label for="business_name"
-               class="pb-1"><?= $lang['lead_business_name'] ?? 'Business Name'; ?></label>
+               class="pb-1"><?= $lang['lead_business_name']; ?></label>
         <input type="text"
                name="business_name"
                maxlength="255"
@@ -547,8 +547,8 @@ require SECTIONOPEN;
                   class="form-select"
                   autocomplete="off">
             <option value="No"
-                    selected><?= $lang['no'] ?? 'No'; ?></option>
-            <option value="Yes"><?= $lang['yes'] ?? 'Yes'; ?></option>
+                    selected><?= $lang['no']; ?></option>
+            <option value="Yes"><?= $lang['yes']; ?></option>
           </select>
         </div>
       </div>
@@ -588,7 +588,7 @@ require SECTIONOPEN;
           class="btn btn-primary ms-2"
           role="button"
           tabindex="0">
-    <?= $lang['lead_submit_and_next'] ?? 'Submit and Next'; ?>
+    <?= $lang['lead_submit_and_next']; ?>
   </button>
 </form>
 
