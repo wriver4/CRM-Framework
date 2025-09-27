@@ -204,7 +204,7 @@ if ($table_page == true) {
   }
   if ($dir == 'leads') {
     echo '   "pageLength": 7,'
-        .'    "ordering": false,'
+        .'    order: [[1, "desc"]],'
         .'    columnDefs: ['
         .'     { orderable: false, targets: [0] }'
         .'    ],';

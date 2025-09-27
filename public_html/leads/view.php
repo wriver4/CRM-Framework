@@ -67,7 +67,10 @@ require __DIR__ . '/../templates/section_header.php';
             </p>
             <p><strong><?= $lang['lead_phone'] ?>:</strong>
               <?php if ($cell_phone): ?>
-              <a href="tel:<?= htmlspecialchars($cell_phone) ?>"><?= htmlspecialchars($cell_phone) ?></a>
+              <?php 
+                $formatted_phone = $helpers->format_phone_display($cell_phone, $form_country ?? 'US');
+              ?>
+              <a href="tel:<?= htmlspecialchars($cell_phone) ?>"><?= htmlspecialchars($formatted_phone) ?></a>
               <?php else: ?>
               <span class="text-muted">-</span>
               <?php endif; ?>

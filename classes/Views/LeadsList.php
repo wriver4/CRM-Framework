@@ -9,7 +9,6 @@ class LeadsList extends EditDeleteTable
 {
     public function __construct($results, $lang)
     {
-        // Reorder columns: move project_name to the end for more space
         $this->column_names = [
             'action' => $lang['action'] ?? 'Action',
             'lead_id' => $lang['lead_id'] ?? 'Lead #',
@@ -17,13 +16,13 @@ class LeadsList extends EditDeleteTable
             'full_name' => $lang['full_name'] ?? 'Full Name',
             'cell_phone' => $lang['lead_cell_phone'] ?? 'Phone',
             'email' => $lang['lead_email'] ?? 'Email',
-            'full_address' => $lang['full_address'] ?? 'Address',
-            'project_name' => $lang['project_name'] ?? 'Project Name'
+            'full_address' => $lang['full_address'] ?? 'Address'
         ];
         parent::__construct($results, $this->column_names, "leads-list");
         $this->lang = $lang;
         $this->leads = new Leads();
         $this->users = new Users();
+        $this->helpers = new Helpers();
         
         // Add view button properties that are missing from parent class
         $this->row_nav_button_view_class_enabled = 'class="btn nav-link btn-info link-light" ';
@@ -33,16 +32,13 @@ class LeadsList extends EditDeleteTable
     }
 
     /**
-     * Override table header to give project name column more space
+     * Override table header for custom column sizing
      */
     public function table_header($column_names = null)
     {
         echo $this->header_open;
         foreach ($this->column_names as $key => $value) {
             if ($key == 'action') {
-                echo '<th class="col-2 text-center" scope="col">' . $value . '</th>';
-            } elseif ($key == 'project_name') {
-                // Give project name column extra space (col-2 instead of default)
                 echo '<th class="col-2 text-center" scope="col">' . $value . '</th>';
             } else {
                 echo '<th class="text-center" scope="col">' . $value . '</th>';
@@ -96,17 +92,18 @@ class LeadsList extends EditDeleteTable
                     echo '</td>';
                     break;
                 
-                case 'project_name':
-                    echo '<td>';
-                    $value = $results['project_name'] ?? '';
-                    echo htmlspecialchars($value ?: '-');
-                    echo '</td>';
-                    break;
+
                 
                 case 'cell_phone':
                     echo '<td>';
-                    $value = $results['cell_phone'] ?? '';
-                    echo htmlspecialchars($value ?: '-');
+                    $phone = $results['cell_phone'] ?? '';
+                    $country = $results['form_country'] ?? 'US';
+                    if (!empty($phone)) {
+                        $formatted_phone = $this->helpers->format_phone_display($phone, $country);
+                        echo htmlspecialchars($formatted_phone);
+                    } else {
+                        echo '-';
+                    }
                     echo '</td>';
                     break;
                 

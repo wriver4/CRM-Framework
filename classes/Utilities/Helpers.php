@@ -919,6 +919,104 @@ public function admin_select_property_id($lang, $prop_id )
   }
 
   /**
+   * Format phone number for display based on country
+   * US numbers: 123-456-7890 (no country code)
+   * International: +1 123-456-7890 (country code with space)
+   * 
+   * @param string $phone Raw phone number
+   * @param string $country Country code (e.g., 'US', 'CA', 'GB')
+   * @return string Formatted phone number
+   */
+  public function format_phone_display($phone, $country = 'US')
+  {
+    if (empty($phone)) {
+        return '';
+    }
+    
+    // Remove all non-numeric characters except + at the beginning
+    $cleaned = preg_replace('/[^0-9+]/', '', $phone);
+    
+    // Handle numbers that already have country codes
+    if (substr($cleaned, 0, 1) === '+') {
+        // Already has country code, extract it
+        // Try to match known country codes first
+        $country_codes = ['1', '44', '61', '49', '33', '39', '34', '81', '86', '91', '55', '52'];
+        
+        foreach ($country_codes as $code) {
+            if (substr($cleaned, 1, strlen($code)) === $code) {
+                $country_code = $code;
+                $number = substr($cleaned, 1 + strlen($code));
+                
+                // Format the number part
+                if ($country_code === '1' && strlen($number) === 10) {
+                    // North American number
+                    $formatted_number = substr($number, 0, 3) . '-' . substr($number, 3, 3) . '-' . substr($number, 6, 4);
+                    
+                    // If country is US, don't show country code
+                    if (strtoupper($country) === 'US') {
+                        return $formatted_number;
+                    } else {
+                        return '+' . $country_code . ' ' . $formatted_number;
+                    }
+                } else {
+                    // International number - return with country code and basic formatting
+                    if (strlen($number) >= 10) {
+                        $formatted_number = substr($number, 0, 3) . '-' . substr($number, 3, 3) . '-' . substr($number, 6);
+                        return '+' . $country_code . ' ' . $formatted_number;
+                    } else {
+                        return '+' . $country_code . ' ' . $number;
+                    }
+                }
+            }
+        }
+        
+        // If no known country code found, use fallback regex
+        if (preg_match('/^\+(\d{1,3})(\d+)$/', $cleaned, $matches)) {
+            $country_code = $matches[1];
+            $number = $matches[2];
+            return '+' . $country_code . ' ' . $number;
+        }
+    }
+    
+    // Remove leading 1 for US numbers if present
+    if (strlen($cleaned) === 11 && substr($cleaned, 0, 1) === '1') {
+        $cleaned = substr($cleaned, 1);
+    }
+    
+    // Format based on country and number length
+    if (strlen($cleaned) === 10) {
+        // Standard 10-digit number
+        $formatted = substr($cleaned, 0, 3) . '-' . substr($cleaned, 3, 3) . '-' . substr($cleaned, 6, 4);
+        
+        // Add country code for non-US countries
+        if (strtoupper($country) !== 'US') {
+            $country_codes = [
+                'CA' => '1',  // Canada
+                'GB' => '44', // United Kingdom
+                'AU' => '61', // Australia
+                'DE' => '49', // Germany
+                'FR' => '33', // France
+                'IT' => '39', // Italy
+                'ES' => '34', // Spain
+                'JP' => '81', // Japan
+                'CN' => '86', // China
+                'IN' => '91', // India
+                'BR' => '55', // Brazil
+                'MX' => '52', // Mexico
+            ];
+            
+            $country_code = $country_codes[strtoupper($country)] ?? '1';
+            return '+' . $country_code . ' ' . $formatted;
+        }
+        
+        return $formatted;
+    }
+    
+    // If not standard format, return as-is (but cleaned)
+    return $cleaned;
+  }
+
+  /**
    * Validate session ID format according to PHP session configuration
    * @param string $sessionId Session ID to validate
    * @return bool True if valid, false otherwise

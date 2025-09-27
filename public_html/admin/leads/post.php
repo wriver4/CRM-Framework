@@ -4,12 +4,13 @@ require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 // Check if user is logged in
 $not->loggedin();
 
-// Function to format phone number with dashes
-function format_phone_number($phone) {
+// Function to format phone number with dashes (for storage)
+function format_phone_number($phone, $country = 'US') {
     if (empty($phone)) {
         return '';
     }
     
+    // For storage, we want to keep it simple - just clean and format for US numbers
     // Remove all non-numeric characters
     $phone = preg_replace('/[^0-9]/', '', $phone);
     
@@ -18,7 +19,7 @@ function format_phone_number($phone) {
         $phone = substr($phone, 1);
     }
     
-    // Format 10-digit US numbers as XXX-XXX-XXXX
+    // Format 10-digit US numbers as XXX-XXX-XXXX for storage
     if (strlen($phone) == 10) {
         return substr($phone, 0, 3) . '-' . substr($phone, 3, 3) . '-' . substr($phone, 6, 4);
     }

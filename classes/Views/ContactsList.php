@@ -49,7 +49,10 @@ class ContactsList extends EditDeleteTable
                 '3' => $this->lang['alt'] ?? 'Alt',
                 default => 'Phone'
               };
-              echo $phone_type . ': ' . htmlspecialchars($phone_value) . '<br>';
+              // Get country from contact data, default to US
+              $country = $results['p_country'] ?? $results['m_country'] ?? 'US';
+              $formatted_phone = $helper->format_phone_display($phone_value, $country);
+              echo $phone_type . ': ' . htmlspecialchars($formatted_phone) . '<br>';
             }
           } else {
             echo '<small class="text-muted">No phones</small>';
