@@ -114,6 +114,23 @@ if ($currentUserId > 0) {
         </li>
       </ul>
     </li>
+    <li class="dropdown dropend">
+      <a class="dropdown-item dropdown-toggle"
+         href="#"
+         id="toolsDropdown"
+         role="button"
+         data-bs-toggle="dropdown"
+         aria-expanded="false">
+        <i class="fa fa-tools me-2"></i><?= $lang['navbar_tools']; ?>
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="toolsDropdown">
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/tools/autoloaded_classes' ?>">
+             <i class="fa fa-code me-2"></i><?= $lang['tools_autoloaded_classes']; ?>
+           </a>
+        </li>
+      </ul>
+    </li>
     <li><a class="dropdown-item"
          href="<?php echo URL . '/admin/languages/list' ?>">
          <i class="fa fa-globe me-2"></i><?= $lang['manage_languages']; ?>

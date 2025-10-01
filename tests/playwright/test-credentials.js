@@ -5,8 +5,8 @@ const TEST_CREDENTIALS = {
   // Super Administrator - Full access
   superAdmin: {
     username: 'testadmin',
-    password: 'testpass123',
-    email: 'testadmin@example.com',
+    password: 'TestsuperadminHQ4!!@@1',
+    email: 'mark@waveguardco.com',
     role: 'Super Administrator',
     roleId: 1
   },
@@ -14,8 +14,8 @@ const TEST_CREDENTIALS = {
   // Administrator - High level access
   admin: {
     username: 'testadmin2',
-    password: 'testpass123',
-    email: 'testadmin2@example.com',
+    password: 'TestadminHQ4!!@@1',
+    email: 'mark@waveguardco.com',
     role: 'Administrator',
     roleId: 2
   },
@@ -23,8 +23,8 @@ const TEST_CREDENTIALS = {
   // Sales Manager - Sales management access
   salesManager: {
     username: 'testsalesmgr',
-    password: 'testpass123',
-    email: 'testsalesmgr@example.com',
+    password: 'TestsalesmanHQ4!!@@1',
+    email: 'mark@waveguardco.com',
     role: 'Sales Manager',
     roleId: 13
   },
@@ -32,8 +32,8 @@ const TEST_CREDENTIALS = {
   // Sales Assistant - Sales support access
   salesAssistant: {
     username: 'testsalesasst',
-    password: 'testpass123',
-    email: 'testsalesasst@example.com',
+    password: 'TestsalesassHQ4!!@@1',
+    email: 'mark@waveguardco.com',
     role: 'Sales Assistant',
     roleId: 14
   },
@@ -41,8 +41,8 @@ const TEST_CREDENTIALS = {
   // Sales Person - Basic sales access
   salesPerson: {
     username: 'testsalesperson',
-    password: 'testpass123',
-    email: 'testsalesperson@example.com',
+    password: 'TestsalespersonHQ4!!@@1',
+    email: 'mark@waveguardco.com',
     role: 'Sales Person',
     roleId: 15
   }

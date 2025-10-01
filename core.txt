@@ -220,6 +220,24 @@ vendor/psr/
 ## Database Schema (Essential)
 sql/democrm_democrm.sql
 
+## Scripts - Testing Framework
+scripts/testing/setup-test-environment.sh
+scripts/testing/run-calendar-comprehensive-tests.sh
+scripts/testing/run-calendar-tests.sh
+scripts/testing/run-leads-tests.sh
+scripts/testing/run-local-tests.sh
+scripts/testing/run-tests-nixos.sh
+scripts/testing/run-tests
+scripts/testing/run-edit-workflow-tests.sh
+scripts/testing/run-note-deletion-tests.sh
+scripts/testing/run-phpunit-nixos.sh
+scripts/testing/run-tests.php
+
+## Scripts - Database Management
+scripts/run_migrations.php
+scripts/direct_migration.php
+scripts/show_migration_preview.php
+
 ## Logs Directory (Runtime)
 logs/
 

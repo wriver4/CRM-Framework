@@ -1,8 +1,17 @@
 <?php
-require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
-
-// Check if user is logged in
-$not->loggedin();
+// Note: system.php and authentication are handled by api.php when called via API
+// For direct access, we need to handle it here
+/*if (!defined('SYSTEM_LOADED')) {
+    require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
+    
+    // Check authentication - API version (returns JSON instead of redirecting)
+    if (!Sessions::isLoggedIn()) {
+        header('Content-Type: application/json');
+        http_response_code(401);
+        echo json_encode(['error' => 'Authentication required']);
+        exit;
+    }
+}*/
 
 // Create instances
 $leads = new Leads();
@@ -36,6 +45,31 @@ if (isset($_GET['action'])) {
                 $user_name = $users->get_name_by_id($_GET['user_id']);
                 echo $user_name ?: 'Unknown User';
             }
+            break;
+            
+        case 'list':
+            // Get list of leads for API (used by calendar.js)
+            header('Content-Type: application/json');
+            $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 100;
+            
+            // Get leads with proper fields for calendar dropdown
+            $all_leads = $leads->get_leads();
+            
+            // Limit results and format for API
+            $limited_leads = array_slice($all_leads, 0, $limit);
+            $formatted_leads = [];
+            
+            foreach ($limited_leads as $lead) {
+                $formatted_leads[] = [
+                    'id' => $lead['id'],
+                    'company_name' => $lead['company_name'] ?? ($lead['first_name'] . ' ' . $lead['family_name']),
+                    'first_name' => $lead['first_name'] ?? '',
+                    'family_name' => $lead['family_name'] ?? '',
+                    'lead_id' => $lead['lead_id'] ?? ''
+                ];
+            }
+            
+            echo json_encode($formatted_leads);
             break;
             
         default:

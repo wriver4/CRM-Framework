@@ -1,8 +1,6 @@
 <?php
 require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 $not->loggedin();
-
-$status = new Status();
 // Direct routing variables - these determine page navigation and template inclusion
 $dir = "reports";
 $subdir = "status";

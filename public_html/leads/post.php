@@ -159,7 +159,15 @@ try {
             'eng_total_pumps' => !empty($_POST['eng_total_pumps']) ? (int)$_POST['eng_total_pumps'] : null
         ],
         
-        'documents' => []
+        'documents' => [],
+        
+        // Notes and next action data
+        'note_text' => sanitize_input($_POST['note_text'] ?? ''),
+        'note_source' => (int)($_POST['note_source'] ?? 1),
+        'next_action' => (int)($_POST['next_action'] ?? 0),
+        'next_action_notes' => sanitize_input($_POST['next_action_notes'] ?? ''),
+        'next_action_date' => sanitize_input($_POST['next_action_date'] ?? ''),
+        'next_action_time' => sanitize_input($_POST['next_action_time'] ?? '')
     ];
     
     // Handle file uploads for documents
@@ -225,6 +233,9 @@ try {
                 $lead_id,                                      // location
                 "Lead updated with contact integration" . ($stage_notification['moved'] ? " - Stage changed to {$stage_notification['stage_name']}" : "") // data
             );
+            
+            // Process notes and next actions
+            processNotesAndCalendarEvents($lead_id, $data, $_SESSION['user_id'] ?? 1);
             
             // Always redirect to leads list after editing
             header('Location: list.php');
@@ -304,6 +315,9 @@ try {
                 }
             }
             
+            // Process notes and next actions
+            processNotesAndCalendarEvents($result['lead_id'], $data, $_SESSION['user_id'] ?? 1);
+            
             // Clear any preserved form data
             unset($_SESSION['form_data']);
             
@@ -332,6 +346,98 @@ try {
         header('Location: edit.php?id=' . $_POST['id']);
     } else {
         header('Location: new.php');
+    }
+}
+
+/**
+ * Process notes and create calendar events for next actions
+ */
+function processNotesAndCalendarEvents($lead_id, $data, $user_id) {
+    try {
+        // Process current action note if provided
+        if (!empty($data['note_text'])) {
+            $notes = new Notes();
+            $notes->add_note(
+                $lead_id,
+                $data['note_text'],
+                $data['note_source'],
+                $user_id
+            );
+        }
+        
+        // Process next action and create calendar event if scheduled
+        if (!empty($data['next_action']) && !empty($data['next_action_date'])) {
+            // Map next action types to calendar event types
+            $action_to_event_type = [
+                1 => 1, // Phone call
+                2 => 2, // Email  
+                3 => 3, // Text message
+                4 => 4, // Internal note
+                5 => 5, // Virtual meeting
+                6 => 6  // In-person meeting
+            ];
+            
+            $event_type = $action_to_event_type[$data['next_action']] ?? 1;
+            
+            // Create datetime string
+            $start_datetime = $data['next_action_date'];
+            if (!empty($data['next_action_time'])) {
+                $start_datetime .= ' ' . $data['next_action_time'];
+            } else {
+                $start_datetime .= ' 09:00:00'; // Default to 9 AM if no time specified
+            }
+            
+            // Get action type name for title
+            $action_names = [
+                1 => 'Phone Call',
+                2 => 'Email',
+                3 => 'Text Message', 
+                4 => 'Internal Note',
+                5 => 'Virtual Meeting',
+                6 => 'In-Person Meeting'
+            ];
+            
+            $action_name = $action_names[$data['next_action']] ?? 'Follow-up';
+            
+            // Create calendar event
+            $calendar = new CalendarEvent();
+            $event_data = [
+                'title' => $action_name . ' - Lead #' . $data['lead_id'],
+                'description' => $data['next_action_notes'] ?: 'Scheduled follow-up action',
+                'event_type' => $event_type,
+                'start_datetime' => $start_datetime,
+                'end_datetime' => null, // Let system calculate default duration
+                'all_day' => 0,
+                'status' => 1, // Active
+                'priority' => 5, // Normal priority
+                'location' => '',
+                'notes' => $data['next_action_notes'] ?: '',
+                'reminder_minutes' => 15, // 15 minute reminder
+                'timezone' => $data['timezone'] ?: 'UTC',
+                'lead_id' => $lead_id,
+                'contact_id' => null // Will be linked through lead
+            ];
+            
+            $event_id = $calendar->createEvent($event_data, $user_id);
+            
+            if ($event_id) {
+                // Log successful calendar event creation
+                $audit = new Audit();
+                $audit->log(
+                    $user_id,
+                    'calendar_event_created_from_lead',
+                    "calendar_event_{$event_id}",
+                    $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown',
+                    $_SERVER['REMOTE_ADDR'] ?? 'Unknown',
+                    $lead_id,
+                    "Calendar event created for lead {$lead_id}: {$action_name} scheduled for {$start_datetime}"
+                );
+            }
+        }
+        
+    } catch (Exception $e) {
+        // Log error but don't fail the lead operation
+        error_log("Notes/Calendar processing error for lead {$lead_id}: " . $e->getMessage());
     }
 }
 

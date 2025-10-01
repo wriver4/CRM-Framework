@@ -9,6 +9,8 @@ $lang = [
   'navbar_referrals' => "Referrals",
   'navbar_prospects' => "Prospects",
   'navbar_contracting' => "Contracting",
+  'navbar_calendar' => "Calendar",
+  'calendar' => "Calendar",
   'navbar_leads_new' => "New Lead Entry",
   'navbar_leads_list' => "Leads List",
 
@@ -23,8 +25,12 @@ $lang = [
   'navbar_quick_actions' => "Quick Actions",
   'navbar_administration' => "Administration",
   'navbar_logs' => "Logs",
+  'navbar_tools' => "Tools",
   'navbar_system_messages' => "System Messages",
   'navbar_help_support' => "Help & Support",
+  
+  // Tools
+  'tools_autoloaded_classes' => "Autoloaded Classes",
   'language_updated_successfully' => "Language preference updated successfully!",
   'save_language' => "Save Language",
   'contact_admin_help' => "For other changes, contact administrator",
@@ -341,7 +347,9 @@ $lang = [
   'lead_contact_information' => 'Contact Information',
   'lead_first_name' => 'First Name',
   'lead_family_name' => 'Family Name',
+  'lead_full_name' => 'Full Name',
   'lead_business_name' => 'Business Name',
+  'lead_project_name' => 'Project Name',
   'lead_cell_phone' => 'Cell Phone',
   'lead_email' => 'Email',
   'lead_contact_type' => 'Contact Type',
@@ -604,6 +612,38 @@ $lang = [
   'help_username' => 'Your username (contact administrator)',
   'help_role' => 'Your role and permissions (contact administrator)',
   'advanced_language_settings' => 'Advanced Language Settings',
+  'address' => 'Address',
+  'system_cost_low' => 'System Cost Low',
+  'system_cost_high' => 'System Cost High',
+  
+  // Calendar Priority Labels (1-10 system)
+  'priority_1' => 'Lowest',
+  'priority_2' => 'Very Low',
+  'priority_3' => 'Low',
+  'priority_4' => 'Below Normal',
+  'priority_5' => 'Normal',
+  'priority_6' => 'Above Normal',
+  'priority_7' => 'High',
+  'priority_8' => 'Very High',
+  'priority_9' => 'Critical',
+  'priority_10' => 'Urgent',
+  'select_priority' => 'Select Priority',
+  
+  // Calendar Event Type Labels
+  'event_type_phone_call' => 'Phone Call',
+  'event_type_email' => 'Email',
+  'event_type_text_message' => 'Text Message',
+  'event_type_internal_note' => 'Internal Note',
+  'event_type_virtual_meeting' => 'Virtual Meeting',
+  'event_type_in_person_meeting' => 'In-Person Meeting',
+  'select_event_type' => 'Select Event Type',
+  
+  // Calendar Event Status Labels
+  'event_status_pending' => 'Pending',
+  'event_status_completed' => 'Completed',
+  'event_status_cancelled' => 'Cancelled',
+  'event_status_in_progress' => 'In Progress',
+  'select_status' => 'Select Status',
 ];
 
 return $lang;

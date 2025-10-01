@@ -1,0 +1,74 @@
+/**
+ * Calendar Module Styles
+ * 
+ * FullCalendar integration styles for the CRM calendar module
+ * 
+ * @author CRM Framework
+ * @version 1.1 - Fixed positioning issues
+ */
+
+/* FullCalendar CSS is included inline with the JavaScript global build */
+/* No separate CSS import needed */
+
+/* Bootstrap 5 FullCalendar Integration Styles */
+
+/* Ensure calendar container respects Bootstrap layout */
+#calendar {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Bootstrap 5 theme enhancements */
+.fc-theme-bootstrap5 {
+    /* Let FullCalendar handle positioning naturally */
+}
+
+/* Ensure calendar fits within card boundaries */
+.card-body #calendar {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 400px;
+}
+
+/* Fix modal z-index issues if calendar modals appear */
+.fc-popover {
+    z-index: 1060; /* Higher than Bootstrap's modal backdrop */
+}
+
+/* Ensure calendar toolbar buttons work properly with Bootstrap theme */
+.fc-theme-bootstrap5 .fc-button-group .fc-button {
+    border-radius: 0.25rem;
+}
+
+.fc-theme-bootstrap5 .fc-button-group .fc-button:first-child {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+.fc-theme-bootstrap5 .fc-button-group .fc-button:last-child {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+    #calendar {
+        font-size: 0.9em;
+        min-height: 300px !important;
+    }
+    
+    .fc-header-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .fc-toolbar-chunk {
+        margin: 0.25em 0;
+        text-align: center;
+    }
+}
+
+/* Clean Bootstrap 5 integration - no debug borders needed */

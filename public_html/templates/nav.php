@@ -30,6 +30,7 @@ require_once 'nav_item_referrals.php';
 require_once 'nav_item_prospects.php';
 require_once 'nav_item_contracting.php';
 require_once 'nav_item_contacts.php';
+require_once 'nav_item_calendar.php';
 require_once 'nav_item_reports.php';
 ?>
         </ul>

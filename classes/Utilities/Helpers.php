@@ -1042,4 +1042,114 @@ public function admin_select_property_id($lang, $prop_id )
     throw new \RuntimeException('Unknown value in session.sid_bits_per_character.');
   }
 
+  // Calendar Priority System (1-10 integer system)
+  public function get_calendar_priority_array($lang)
+  {
+    $priority_array = [
+      '1' => $lang['priority_1'], // Lowest
+      '2' => $lang['priority_2'], // Very Low
+      '3' => $lang['priority_3'], // Low
+      '4' => $lang['priority_4'], // Below Normal
+      '5' => $lang['priority_5'], // Normal (default)
+      '6' => $lang['priority_6'], // Above Normal
+      '7' => $lang['priority_7'], // High
+      '8' => $lang['priority_8'], // Very High
+      '9' => $lang['priority_9'], // Critical
+      '10' => $lang['priority_10'], // Urgent
+    ];
+    return $priority_array;
+  }
+
+  public function get_calendar_priority($lang, $priority)
+  {
+    $priority_array = $this->get_calendar_priority_array($lang);
+    return $priority_array[$priority] ?? $lang['priority_5']; // Default to Normal
+  }
+
+  public function select_calendar_priority($lang, $priority_id = null)
+  {
+    $priorities = $this->get_calendar_priority_array($lang);
+    if ($priority_id == null) {
+      echo '<option value="">' . $lang['select_priority'] . '</option>';
+    }
+    foreach ($priorities as $key => $value) {
+      echo '<option value="'
+        . $key
+        . '"'
+        . ($priority_id == $key ? ' selected="selected">' : '>')
+        . $value
+        . '</option>';
+    }
+  }
+
+  // Calendar Event Types
+  public function get_calendar_event_type_array($lang)
+  {
+    $event_type_array = [
+      '1' => $lang['event_type_phone_call'], // Phone Call
+      '2' => $lang['event_type_email'], // Email
+      '3' => $lang['event_type_text_message'], // Text Message
+      '4' => $lang['event_type_internal_note'], // Internal Note
+      '5' => $lang['event_type_virtual_meeting'], // Virtual Meeting
+      '6' => $lang['event_type_in_person_meeting'], // In-Person Meeting
+    ];
+    return $event_type_array;
+  }
+
+  public function get_calendar_event_type($lang, $event_type)
+  {
+    $event_type_array = $this->get_calendar_event_type_array($lang);
+    return $event_type_array[$event_type] ?? $lang['event_type_phone_call']; // Default to Phone Call
+  }
+
+  public function select_calendar_event_type($lang, $event_type_id = null)
+  {
+    $event_types = $this->get_calendar_event_type_array($lang);
+    if ($event_type_id == null) {
+      echo '<option value="">' . $lang['select_event_type'] . '</option>';
+    }
+    foreach ($event_types as $key => $value) {
+      echo '<option value="'
+        . $key
+        . '"'
+        . ($event_type_id == $key ? ' selected="selected">' : '>')
+        . $value
+        . '</option>';
+    }
+  }
+
+  // Calendar Event Status
+  public function get_calendar_event_status_array($lang)
+  {
+    $status_array = [
+      '1' => $lang['event_status_pending'], // Pending
+      '2' => $lang['event_status_completed'], // Completed
+      '3' => $lang['event_status_cancelled'], // Cancelled
+      '4' => $lang['event_status_in_progress'], // In Progress
+    ];
+    return $status_array;
+  }
+
+  public function get_calendar_event_status($lang, $status)
+  {
+    $status_array = $this->get_calendar_event_status_array($lang);
+    return $status_array[$status] ?? $lang['event_status_pending']; // Default to Pending
+  }
+
+  public function select_calendar_event_status($lang, $status_id = null)
+  {
+    $statuses = $this->get_calendar_event_status_array($lang);
+    if ($status_id == null) {
+      echo '<option value="">' . $lang['select_status'] . '</option>';
+    }
+    foreach ($statuses as $key => $value) {
+      echo '<option value="'
+        . $key
+        . '"'
+        . ($status_id == $key ? ' selected="selected">' : '>')
+        . $value
+        . '</option>';
+    }
+  }
+
 }

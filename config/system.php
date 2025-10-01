@@ -5,6 +5,9 @@
  * file 'LICENSE.txt', which is part of this source code package.
  */
 
+// Define constant to prevent multiple inclusions
+// define('SYSTEM_LOADED', true);
+
 // --- SESSION SECURITY CONFIGURATION ---
 // These settings enhance session security but are commented out for now
 // to avoid breaking existing functionality. Uncomment and test carefully.
@@ -30,7 +33,10 @@
 // Marks session cookie as SameSite=Strict (CSRF protection)
 // ini_set('session.cookie_samesite', 'Strict');
 
-session_start();
+// Only start session if not running in CLI mode
+if (php_sapi_name() !== 'cli') {
+    session_start();
+}
 
 // --- AUTOLOADING ---
 // Autoloaders should be registered first to ensure classes are available
@@ -57,10 +63,12 @@ spl_autoload_register(function ($class_name) {
     }
     
     // Fallback to root classes directory for backward compatibility
+    /*
     $file = __DIR__ . '/../classes/' . $class_name . '.php';
     if (file_exists($file)) {
         require_once $file;
     }
+    */
 });
 
 // 2. Composer's autoloader for vendor packages.
@@ -92,12 +100,12 @@ $protocol = 'https://';
 
 // --- FILE SYSTEM PATHS ---
 // Core application paths
-define("DOCROOT", dirname($_SERVER['DOCUMENT_ROOT']));
+define("DOCROOT", dirname(__DIR__));
 define("CONFIGROOT", DOCROOT . '/config');
-define("CLASSES", DOCROOT . '/classes/');
+define("CLASSES", DOCROOT . "/classes/");
 
 // Publicly accessible paths
-define("DOCPUBLIC", $_SERVER['DOCUMENT_ROOT']);
+define("DOCPUBLIC", DOCROOT . '/public_html');
 define("DOCTEMPLATES", DOCPUBLIC . '/templates');
 
 // Specific template file paths for includes
@@ -112,7 +120,7 @@ define("SECTIONOPEN", DOCTEMPLATES . '/section_open.php');
 define("SECTIONCLOSE", DOCTEMPLATES . '/section_close.php');
 
 // --- URLS & BROWSER PATHS ---
-define("URL", $protocol . $_SERVER['HTTP_HOST']);
+define("URL", $protocol . ($_SERVER['HTTP_HOST'] ?? 'localhost'));
 define("TEMPLATES", URL . "/templates");
 define("ASSETS", URL . "/assets");
 define("IMG", ASSETS . '/img');
@@ -128,6 +136,7 @@ define("REFERRALS", URL . "/referrals");
 define("PROSPECTS", URL . "/prospects");
 define("CONTRACTING", URL . "/contracting");
 define("CONTACTS", URL . "/contacts");
+define("CALENDAR", URL . "/calendar");
 define("ADMIN", URL . "/admin");
 define("REPORTS", URL . "/reports");
 
@@ -188,7 +197,9 @@ try {
 } catch (\Throwable $e) {
     // The Logit handler has already logged the detailed error via Whoops.
     // Now, we can stop execution gracefully with a user-friendly message.
-    http_response_code(503); // Service Unavailable
+    if (php_sapi_name() !== 'cli') {
+        http_response_code(503); // Service Unavailable
+    }
     die("A critical application service could not be started. Please check the error logs.");
 }
 

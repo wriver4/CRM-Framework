@@ -1,12 +1,62 @@
 <?php
+// Note: system.php and authentication are handled by api.php when called via API
+// For direct access, we need to handle it here
+/*if (!defined('SYSTEM_LOADED')) {
+    require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
+    
+    // Check authentication - API version (returns JSON instead of redirecting)
+    if (!Sessions::isLoggedIn()) {
+        header('Content-Type: application/json');
+        http_response_code(401);
+        echo json_encode(['error' => 'Authentication required']);
+        exit;
+    }
+}*/
 require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 $not->loggedin();
 $contacts = new Contacts();
-if ($dir == 'contacts' && $page == 'list') {
-  $results = $contacts->get_list();
-  $list = new ContactsList($results, $lang);
-  $list->create_table();
-}
+
+// Handle different GET requests
+/*if (isset($_GET['action'])) {
+    switch ($_GET['action']) {
+        case 'list':
+            // Get list of contacts for API (used by calendar.js)
+            header('Content-Type: application/json');
+            $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 100;
+            
+            // Get contacts with proper fields for calendar dropdown
+            $all_contacts = $contacts->get_list();
+            
+            // Limit results and format for API
+            $limited_contacts = array_slice($all_contacts, 0, $limit);
+            $formatted_contacts = [];
+            
+            foreach ($limited_contacts as $contact) {
+                $formatted_contacts[] = [
+                    'id' => $contact['id'],
+                    'full_name' => ($contact['first_name'] ?? '') . ' ' . ($contact['family_name'] ?? ''),
+                    'first_name' => $contact['first_name'] ?? '',
+                    'family_name' => $contact['family_name'] ?? '',
+                    'business_name' => $contact['business_name'] ?? ''
+                ];
+            }
+            
+            echo json_encode($formatted_contacts);
+            break;
+            
+        default:
+            // No default action for contacts
+            break;
+    }
+} else {
+  */
+    // Handle page-specific logic (existing functionality)
+    if ($dir == 'contacts' && $page == 'list') {
+      $results = $contacts->get_list();
+      $list = new ContactsList($results, $lang);
+      $list->create_table();
+    }
+//}
 
 if ($dir == 'contacts' && $page == 'view') {
   $id = trim($_GET["id"]);

@@ -9,6 +9,8 @@ $lang = [
   'navbar_referrals' => "Referencias",
   'navbar_prospects' => "Prospectos",
   'navbar_contracting' => "Contratación",
+  'navbar_calendar' => "Calendario",
+  'calendar' => "Calendario",
   'navbar_leads_new' => "Nueva Entrada de Cliente Potencial",
   'navbar_leads_list' => "Lista de Clientes Potenciales",
   'navbar_users' => "Usuarios",
@@ -18,6 +20,16 @@ $lang = [
   'navbar_maintenance' => "Mantenimiento",
   'navbar_help' => "Ayuda",
   'navbar_logout' => "Cerrar Sesión",
+  'navbar_profile' => "Perfil",
+  'navbar_quick_actions' => "Acciones Rápidas",
+  'navbar_administration' => "Administración",
+  'navbar_logs' => "Registros",
+  'navbar_tools' => "Herramientas",
+  'navbar_system_messages' => "Mensajes del Sistema",
+  'navbar_help_support' => "Ayuda y Soporte",
+  
+  // Tools
+  'tools_autoloaded_classes' => "Clases Autocargadas",
   // Footer
   'copyright' => "Derechos de autor",
   'all_rights_reserved' => "Reservados todos los derechos.",
@@ -405,5 +417,6 @@ $lang = [
   // Additional lead fields
   'lead_full_name' => 'Nombre Completo',
   'lead_project_name' => 'Nombre del Proyecto',
-  'project_name' => 'Nombre del Proyecto'
+  'project_name' => 'Nombre del Proyecto',
+  'address' => 'Dirección',
 ];

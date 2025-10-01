@@ -93,6 +93,13 @@
         type="text/css"
         href="https://cdn.datatables.net/v/bs5/dt-1.12.1/fh-3.2.4/r-2.3.0/datatables.min.css" />
   <?php } ?>
+  <?php if ($dir == 'calendar') { ?>
+  <!-- Bootstrap Icons for FullCalendar Bootstrap 5 theme -->
+  <link rel="stylesheet" 
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+  <link rel="stylesheet"
+        href="<?php echo CSS . "/calendar.css"; ?>">
+  <?php } ?>
 
   <link rel="stylesheet"
         href="<?php echo CSS . "/style.css"; ?>">

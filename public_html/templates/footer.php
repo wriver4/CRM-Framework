@@ -160,6 +160,13 @@ if ($dir == 'tickets' && $page == 'view') {
   echo '<script src="' . JS . '/tickets_view_labor.js"></script>';
 }
 
+// Calendar module
+if ($dir == 'calendar') {
+  echo '<script src="' . ASSETS . '/vendor/fullcalendar/index.global.js"></script>';
+  echo '<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@6.1.19/index.global.min.js"></script>';
+  echo '<script src="' . JS . '/calendar.js"></script>';
+}
+
 
 
 // datatables
