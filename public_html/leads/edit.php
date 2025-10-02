@@ -69,8 +69,7 @@ require SECTIONOPEN;
           </label>
           <select name="contact_selector"
                   id="contact_selector"
-                  class="form-select form-select-sm"
-                  style="min-width: 200px;">
+                  class="form-select form-select-sm contact-selector">
             <?php foreach ($property_contacts as $contact): ?>
             <option value="<?= htmlspecialchars($contact['id']) ?>"
                     data-full-name="<?= htmlspecialchars($contact['full_name']) ?>"
@@ -269,8 +268,7 @@ require SECTIONOPEN;
   }
   ?>
   <div class="card mb-4">
-    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center"
-         style="cursor: pointer;"
+    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center collapsible-header"
          data-bs-toggle="collapse"
          data-bs-target="#servicesInterestedCollapse"
          aria-expanded="false"
@@ -278,8 +276,7 @@ require SECTIONOPEN;
       <h5 class="mb-0 d-flex align-items-center">
         <i class="fa-solid fa-cogs me-2"></i><?= $lang['lead_services_interested_in']; ?>
       </h5>
-      <i class="fa-solid fa-chevron-down collapse-icon"
-         style="transition: transform 0.3s ease; cursor: pointer;"></i>
+      <i class="fa-solid fa-chevron-down collapse-icon"></i>
     </div>
     <div class="collapse"
          id="servicesInterestedCollapse">
@@ -328,8 +325,7 @@ require SECTIONOPEN;
   ?>
   <?php if ($has_structure_content): ?>
   <div class="card mb-4">
-    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center"
-         style="cursor: pointer;"
+    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center collapsible-header"
          data-bs-toggle="collapse"
          data-bs-target="#structureInformationCollapse"
          aria-expanded="false"
@@ -337,8 +333,7 @@ require SECTIONOPEN;
       <h5 class="mb-0 d-flex align-items-center">
         <i class="fa-solid fa-building me-2"></i><?= $lang['lead_structure_information']; ?>
       </h5>
-      <i class="fa-solid fa-chevron-up collapse-icon"
-         style="transition: transform 0.3s ease; cursor: pointer;"></i>
+      <i class="fa-solid fa-chevron-up collapse-icon"></i>
     </div>
     <div class="collapse"
          id="structureInformationCollapse">
@@ -363,8 +358,7 @@ require SECTIONOPEN;
         <!-- Structure Description -->
         <?php if ($structure_description_display): ?>
         <div class="mb-3">
-          <label
-                 class="form-label fw-bold text-muted"><?= $lang['lead_structure_description'] ?></label>
+          <label class="form-label fw-bold text-muted"><?= $lang['lead_structure_description'] ?></label>
           <div class="bg-light p-3 rounded border">
             <div class="d-flex align-items-center">
               <i class="fa-solid fa-blueprint text-warning me-3 fa-lg"></i>
@@ -382,8 +376,7 @@ require SECTIONOPEN;
         <!-- Structure Other -->
         <?php if (!empty($structure_other)): ?>
         <div class="mb-3">
-          <label
-                 class="form-label fw-bold text-muted"><?= $lang['lead_structure_other'] ?></label>
+          <label class="form-label fw-bold text-muted"><?= $lang['lead_structure_other'] ?></label>
           <div class="bg-light p-3 rounded border">
             <div class="d-flex align-items-center">
               <i class="fa-solid fa-plus-circle text-secondary me-3 fa-lg"></i>
@@ -401,8 +394,7 @@ require SECTIONOPEN;
         <!-- Structure Additional -->
         <?php if (!empty($structure_additional)): ?>
         <div class="mb-3">
-          <label
-                 class="form-label fw-bold text-muted"><?= $lang['lead_structure_additional'] ?></label>
+          <label class="form-label fw-bold text-muted"><?= $lang['lead_structure_additional'] ?></label>
           <div class="bg-light p-3 rounded border">
             <div class="d-flex align-items-start">
               <i class="fa-solid fa-comment-alt text-info me-3 mt-1 fa-lg"></i>
@@ -423,21 +415,18 @@ require SECTIONOPEN;
 
   <!-- File Upload Links -->
   <div class="card mb-4">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
-         style="cursor: pointer;">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center collapsible-header">
       <h5 class="mb-0">
-        <button class="btn p-0 text-start text-white border-0 bg-transparent d-flex align-items-center w-100"
+        <button class="btn p-0 text-start text-white border-0 bg-transparent d-flex align-items-center w-100 radio-no-shadow"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#fileUploadLinksCollapse"
                 aria-expanded="false"
-                aria-controls="fileUploadLinksCollapse"
-                style="box-shadow: none; cursor: pointer;">
+                aria-controls="fileUploadLinksCollapse">
           <i class="fa-solid fa-upload me-2"></i><?= $lang['lead_file_upload_links']; ?>
         </button>
       </h5>
-      <i class="fa-solid fa-chevron-up collapse-icon"
-         style="transition: transform 0.3s ease; cursor: pointer;"></i>
+      <i class="fa-solid fa-chevron-up collapse-icon"></i>
     </div>
     <div class="collapse"
          id="fileUploadLinksCollapse">
@@ -446,8 +435,7 @@ require SECTIONOPEN;
         <div class="row mb-3">
           <div class="col-12">
             <div class="form-group">
-              <label
-                     class="form-label fw-bold text-muted"><?= $lang['lead_plans_upload_link']; ?></label>
+              <label class="form-label fw-bold text-muted"><?= $lang['lead_plans_upload_link']; ?></label>
               <div class="bg-light p-3 rounded border">
                 <div class="d-flex align-items-center">
                   <i class="fa-solid fa-file-alt text-info me-3 fa-lg"></i>
@@ -455,8 +443,7 @@ require SECTIONOPEN;
                     <?php if (!empty($plans_upload_link)): ?>
                     <span class="text-break"><?= htmlspecialchars($plans_upload_link) ?></span>
                     <?php else: ?>
-                    <em
-                        class="text-muted"><?= $lang['message_no_plans_link']; ?></em>
+                    <em class="text-muted"><?= $lang['message_no_plans_link']; ?></em>
                     <?php endif; ?>
                   </div>
                 </div>
@@ -472,8 +459,7 @@ require SECTIONOPEN;
         <div class="row">
           <div class="col-12">
             <div class="form-group">
-              <label
-                     class="form-label fw-bold text-muted"><?= $lang['lead_pictures_upload_link']; ?></label>
+              <label class="form-label fw-bold text-muted"><?= $lang['lead_pictures_upload_link']; ?></label>
               <div class="bg-light p-3 rounded border">
                 <div class="d-flex align-items-center">
                   <i class="fa-solid fa-image text-primary me-3 fa-lg"></i>
@@ -481,8 +467,7 @@ require SECTIONOPEN;
                     <?php if (!empty($picture_upload_link)): ?>
                     <span class="text-break"><?= htmlspecialchars($picture_upload_link) ?></span>
                     <?php else: ?>
-                    <em
-                        class="text-muted"><?= $lang['message_no_pictures_link']; ?></em>
+                    <em class="text-muted"><?= $lang['message_no_pictures_link']; ?></em>
                     <?php endif; ?>
                   </div>
                 </div>
@@ -503,10 +488,10 @@ require SECTIONOPEN;
   $user_role = $_SESSION['user_role'] ?? 'user';
   $user_rid = $_SESSION['user_rid'] ?? 0;
   
-  // Define role permissions
-  $can_edit_engineering = in_array($user_rid, [1, 2, 4, 5]); // Super Admin, Admin, Operations Technician 1 & 2
-  $can_edit_sales = in_array($user_rid, [1, 2, 13, 14, 15]); // Super Admin, Admin, Sales Manager, Sales Assistant, Sales Person
-  $can_edit_admin_leads = in_array($user_rid, [1, 2]); // Super Admin, Admin (can edit both)
+  // Define role permissions using Helper class methods
+  $can_edit_engineering = $helpers->can_edit_engineering($user_rid);
+  $can_edit_sales = $helpers->can_edit_sales($user_rid);
+  $can_edit_admin_leads = $helpers->can_edit_admin_leads($user_rid);
   
   // Check if any engineering data exists to determine default collapse state
   $has_engineering_data = !empty($eng_system_cost_low) || !empty($eng_system_cost_high) || !empty($eng_protected_area);
@@ -515,8 +500,7 @@ require SECTIONOPEN;
   ?>
 
   <div class="card mb-4">
-    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center"
-         style="cursor: pointer;"
+    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center collapsible-header"
          data-bs-toggle="collapse"
          data-bs-target="#screeningEstimatesCollapse"
          aria-expanded="<?= $has_engineering_data ? 'true' : 'false' ?>"
@@ -524,8 +508,7 @@ require SECTIONOPEN;
       <h5 class="mb-0 d-flex align-items-center">
         <i class="fa-solid fa-calculator me-2"></i><?= $lang['screening_estimates']; ?>
       </h5>
-      <i class="fa-solid fa-chevron-<?= $chevron_direction ?> collapse-icon"
-         style="transition: transform 0.3s ease; cursor: pointer;"></i>
+      <i class="fa-solid fa-chevron-<?= $chevron_direction ?> collapse-icon"></i>
     </div>
     <div class="collapse <?= $default_expanded ?>"
          id="screeningEstimatesCollapse">
@@ -697,16 +680,9 @@ require SECTIONOPEN;
           <label class="form-label fw-bold"><?= $lang['label_current_action']; ?></label>
           <div>
             <?php 
-            // 🌍 Internationalized note source array with desired order and options
-            $custom_note_sources = [
-                1 => $lang['note_source_phone_call'],
-                2 => $lang['note_source_email'],
-                3 => $lang['note_source_text_message'],
-                5 => $lang['note_source_virtual_meeting'],
-                6 => $lang['note_source_in_person'],
-                4 => $lang['note_source_internal_note']
-            ];
-            foreach ($custom_note_sources as $key => $value): ?>
+            // 🌍 Get internationalized note sources from Helper class
+            $note_sources = $helpers->get_note_sources_for_actions($lang);
+            foreach ($note_sources as $key => $value): ?>
             <div class="form-check form-check-inline">
               <input class="form-check-input"
                      type="radio"
@@ -737,15 +713,8 @@ require SECTIONOPEN;
           <label class="form-label fw-bold"><?= $lang['label_next_action']; ?></label>
           <div>
             <?php 
-            // 🌍 Internationalized next action source array with desired order and options (matching Current Action)
-            $next_action_sources = [
-                1 => $lang['note_source_phone_call'],
-                2 => $lang['note_source_email'],
-                3 => $lang['note_source_text_message'],
-                5 => $lang['note_source_virtual_meeting'],
-                6 => $lang['note_source_in_person'],
-                4 => $lang['note_source_internal_note']
-            ];
+            // 🌍 Get internationalized note sources from Helper class (matching Current Action)
+            $next_action_sources = $helpers->get_note_sources_for_actions($lang);
             foreach ($next_action_sources as $key => $value): ?>
             <div class="form-check form-check-inline">
               <input class="form-check-input"
@@ -772,15 +741,15 @@ require SECTIONOPEN;
         </div>
       </div>
       <div class="row mb-3">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label for="next_action_date"
-                 class="form-label fw-bold">Next Action Date</label>
+                 class="form-label fw-bold"><?= $lang['label_next_action_date']; ?></label>
           <input type="date"
                  name="next_action_date"
                  id="next_action_date"
                  class="form-control">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label for="next_action_time"
                  class="form-label fw-bold"><?= $lang['label_time_optional']; ?> <small
                    class="text-muted"><?= $lang['label_time_note']; ?></small></label>
@@ -790,16 +759,31 @@ require SECTIONOPEN;
                  class="form-control"
                  placeholder="<?= $lang['placeholder_optional']; ?>">
         </div>
+        <div class="col-md-4">
+          <label for="next_action_priority"
+                 class="form-label fw-bold"><?= $lang['label_priority_level']; ?></label>
+          <?= $helpers->select_next_action_priority($lang, $next_action_priority ?? 5, 'next_action_priority', 'form-select'); ?>
+        </div>
       </div>
       <div class="row mb-3">
         <div class="col-12">
           <small class="text-muted">
             <i class="fa-solid fa-clock me-1"></i>
-            Client timezone: <span id="client-timezone"></span> |
-            Your timezone: <span id="user-timezone"></span> |
+            <?= $lang['label_client_timezone']; ?>: <span id="client-timezone"></span> |
+            <?= $lang['label_your_timezone']; ?>: <span id="user-timezone"></span> |
             <span id="time-conversion"
                   class="fw-bold"></span>
           </small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="alert alert-info alert-sm py-2 mt-2">
+            <i class="fa-solid fa-calendar-plus me-2"></i>
+            <small><strong>Auto Calendar Integration:</strong> Next Actions with dates will automatically create
+              calendar events.
+              All-day events are created when no time is specified.</small>
+          </div>
         </div>
       </div>
     </div>
@@ -809,10 +793,10 @@ require SECTIONOPEN;
   <div class="offcanvas offcanvas-end"
        tabindex="-1"
        id="notesDrawer"
-       style="width: 700px;">
+       class="lead-modal-content">
     <div class="offcanvas-header bg-dark text-white">
       <h5 class="offcanvas-title">
-        <i class="fa-solid fa-sticky-note me-2"></i>Activity Timeline - Lead
+        <i class="fa-solid fa-sticky-note me-2"></i><?= $lang['activity_timeline_lead']; ?>
         #<?= htmlspecialchars($lead_id ?? '') ?>
       </h5>
       <button type="button"
@@ -861,10 +845,9 @@ require SECTIONOPEN;
     <div class="offcanvas-body p-0">
       <!-- Loading indicator -->
       <div id="notesLoading"
-           class="text-center p-4"
-           style="display: none;">
+           class="text-center p-4 lead-hidden">
         <i class="fa-solid fa-spinner fa-spin fa-2x text-muted"></i>
-        <p class="text-muted mt-2">Loading notes...</p>
+        <p class="text-muted mt-2"><?= $lang['text_loading_notes']; ?></p>
       </div>
 
       <!-- Notes container -->
@@ -890,10 +873,11 @@ require SECTIONOPEN;
               <div class="d-flex justify-content-between align-items-start mb-2">
                 <div>
                   <span class="<?= $notes_class->get_source_badge_class($note['source']) ?> me-2">
-                    <?= $notes_class->get_note_source_array()[$note['source']] ?? 'Unknown' ?>
+                    <?= $notes_class->get_note_source_array()[$note['source']] ?? $lang['text_unknown'] ?>
                   </span>
                   <?php if (!empty($note['form_source']) && $note['form_source'] != 'leads'): ?>
-                  <small class="badge bg-light text-dark">from <?= ucfirst($note['form_source']) ?></small>
+                  <small class="badge bg-light text-dark"><?= $lang['text_from']; ?>
+                    <?= ucfirst($note['form_source']) ?></small>
                   <?php endif; ?>
                 </div>
                 <small class="text-muted">
@@ -921,60 +905,6 @@ require SECTIONOPEN;
       </div>
     </div>
   </div>
-
-  <style>
-  .timeline {
-    position: relative;
-  }
-
-  .timeline-item {
-    position: relative;
-    display: flex;
-  }
-
-  .timeline-marker {
-    flex-shrink: 0;
-    width: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .timeline-marker-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 12px;
-  }
-
-  .timeline-line {
-    width: 2px;
-    flex-grow: 1;
-    background: #dee2e6;
-    margin-top: 8px;
-  }
-
-  .timeline-item:last-child .timeline-line {
-    display: none;
-  }
-
-  .timeline-content {
-    flex-grow: 1;
-    margin-left: 16px;
-    padding-bottom: 8px;
-  }
-
-  .note-text {
-    background: #f8f9fa;
-    padding: 12px;
-    border-radius: 8px;
-    border-left: 3px solid #dee2e6;
-  }
-  </style>
 
   <!-- Stage -->
   <div class="row">
@@ -1070,508 +1000,7 @@ require SECTIONOPEN;
   </button>
 </form>
 
-<script>
-// Notes search and ordering functionality
-document.addEventListener('DOMContentLoaded', function() {
 
-
-  // Display user's and client's timezone with conversion
-  const userTimezoneElement = document.getElementById('user-timezone');
-  const clientTimezoneElement = document.getElementById('client-timezone');
-  const timeConversionElement = document.getElementById('time-conversion');
-
-  if (userTimezoneElement && clientTimezoneElement && timeConversionElement) {
-    try {
-      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      userTimezoneElement.textContent = userTimezone;
-
-      // Get client timezone based on location
-      const clientState = '<?= htmlspecialchars($form_state ?? '') ?>';
-      const clientCountry = '<?= htmlspecialchars($form_country ?? '') ?>';
-      const clientTimezone = getTimezoneFromLocation(clientState, clientCountry);
-      clientTimezoneElement.textContent = clientTimezone;
-
-      // Update hidden timezone field for form submission
-      const timezoneField = document.getElementById('timezone');
-      if (timezoneField) {
-        timezoneField.value = clientTimezone;
-      }
-
-      // Show time conversion example
-      updateTimeConversion(clientTimezone, userTimezone);
-
-      // Update conversion when time field changes
-      const timeField = document.getElementById('next_action_time');
-      if (timeField) {
-        timeField.addEventListener('change', function() {
-          updateTimeConversion(clientTimezone, userTimezone, this.value);
-        });
-      }
-
-    } catch (e) {
-      userTimezoneElement.textContent = 'Unable to detect timezone';
-      clientTimezoneElement.textContent = 'Unknown';
-      timeConversionElement.textContent = '';
-    }
-  }
-
-  // Function to estimate timezone from location
-  function getTimezoneFromLocation(state, country) {
-    // US state to timezone mapping (simplified)
-    const usTimezones = {
-      'CA': 'America/Los_Angeles',
-      'WA': 'America/Los_Angeles',
-      'OR': 'America/Los_Angeles',
-      'NV': 'America/Los_Angeles',
-      'AZ': 'America/Phoenix',
-      'UT': 'America/Denver',
-      'CO': 'America/Denver',
-      'WY': 'America/Denver',
-      'MT': 'America/Denver',
-      'NM': 'America/Denver',
-      'ND': 'America/Denver',
-      'SD': 'America/Denver',
-      'TX': 'America/Chicago',
-      'OK': 'America/Chicago',
-      'KS': 'America/Chicago',
-      'NE': 'America/Chicago',
-      'MN': 'America/Chicago',
-      'IA': 'America/Chicago',
-      'MO': 'America/Chicago',
-      'AR': 'America/Chicago',
-      'LA': 'America/Chicago',
-      'MS': 'America/Chicago',
-      'AL': 'America/Chicago',
-      'TN': 'America/Chicago',
-      'KY': 'America/Chicago',
-      'IN': 'America/Chicago',
-      'IL': 'America/Chicago',
-      'WI': 'America/Chicago',
-      'MI': 'America/Detroit',
-      'OH': 'America/New_York',
-      'WV': 'America/New_York',
-      'VA': 'America/New_York',
-      'PA': 'America/New_York',
-      'NY': 'America/New_York',
-      'VT': 'America/New_York',
-      'NH': 'America/New_York',
-      'ME': 'America/New_York',
-      'MA': 'America/New_York',
-      'RI': 'America/New_York',
-      'CT': 'America/New_York',
-      'NJ': 'America/New_York',
-      'DE': 'America/New_York',
-      'MD': 'America/New_York',
-      'DC': 'America/New_York',
-      'NC': 'America/New_York',
-      'SC': 'America/New_York',
-      'GA': 'America/New_York',
-      'FL': 'America/New_York'
-    };
-
-    if (country === 'US' && usTimezones[state]) {
-      return usTimezones[state];
-    }
-
-    // Default fallbacks for other countries
-    const countryTimezones = {
-      'CA': 'America/Toronto',
-      'GB': 'Europe/London',
-      'AU': 'Australia/Sydney',
-      'DE': 'Europe/Berlin',
-      'FR': 'Europe/Paris'
-    };
-
-    return countryTimezones[country] || 'UTC';
-  }
-
-  // Function to update time conversion display
-  function updateTimeConversion(clientTz, userTz, selectedTime = null) {
-    try {
-      const now = new Date();
-      let timeToConvert = now;
-
-      if (selectedTime) {
-        // Use selected time with today's date
-        const [hours, minutes] = selectedTime.split(':');
-        timeToConvert = new Date();
-        timeToConvert.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-      } else {
-        // Use current time as example
-        timeToConvert = new Date();
-        // Keep the current time instead of setting to 9:00 AM
-      }
-
-      if (clientTz !== userTz) {
-        // Format time in client timezone
-        const clientTime = timeToConvert.toLocaleTimeString('en-US', {
-          timeZone: clientTz,
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
-        });
-
-        // Format time in user timezone
-        const userTime = timeToConvert.toLocaleTimeString('en-US', {
-          timeZone: userTz,
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
-        });
-
-        if (selectedTime) {
-          const clientTime = timeToConvert.toLocaleTimeString('en-US', {
-            timeZone: clientTz,
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-          });
-          timeConversionElement.textContent = `${clientTime} client time = ${userTime} your time`;
-        } else {
-          timeConversionElement.textContent = `Current time: ${clientTime} client time = ${userTime} your time`;
-        }
-      } else {
-        timeConversionElement.textContent = 'Same timezone';
-      }
-    } catch (e) {
-      timeConversionElement.textContent = 'Unable to convert time';
-    }
-  }
-
-  const notesSearch = document.getElementById('notesSearch');
-  const notesOrder = document.getElementById('notesOrder');
-  const clearSearch = document.getElementById('clearSearch');
-  const notesContainer = document.getElementById('notesContainer');
-  const notesLoading = document.getElementById('notesLoading');
-  const currentCount = document.getElementById('current-count');
-  const drawerTotal = document.getElementById('drawer-total');
-  const notesCount = document.getElementById('notes-count-header');
-  const totalNotes = document.getElementById('total-notes-header');
-
-  const leadId = <?= $internal_id ?? 0 ?>;
-  let searchTimeout;
-
-  // Search functionality
-  if (notesSearch) {
-    notesSearch.addEventListener('input', function() {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(() => {
-        loadNotes();
-      }, 500); // Debounce search
-    });
-  }
-
-  // Order change
-  if (notesOrder) {
-    notesOrder.addEventListener('change', function() {
-      loadNotes();
-    });
-  }
-
-  // Clear search
-  if (clearSearch) {
-    clearSearch.addEventListener('click', function() {
-      notesSearch.value = '';
-      loadNotes();
-    });
-  }
-
-  // Load notes initially
-  loadNotes();
-
-  // Load notes via AJAX
-  function loadNotes() {
-    if (leadId <= 0) return;
-
-    const search = notesSearch ? notesSearch.value : '';
-    const order = notesOrder ? notesOrder.value : 'DESC';
-
-    // Show loading
-    if (notesLoading) notesLoading.style.display = 'block';
-    if (notesContainer) notesContainer.style.opacity = '0.5';
-
-    fetch('notes_ajax.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'get_notes',
-          lead_id: leadId,
-          search: search,
-          order: order
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          renderNotes(data.notes);
-          updateCounts(data.notes.length, data.total_count || data.notes.length);
-        } else {
-          console.error('Error loading notes:', data.error);
-          showError('Failed to load notes: ' + (data.error || 'Unknown error'));
-        }
-      })
-      .catch(error => {
-        console.error('Network error:', error);
-        showError('Network error while loading notes');
-      })
-      .finally(() => {
-        // Hide loading
-        if (notesLoading) notesLoading.style.display = 'none';
-        if (notesContainer) notesContainer.style.opacity = '1';
-      });
-  }
-
-  // Render notes HTML
-  function renderNotes(notes) {
-    if (!notesContainer) return;
-
-    if (notes.length === 0) {
-      notesContainer.innerHTML = `
-                <div class="text-center p-5">
-                    <i class="fa-solid fa-sticky-note fa-4x text-muted opacity-25 mb-3"></i>
-                    <h6 class="text-muted">No Notes Found</h6>
-                    <p class="text-muted">No notes match your search criteria.</p>
-                </div>
-            `;
-      return;
-    }
-
-    let html = '<div class="timeline p-4">';
-
-    notes.forEach(note => {
-      const sourceColor = note.source <= 3 ? 'primary' : (note.source <= 6 ? 'success' : 'secondary');
-      const sourceIcon = getSourceIcon(note.source);
-
-      html += `
-                <div class="timeline-item mb-4">
-                    <div class="timeline-marker">
-                        <div class="timeline-marker-icon bg-${sourceColor}">
-                            <i class="fa-solid fa-${sourceIcon} text-white"></i>
-                        </div>
-                    </div>
-                    <div class="timeline-content">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div>
-                                <span class="${note.source_badge} me-2">${note.source_name}</span>
-                                ${note.contact_name ? `<small class="badge bg-info text-white me-2"><i class="fa-solid fa-user me-1"></i>${escapeHtml(note.contact_name)}</small>` : ''}
-                                ${note.form_source && note.form_source !== 'leads' ? `<small class="badge bg-light text-dark">from ${note.form_source}</small>` : ''}
-                            </div>
-                            <small class="text-muted">${note.date_formatted}</small>
-                        </div>
-                        <div class="note-content">
-                            <p class="mb-1">${escapeHtml(note.note_text).replace(/\n/g, '<br>')}</p>
-                            <small class="text-muted">
-                                <i class="fa-solid fa-user me-1"></i>${escapeHtml(note.user_name)}
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            `;
-    });
-
-    html += '</div>';
-    notesContainer.innerHTML = html;
-  }
-
-  // Update count displays
-  function updateCounts(current, total) {
-    if (currentCount) currentCount.textContent = current;
-    if (drawerTotal) drawerTotal.textContent = total;
-    if (notesCount) notesCount.textContent = current;
-  }
-
-  // Get icon for note source
-  function getSourceIcon(source) {
-    const icons = {
-      1: 'phone', // Phone Call
-      2: 'envelope', // Email  
-      3: 'comment-sms', // Text Message
-      4: 'sticky-note', // Internal Note
-      5: 'handshake', // Meeting
-      6: 'map-marker-alt', // Site Visit
-      7: 'clock' // Follow-up
-    };
-    return icons[source] || 'sticky-note';
-  }
-
-  // Show error message
-  function showError(message) {
-    if (notesContainer) {
-      notesContainer.innerHTML = `
-                <div class="alert alert-danger m-4">
-                    <i class="fa-solid fa-exclamation-triangle me-2"></i>${escapeHtml(message)}
-                </div>
-            `;
-    }
-  }
-
-  // Escape HTML
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
-  // Handle collapse chevron rotation
-  // Handle structure information collapse
-  const structureCollapse = document.getElementById('structureInformationCollapse');
-  const structureIcon = structureCollapse?.previousElementSibling?.querySelector('.collapse-icon');
-
-  if (structureCollapse && structureIcon) {
-    // Set initial state (collapsed = rotated)
-    structureIcon.style.transform = 'rotate(180deg)';
-
-    structureCollapse.addEventListener('show.bs.collapse', function() {
-      structureIcon.style.transform = 'rotate(0deg)';
-    });
-
-    structureCollapse.addEventListener('hide.bs.collapse', function() {
-      structureIcon.style.transform = 'rotate(180deg)';
-    });
-  }
-
-  // Handle file upload links collapse
-  const uploadCollapse = document.getElementById('fileUploadLinksCollapse');
-  const uploadIcon = uploadCollapse?.previousElementSibling?.querySelector('.collapse-icon');
-
-  if (uploadCollapse && uploadIcon) {
-    // Set initial state (collapsed = rotated)
-    uploadIcon.style.transform = 'rotate(180deg)';
-
-    uploadCollapse.addEventListener('show.bs.collapse', function() {
-      uploadIcon.style.transform = 'rotate(0deg)';
-    });
-
-    uploadCollapse.addEventListener('hide.bs.collapse', function() {
-      uploadIcon.style.transform = 'rotate(180deg)';
-    });
-  }
-
-  // Handle screening estimates collapse
-  const screeningCollapse = document.getElementById('screeningEstimatesCollapse');
-  const screeningIcon = screeningCollapse?.previousElementSibling?.querySelector('.collapse-icon');
-
-  if (screeningCollapse && screeningIcon) {
-    screeningCollapse.addEventListener('show.bs.collapse', function() {
-      screeningIcon.classList.remove('fa-chevron-down');
-      screeningIcon.classList.add('fa-chevron-up');
-    });
-
-    screeningCollapse.addEventListener('hide.bs.collapse', function() {
-      screeningIcon.classList.remove('fa-chevron-up');
-      screeningIcon.classList.add('fa-chevron-down');
-    });
-  }
-
-  // Auto-expand screening estimates when user enters data
-  const screeningInputs = [
-    'eng_system_cost_low', 'eng_system_cost_high', 'eng_protected_area', 'eng_cabinets', 'eng_total_pumps'
-  ];
-
-  screeningInputs.forEach(inputId => {
-    const input = document.getElementById(inputId);
-    if (input) {
-      input.addEventListener('focus', function() {
-        if (screeningCollapse && !screeningCollapse.classList.contains('show')) {
-          const bsCollapse = new bootstrap.Collapse(screeningCollapse, {
-            show: true
-          });
-        }
-      });
-    }
-  });
-
-  // Format currency inputs with commas
-  const currencyInputs = [
-    'eng_system_cost_low', 'eng_system_cost_high'
-  ];
-
-  currencyInputs.forEach(inputId => {
-    const input = document.getElementById(inputId);
-    if (input) {
-      input.addEventListener('input', function(e) {
-        // Remove non-numeric characters except for existing commas
-        let value = e.target.value.replace(/[^\d]/g, '');
-
-        // Add commas for thousands
-        if (value) {
-          value = parseInt(value).toLocaleString();
-        }
-
-        e.target.value = value;
-      });
-
-      // Remove commas before form submission
-      input.addEventListener('blur', function(e) {
-        e.target.value = e.target.value.replace(/,/g, '');
-      });
-    }
-  });
-
-});
-
-// Stage change handler
-function handleStageChange(newStage) {
-  const currentStage = <?= $selected_stage ?? 1 ?>;
-  const stageNames = <?= json_encode($leads->get_lead_stage_array()) ?>;
-  const leadId = '<?= htmlspecialchars($lead_id ?? '') ?>';
-
-  if (newStage != currentStage) {
-    let message = '';
-    let redirectUrl = '';
-
-    // Determine where the record will move based on new stage
-    switch (parseInt(newStage)) {
-      case 4: // Referral
-        message = `This lead will be moved to the Referrals list when you save.`;
-        redirectUrl = '/referrals/list';
-        break;
-      case 5:
-      case 6:
-      case 7:
-      case 8:
-      case 9:
-      case 10:
-      case 11:
-      case 12:
-      case 13: // Prospect stages
-        message = `This lead will be moved to the Prospects list when you save.`;
-        redirectUrl = '/prospects/list';
-        break;
-      case 13: // Contracting
-        message = `This lead will be moved to the Contracting list when you save.`;
-        redirectUrl = '/contracting/list';
-        break;
-      case 14: // Closed Won
-        message = `This lead will be marked as Closed Won and moved to the appropriate list.`;
-        break;
-      case 15: // Closed Lost
-        message = `This lead will be marked as Closed Lost.`;
-        break;
-    }
-
-    if (message) {
-      // Show confirmation dialog
-      if (confirm(
-          `Stage Change: ${stageNames[currentStage]} → ${stageNames[newStage]}\n\n${message}\n\nDo you want to continue?`
-        )) {
-        // User confirmed, let the form submission handle the stage change
-        return true;
-      } else {
-        // User cancelled, revert the dropdown
-        document.getElementById('stage').value = currentStage;
-        return false;
-      }
-    }
-  }
-  return true;
-}
-</script>
-
-<!-- Contact Selector JavaScript -->
-<script src="/assets/js/contact-selector.js"></script>
 
 <?php
 require SECTIONCLOSE;

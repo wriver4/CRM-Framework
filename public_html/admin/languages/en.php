@@ -628,6 +628,8 @@ $lang = [
   'priority_9' => 'Critical',
   'priority_10' => 'Urgent',
   'select_priority' => 'Select Priority',
+  'label_next_action_date' => 'Next Action Date',
+  'label_priority_level' => 'Priority Level',
   
   // Calendar Event Type Labels
   'event_type_phone_call' => 'Phone Call',
@@ -644,6 +646,75 @@ $lang = [
   'event_status_cancelled' => 'Cancelled',
   'event_status_in_progress' => 'In Progress',
   'select_status' => 'Select Status',
+  
+  // Lead Edit Form - Timezone and General Labels
+  'label_client_timezone' => 'Client timezone',
+  'label_your_timezone' => 'Your timezone', 
+  'activity_timeline_lead' => 'Activity Timeline - Lead',
+  'text_unknown' => 'Unknown',
+  'text_from' => 'from',
+  'error_unable_detect_timezone' => 'Unable to detect timezone',
+  'error_unable_convert_time' => 'Unable to convert time',
+  'error_failed_load_notes' => 'Failed to load notes',
+  'error_unknown_error' => 'Unknown error',
+  'text_loading_notes' => 'Loading notes...',
+  'error_network_loading_notes' => 'Network error while loading notes',
+  
+  // Email Templates - General
+  'email_dear_customer' => 'Valued Customer',
+  'email_greeting' => 'Hello',
+  'email_next_steps' => 'We will review your information and contact you shortly to discuss your project in detail.',
+  'email_download_title' => 'Resources & Downloads',
+  'email_download_description' => 'Access helpful resources and information about our services:',
+  'email_download_button' => 'Access Resources',
+  'email_contact_title' => 'Contact Us',
+  'email_contact_description' => 'If you have any questions or need immediate assistance, please don\'t hesitate to reach out:',
+  'email_phone_label' => 'Phone',
+  'email_email_label' => 'Email',
+  'email_website_label' => 'Website',
+  'email_footer_text' => 'Thank you for your interest in our services. We look forward to working with you!',
+  'email_footer_copyright' => '© ' . date('Y') . ' All rights reserved.',
+  
+  // Email Templates - Contact Information (to be configured)
+  'email_contact_phone' => '',
+  'email_contact_email' => '',
+  'email_contact_website' => '',
+  'email_nextcloud_link' => '',
+  
+  // Email Templates - Web Estimate
+  'email_subject_web_estimate' => 'Thank You for Your Web Estimate Request',
+  'email_web_estimate_intro' => 'Thank you for requesting a web estimate. We have received your information and appreciate your interest in our services.',
+  'email_web_estimate_body' => 'Our team is currently reviewing your project details. We will prepare a detailed estimate and contact you within 1-2 business days to discuss your specific needs and answer any questions you may have.',
+  
+  // Email Templates - LTR Form
+  'email_subject_ltr_form' => 'Thank You for Your LTR Form Submission',
+  'email_ltr_form_intro' => 'Thank you for submitting your LTR form. We have received your information and are excited to learn more about your project.',
+  'email_ltr_form_body' => 'Our team will carefully review the details you provided. We will reach out to you shortly to discuss the next steps and how we can best serve your needs.',
+  
+  // Email Templates - Contact Form
+  'email_subject_contact_form' => 'Thank You for Contacting Us',
+  'email_contact_form_intro' => 'Thank you for reaching out to us through our contact form. We have received your message and appreciate you taking the time to connect with us.',
+  'email_contact_form_body' => 'A member of our team will review your inquiry and respond to you as soon as possible. We typically respond to all inquiries within 24 hours during business days.',
+  
+  // Email Templates - Phone Inquiry
+  'email_subject_phone_inquiry' => 'Thank You for Your Phone Inquiry',
+  'email_phone_inquiry_intro' => 'Thank you for speaking with us today. We enjoyed learning about your project and are excited about the opportunity to work with you.',
+  'email_phone_inquiry_body' => 'As discussed, we are sending you this email with additional information and resources. Please review the materials below, and feel free to contact us if you have any questions.',
+  
+  // Email Templates - Cold Call
+  'email_subject_cold_call' => 'Great Speaking With You Today',
+  'email_cold_call_intro' => 'It was a pleasure speaking with you today. Thank you for taking the time to learn about our services.',
+  'email_cold_call_body' => 'As promised, we are following up with additional information about how we can help with your project. Please review the resources below and let us know if you would like to schedule a more detailed consultation.',
+  
+  // Email Templates - In Person
+  'email_subject_in_person' => 'Thank You for Meeting With Us',
+  'email_in_person_intro' => 'Thank you for taking the time to meet with us in person. It was great to discuss your project face-to-face and learn more about your specific needs.',
+  'email_in_person_body' => 'As we discussed during our meeting, we are sending you this follow-up email with additional resources and information. Please review the materials below, and don\'t hesitate to reach out if you have any questions.',
+  
+  // Email Templates - Generic
+  'email_subject_generic' => 'Thank You for Your Interest',
+  'email_generic_intro' => 'Thank you for your interest in our services. We have received your information and appreciate you reaching out to us.',
+  'email_generic_body' => 'Our team will review your information and contact you shortly to discuss how we can best serve your needs.',
 ];
 
 return $lang;

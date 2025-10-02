@@ -419,4 +419,32 @@ $lang = [
   'lead_project_name' => 'Nombre del Proyecto',
   'project_name' => 'Nombre del Proyecto',
   'address' => 'Dirección',
+  
+  // Priority Labels (1-10 system)
+  'priority_1' => 'Más Bajo',
+  'priority_2' => 'Muy Bajo',
+  'priority_3' => 'Bajo',
+  'priority_4' => 'Inferior al Normal',
+  'priority_5' => 'Normal',
+  'priority_6' => 'Superior al Normal',
+  'priority_7' => 'Alto',
+  'priority_8' => 'Muy Alto',
+  'priority_9' => 'Crítico',
+  'priority_10' => 'Urgente',
+  'select_priority' => 'Seleccionar Prioridad',
+  'label_next_action_date' => 'Fecha de Próxima Acción',
+  'label_priority_level' => 'Nivel de Prioridad',
+  
+  // Lead Edit Form - Timezone and General Labels
+  'label_client_timezone' => 'Zona horaria del cliente',
+  'label_your_timezone' => 'Su zona horaria',
+  'activity_timeline_lead' => 'Cronograma de Actividad - Prospecto',
+  'text_unknown' => 'Desconocido',
+  'text_from' => 'de',
+  'error_unable_detect_timezone' => 'No se pudo detectar la zona horaria',
+  'error_unable_convert_time' => 'No se pudo convertir la hora',
+  'error_failed_load_notes' => 'Error al cargar las notas',
+  'error_unknown_error' => 'Error desconocido',
+  'text_loading_notes' => 'Cargando notas...',
+  'error_network_loading_notes' => 'Error de red al cargar las notas',
 ];

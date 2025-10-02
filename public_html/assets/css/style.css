@@ -216,3 +216,125 @@ table.dataTable td .row .btn i,
 td .row .btn i {
 	font-size: 1.2rem !important;
 }
+
+/* ========================================
+   Bootstrap 5 Nested Dropdown Support
+   ======================================== */
+
+/* Keep parent dropdown open when child dropdown is shown */
+.dropdown .dropdown-menu.show {
+	display: block;
+}
+
+/* Position nested dropdowns to the right (dropend) */
+.dropdown-menu .dropend .dropdown-menu {
+	position: absolute;
+	top: 0;
+	left: 100%;
+	margin-top: 0;
+	margin-left: 0.125rem;
+}
+
+/* Ensure nested dropdown items have proper spacing */
+.dropdown-menu .dropdown-item {
+	position: relative;
+}
+
+/* Style for dropdown toggle arrows in nested menus */
+.dropdown-menu .dropdown-toggle::after {
+	display: inline-block;
+	margin-left: auto;
+	vertical-align: middle;
+	content: "";
+	border-top: 0.3em solid transparent;
+	border-right: 0;
+	border-bottom: 0.3em solid transparent;
+	border-left: 0.3em solid;
+	float: right;
+	margin-top: 0.5em;
+}
+
+/* Prevent parent dropdown from closing when child is active */
+.dropdown.has-child-dropdown-show > .dropdown-menu {
+	display: block;
+}
+
+/* Ensure proper z-index for nested dropdowns */
+.dropdown-menu {
+	z-index: 1050;
+}
+
+.dropdown-menu .dropdown-menu {
+	z-index: 1051;
+}
+
+/* Hover effect for nested dropdown items */
+.dropdown-menu .dropdown-item:hover {
+	background-color: #0d6efd;
+	color: #fff;
+}
+
+/* Active state for nested dropdown items */
+.dropdown-menu .dropdown-item.active {
+	background-color: #0d6efd;
+	color: #fff;
+}
+
+/* ========================================
+   Admin Menu Color Scheme Improvements
+   ======================================== */
+
+/* Dropdown menu items - default state */
+.dropdown-menu .dropdown-item {
+	color: #212529;
+	transition: all 0.2s ease-in-out;
+}
+
+/* Dropdown menu items - hover state with primary blue background */
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+	background-color: #0d6efd;
+	color: #ffffff;
+}
+
+/* Nested dropdown toggle - hover state */
+.dropdown-menu .dropdown-toggle:hover,
+.dropdown-menu .dropdown-toggle:focus {
+	background-color: #0d6efd;
+	color: #ffffff;
+}
+
+/* Dropdown headers - slightly darker for better visibility */
+.dropdown-menu .dropdown-header {
+	color: #495057;
+	font-weight: 600;
+}
+
+/* Dropdown item text (non-clickable) */
+.dropdown-menu .dropdown-item-text {
+	color: #6c757d;
+}
+
+/* Active dropdown items */
+.dropdown-menu .dropdown-item.active,
+.dropdown-menu .dropdown-item:active {
+	background-color: #0d6efd;
+	color: #ffffff;
+}
+
+/* Ensure icons in dropdown items inherit the text color */
+.dropdown-menu .dropdown-item i {
+	transition: color 0.2s ease-in-out;
+}
+
+/* Profile dropdown toggle in navbar - ensure good contrast */
+#dropdownMenuLink {
+	color: #ffffff !important;
+	transition: opacity 0.2s ease-in-out;
+}
+
+#dropdownMenuLink:hover,
+#dropdownMenuLink:focus {
+	opacity: 0.85;
+	color: #ffffff !important;
+}

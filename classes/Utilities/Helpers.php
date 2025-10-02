@@ -1152,4 +1152,174 @@ public function admin_select_property_id($lang, $prop_id )
     }
   }
 
+  // Next Action Priority Levels
+  public function get_next_action_priority_array($lang)
+  {
+    $priority_array = [
+      '1' => $lang['priority_1'], // Lowest
+      '2' => $lang['priority_2'], // Very Low
+      '3' => $lang['priority_3'], // Low
+      '4' => $lang['priority_4'], // Below Normal
+      '5' => $lang['priority_5'], // Normal
+      '6' => $lang['priority_6'], // Above Normal
+      '7' => $lang['priority_7'], // High
+      '8' => $lang['priority_8'], // Very High
+      '9' => $lang['priority_9'], // Critical
+      '10' => $lang['priority_10'], // Urgent
+    ];
+    return $priority_array;
+  }
+
+  public function get_next_action_priority($lang, $priority)
+  {
+    $priority_array = $this->get_next_action_priority_array($lang);
+    return $priority_array[$priority] ?? $lang['priority_5']; // Default to Normal
+  }
+
+  public function select_next_action_priority($lang, $priority_id = 5, $field_name = 'next_action_priority', $css_class = 'form-select')
+  {
+    $priorities = $this->get_next_action_priority_array($lang);
+    $output = '<select name="' . htmlspecialchars($field_name) . '" id="' . htmlspecialchars($field_name) . '" class="' . htmlspecialchars($css_class) . '">';
+    
+    foreach ($priorities as $key => $value) {
+      $output .= '<option value="' . htmlspecialchars($key) . '"'
+        . ($priority_id == $key ? ' selected="selected"' : '')
+        . '>' . htmlspecialchars($value) . '</option>';
+    }
+    
+    $output .= '</select>';
+    return $output;
+  }
+
+  // US State to Timezone Mapping
+  public function get_us_timezone_array()
+  {
+    $timezone_array = [
+      // Pacific Time
+      'CA' => 'America/Los_Angeles',
+      'WA' => 'America/Los_Angeles',
+      'OR' => 'America/Los_Angeles',
+      'NV' => 'America/Los_Angeles',
+      // Mountain Time (Arizona uses Phoenix - no DST)
+      'AZ' => 'America/Phoenix',
+      'UT' => 'America/Denver',
+      'CO' => 'America/Denver',
+      'WY' => 'America/Denver',
+      'MT' => 'America/Denver',
+      'NM' => 'America/Denver',
+      'ND' => 'America/Denver',
+      'SD' => 'America/Denver',
+      // Central Time
+      'TX' => 'America/Chicago',
+      'OK' => 'America/Chicago',
+      'KS' => 'America/Chicago',
+      'NE' => 'America/Chicago',
+      'MN' => 'America/Chicago',
+      'IA' => 'America/Chicago',
+      'MO' => 'America/Chicago',
+      'AR' => 'America/Chicago',
+      'LA' => 'America/Chicago',
+      'MS' => 'America/Chicago',
+      'AL' => 'America/Chicago',
+      'TN' => 'America/Chicago',
+      'KY' => 'America/Chicago',
+      'IN' => 'America/Chicago',
+      'IL' => 'America/Chicago',
+      'WI' => 'America/Chicago',
+      // Eastern Time (Michigan has Detroit timezone)
+      'MI' => 'America/Detroit',
+      'OH' => 'America/New_York',
+      'WV' => 'America/New_York',
+      'VA' => 'America/New_York',
+      'PA' => 'America/New_York',
+      'NY' => 'America/New_York',
+      'VT' => 'America/New_York',
+      'NH' => 'America/New_York',
+      'ME' => 'America/New_York',
+      'MA' => 'America/New_York',
+      'RI' => 'America/New_York',
+      'CT' => 'America/New_York',
+      'NJ' => 'America/New_York',
+      'DE' => 'America/New_York',
+      'MD' => 'America/New_York',
+      'DC' => 'America/New_York',
+      'NC' => 'America/New_York',
+      'SC' => 'America/New_York',
+      'GA' => 'America/New_York',
+      'FL' => 'America/New_York'
+    ];
+    return $timezone_array;
+  }
+
+  // International Country to Timezone Mapping
+  public function get_country_timezone_array()
+  {
+    $country_timezone_array = [
+      'CA' => 'America/Toronto', // Canada
+      'GB' => 'Europe/London',   // United Kingdom
+      'AU' => 'Australia/Sydney', // Australia
+      'DE' => 'Europe/Berlin',   // Germany
+      'FR' => 'Europe/Paris',    // France
+      'MX' => 'America/Mexico_City', // Mexico
+      'BR' => 'America/Sao_Paulo', // Brazil
+      'JP' => 'Asia/Tokyo',      // Japan
+      'CN' => 'Asia/Shanghai',   // China
+      'IN' => 'Asia/Kolkata',    // India
+    ];
+    return $country_timezone_array;
+  }
+
+  // Role Permission Methods
+  
+  /**
+   * Check if user can edit engineering estimates
+   * @param int $user_rid User role ID
+   * @return bool
+   */
+  public function can_edit_engineering($user_rid)
+  {
+    // Super Admin, Admin, Operations Technician 1 & 2
+    return in_array($user_rid, [1, 2, 4, 5]);
+  }
+
+  /**
+   * Check if user can edit sales estimates
+   * @param int $user_rid User role ID
+   * @return bool
+   */
+  public function can_edit_sales($user_rid)
+  {
+    // Super Admin, Admin, Sales Manager, Sales Assistant, Sales Person
+    return in_array($user_rid, [1, 2, 13, 14, 15]);
+  }
+
+  /**
+   * Check if user can edit admin leads (both engineering and sales)
+   * @param int $user_rid User role ID
+   * @return bool
+   */
+  public function can_edit_admin_leads($user_rid)
+  {
+    // Super Admin, Admin
+    return in_array($user_rid, [1, 2]);
+  }
+
+  /**
+   * Get internationalized note source array for action selection
+   * Returns note sources in the desired order for Current Action and Next Action sections
+   * @param array $lang Language array
+   * @return array Internationalized note sources array
+   */
+  public function get_note_sources_for_actions($lang)
+  {
+    return [
+      1 => $lang['note_source_phone_call'],
+      2 => $lang['note_source_email'],
+      3 => $lang['note_source_text_message'],
+      5 => $lang['note_source_virtual_meeting'],
+      6 => $lang['note_source_in_person'],
+      4 => $lang['note_source_internal_note']
+    ];
+  }
+
 }

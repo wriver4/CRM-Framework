@@ -67,7 +67,15 @@ class CalendarEvent extends Database
             $params[':end_date'] = $end_date;
         }
         
-        $query .= " ORDER BY ce.start_datetime ASC";
+        $query .= " ORDER BY 
+                    CASE 
+                        WHEN ce.all_day = 1 THEN ce.priority 
+                        ELSE 999 
+                    END DESC,
+                    CASE 
+                        WHEN ce.all_day = 0 THEN ce.start_datetime 
+                        ELSE NULL 
+                    END ASC";
         
         $stmt = $this->dbcrm()->prepare($query);
         foreach ($params as $key => $value) {

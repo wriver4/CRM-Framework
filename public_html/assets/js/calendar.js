@@ -152,11 +152,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Add lead link if lead_id exists
     if (props.lead_id) {
+      // Build URL with lead_id and contact_id (if available)
+      let leadUrl = `../leads/edit.php?id=${props.lead_id}`;
+      if (props.contact_id) {
+        leadUrl += `&contact_id=${props.contact_id}`;
+      }
+
       html += `
                 <div class="row mb-2">
                     <div class="col-6"><strong>Lead:</strong></div>
                     <div class="col-6">
-                        <a href="../leads/edit.php?id=${props.lead_id}" 
+                        <a href="${leadUrl}" 
                            class="btn btn-sm btn-outline-primary" 
                            target="_blank">
                             <i class="fas fa-external-link-alt me-1"></i>

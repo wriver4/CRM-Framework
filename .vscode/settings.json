@@ -1,16 +1,9 @@
 {
-  "playwright.reuseBrowser": true,
-  "playwright.showTrace": true,
-  "playwright.testDir": "./tests/playwright",
-  "playwright.configFile": "./playwright.config.js",
-  "files.associations": {
-    "*.spec.js": "javascript",
-    "*.test.js": "javascript"
-  },
-  "terminal.integrated.env.linux": {
-    "PLAYWRIGHT_BROWSERS_PATH": "${workspaceFolder}/node_modules/.cache/ms-playwright"
-  },
-  "testing.automaticallyOpenPeekView": "never",
-  "testing.openTesting": "neverOpen",
-  "testing.automaticallyOpenTestResults": "neverOpen"
+  "zencoder.mcpServers": {
+    "democrm-context": {
+      "command": "/usr/bin/node",
+      "args": ["/home/democrm/.zencoder/mcp-server/index.js"],
+      "env": {}
+    }
+  }
 }

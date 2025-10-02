@@ -216,10 +216,25 @@ if ($dir == 'leads' && $page == 'edit') {
         $property_contacts = $contacts->get_contacts_by_lead_id($id);
         $multiple_contacts = count($property_contacts) > 1;
         
-        // Set default selected contact (first one or primary contact)
+        // Set selected contact - check for URL parameter first, then default to first contact
         $selected_contact_id = null;
         if (!empty($property_contacts)) {
-            $selected_contact_id = $property_contacts[0]['id'];
+            // Check if a specific contact_id was passed in URL (e.g., from calendar link)
+            $url_contact_id = $_GET['contact_id'] ?? null;
+            if ($url_contact_id) {
+                // Verify that the specified contact_id exists for this lead
+                foreach ($property_contacts as $contact) {
+                    if ($contact['id'] == $url_contact_id) {
+                        $selected_contact_id = $url_contact_id;
+                        break;
+                    }
+                }
+            }
+            
+            // If no valid contact_id from URL, default to first contact
+            if (!$selected_contact_id) {
+                $selected_contact_id = $property_contacts[0]['id'];
+            }
         }
     }
 }

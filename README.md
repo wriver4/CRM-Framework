@@ -1,5 +1,16 @@
 # DemoCRM - Customer Relationship Management System
 
+## 🚨 CRITICAL: REMOTE CODING PROJECT
+
+**⚠️ THIS IS A REMOTE CODING PROJECT ⚠️**  
+All development is performed on a **remote server via SFTP** at `sftp://159.203.116.150:222/home/democrm`
+
+**Key Remote Development Facts:**
+- Changes are **immediately live** on the production server
+- File ownership must be `democrm:democrm` (use `ssh wswg "chown democrm:democrm /path/to/file"`)
+- Full remote path: `/run/user/1000/gvfs/sftp:host=159.203.116.150,port=222/home/democrm`
+- See `.zencoder/rules/repo.md` for complete remote development guidelines
+
 ## 🚨 IMPORTANT: READ DOCUMENTATION FIRST
 
 **Before working on this project, you MUST read the comprehensive documentation:**
@@ -63,10 +74,20 @@ npx playwright test
 ```
 
 ## Project Overview
-- **Technology**: PHP 8.3+, MariaDB, Bootstrap 5
-- **Architecture**: Non-traditional framework with direct file routing
-- **Languages**: English (primary), Spanish (complete)
-- **Testing**: PHPUnit, Playwright, Enhanced Integration Framework
+
+**Project**: DemoCRM - Customer Relationship Management System  
+**Technology Stack**: PHP 8.3+, MariaDB 10+, Bootstrap 5, JavaScript  
+**Architecture**: Non-Traditional PHP with custom Database singleton pattern extending most classes  
+**Language Support**: English (primary), Spanish (complete translations)  
+**Database Schema**: Refer to `/sql/democrm_democrm_structure.sql` for detailed schema information  
+**Testing**: Automated testing using PHPUnit, Playwright and manual QA processes
+
+### Key Architectural Features:
+- **Database Singleton Pattern**: Most classes extend the Database class for consistent DB access
+- **Direct File Routing**: Non-traditional framework with direct file-based routing
+- **Template System**: Modular template components (HEADER → NAV → BODY → FOOTER)
+- **Security First**: Prepared statements, input validation, audit logging
+- **Internationalization**: Complete translation system with no hardcoded text
 
 ## 📖 Documentation Philosophy
 

@@ -30,7 +30,35 @@ if ($dir == 'leads' && $page == 'new') {
 }
 // hide empty Structure Other/Additional on edit view
 if ($dir == 'leads' && $page == 'edit') {
+  // Load jQuery first for leads edit functionality
+  echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>';
   echo '<script src="' . JS . '/hide-empty-structure.js"></script>';
+  echo '<script src="/assets/js/contact-selector.js"></script>';
+  
+  // Data injection for leads edit
+  echo '<script>';
+  echo 'window.leadsEditData = {';
+  echo '  leadId: ' . ($internal_id ?? 0) . ',';
+  echo '  selectedStage: ' . ($selected_stage ?? 1) . ',';
+  echo '  leadIdText: \'' . htmlspecialchars($lead_id ?? '') . '\',';
+  echo '  clientState: \'' . htmlspecialchars($form_state ?? '') . '\',';
+  echo '  clientCountry: \'' . htmlspecialchars($form_country ?? '') . '\',';
+  echo '  stageNames: ' . json_encode($leads->get_lead_stage_array()) . ',';
+  echo '  usTimezones: ' . json_encode($helpers->get_us_timezone_array()) . ',';
+  echo '  countryTimezones: ' . json_encode($helpers->get_country_timezone_array()) . ',';
+  echo '  errorUnableDetectTimezone: \'' . ($lang['error_unable_detect_timezone'] ?? 'Unable to detect timezone') . '\',';
+  echo '  textUnknown: \'' . ($lang['text_unknown'] ?? 'Unknown') . '\',';
+  echo '  errorUnableConvertTime: \'' . ($lang['error_unable_convert_time'] ?? 'Unable to convert time') . '\',';
+  echo '  errorFailedLoadNotes: \'' . ($lang['error_failed_load_notes'] ?? 'Failed to load notes') . '\',';
+  echo '  errorUnknownError: \'' . ($lang['error_unknown_error'] ?? 'Unknown error') . '\',';
+  echo '  errorNetworkLoadingNotes: \'' . ($lang['error_network_loading_notes'] ?? 'Network error while loading notes') . '\',';
+  echo '  textFrom: \'' . ($lang['text_from'] ?? 'from') . '\',';
+  echo '  textSameTimezone: \'' . ($lang['text_same_timezone'] ?? 'Same timezone') . '\',';
+  echo '  textTimeConversion: \'' . ($lang['text_time_conversion'] ?? '{clientTime} ({clientTz}) = {userTime} ({userTz})') . '\',';
+  echo '  errorTimeConversion: \'' . ($lang['error_time_conversion'] ?? 'Time conversion error') . '\'';
+  echo '};';
+  echo '</script>';
+  
   echo '<script src="/assets/js/edit-leads.js"></script>';
 }
 // dev only

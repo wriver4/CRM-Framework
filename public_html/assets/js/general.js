@@ -1,21 +1,5 @@
-/*$(document).ready(function(){
-	var urlPath = window.location.pathname,
-		urlPathArray = urlPath.split('.'),
-		tabId = urlPathArray[0].split('/').pop();
-	$('#department, #user, #ticket').removeClass('active');
-	$('#'+tabId).addClass('active');
-});*/
-
-// Commented out custom dropdown handling to allow Bootstrap to handle dropdowns properly
-/*let dropdowns = document.querySelectorAll('.dropdown-toggle')
-dropdowns.forEach((dd) => {
-	dd.addEventListener('click', function (e) {
-		var el = this.nextElementSibling
-		el.style.display = el.style.display === 'block' ? 'none' : 'block'
-	})
-});*/
-
-/*
+// Bootstrap 5 Nested Dropdown Support
+// This code enables multi-level dropdown menus (dropend) in the admin navigation
 (function ($bs) {
 	const CLASS_NAME = 'has-child-dropdown-show';
 	$bs.Dropdown.prototype.toggle = function (_orginal) {
@@ -41,7 +25,9 @@ dropdowns.forEach((dd) => {
 		});
 	});
 
-	// for hover
+	// Optional: Enable hover functionality for nested dropdowns
+	// Uncomment the section below if you want dropdowns to open on hover
+	/*
 	document.querySelectorAll('.dropdown-hover, .dropdown-hover-all .dropdown').forEach(function (dd) {
 		dd.addEventListener('mouseenter', function (e) {
 			let toggle = e.target.querySelector(':scope>[data-bs-toggle="dropdown"]');
@@ -58,5 +44,5 @@ dropdowns.forEach((dd) => {
 			}
 		});
 	});
+	*/
 })(bootstrap);
-*/

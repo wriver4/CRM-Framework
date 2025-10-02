@@ -34,11 +34,13 @@ if ($currentUserId > 0) {
     
     <!-- Help & Support Section -->
     <li><h6 class="dropdown-header"><?= $lang['navbar_help_support']; ?></h6></li>
+    <!-- TODO: Uncomment when Help module is built
     <li><a class="dropdown-item"
          href="<?php echo URL . '/help' ?>">
          <i class="fa fa-question-circle me-2"></i><?= $lang['navbar_help']; ?>
        </a>
     </li>
+    -->
     <li><a class="dropdown-item"
          href="<?php echo URL . '/logout' ?>">
          <i class="fa fa-sign-out-alt me-2"></i><?= $lang['navbar_logout']; ?>
@@ -72,6 +74,11 @@ if ($currentUserId > 0) {
         <li><a class="dropdown-item"
              href="<?php echo URL . '/admin/email/accounts_config' ?>">
              <i class="fa fa-cog me-2"></i><?= $lang['email_accounts']; ?>
+           </a>
+        </li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/email/smtp_config/list.php' ?>">
+             <i class="fa fa-paper-plane me-2"></i><?= $lang['smtp_config'] ?? 'SMTP Configuration'; ?>
            </a>
         </li>
         <li><a class="dropdown-item"
@@ -157,11 +164,13 @@ if ($currentUserId > 0) {
         </li>
       </ul>
     </li>
+    <!-- TODO: Uncomment when System Messages module is built
     <li><a class="dropdown-item"
          href="<?php echo URL . '/admin/system_messages/list' ?>">
          <i class="fa fa-comments me-2"></i><?= $lang['navbar_system_messages']; ?>
        </a>
     </li>
+    -->
     <li><a class="dropdown-item<?php echo ($dir == "users") ? ' active' : ''; ?>"
          href="<?php echo URL . '/users/list' ?>">
          <i class="fa fa-users me-2"></i><?= $lang['navbar_users']; ?>

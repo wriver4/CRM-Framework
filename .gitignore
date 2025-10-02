@@ -14,12 +14,14 @@
 .bash*
 .cloud*
 ## folders
+vendor/
 cwp_stats/
 backupcwp/
 tmp/
 ssl/
 ftp/
 Archive/
+development/
 ## files
 error.log
 php_errors.log
@@ -28,7 +30,6 @@ request_2.log
 conf.json
 passwd
 repo.md
-
 ## Testing Results
 # PHPUnit
 .phpunit.cache/

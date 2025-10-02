@@ -31,8 +31,8 @@ $lang = include LANG . '/en.php';
 $database = new Database();
 $pdo = $database->dbcrm();
 
-// Handle actions
-$action = $_GET['action'] ?? 'list';
+// Handle actions - sanitize inputs
+$action = isset($_GET['action']) ? htmlspecialchars($_GET['action'], ENT_QUOTES, 'UTF-8') : 'list';
 $id = (int)($_GET['id'] ?? 0);
 
 // Process actions
@@ -73,11 +73,11 @@ switch ($action) {
         break;
 }
 
-// Get filter parameters
-$status_filter = $_GET['status'] ?? '';
-$form_type_filter = $_GET['form_type'] ?? '';
-$date_from = $_GET['date_from'] ?? '';
-$date_to = $_GET['date_to'] ?? '';
+// Get filter parameters - sanitize inputs
+$status_filter = isset($_GET['status']) ? htmlspecialchars($_GET['status'], ENT_QUOTES, 'UTF-8') : '';
+$form_type_filter = isset($_GET['form_type']) ? htmlspecialchars($_GET['form_type'], ENT_QUOTES, 'UTF-8') : '';
+$date_from = isset($_GET['date_from']) ? htmlspecialchars($_GET['date_from'], ENT_QUOTES, 'UTF-8') : '';
+$date_to = isset($_GET['date_to']) ? htmlspecialchars($_GET['date_to'], ENT_QUOTES, 'UTF-8') : '';
 
 // Build query with filters
 $where_conditions = [];
@@ -118,12 +118,13 @@ $processing_logs = $stmt->fetchAll();
 $stmt = null;
 
 // Get summary statistics
+$days_back = 7; // Number of days to look back for statistics
 $stats_query = "SELECT 
     processing_status,
     COUNT(*) as count,
     DATE(processed_at) as date
 FROM email_form_processing 
-WHERE DATE(processed_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAYS)
+WHERE DATE(processed_at) >= DATE_SUB(CURDATE(), INTERVAL {$days_back} DAY)
 GROUP BY processing_status, DATE(processed_at)
 ORDER BY date DESC";
 

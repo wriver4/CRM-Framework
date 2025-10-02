@@ -167,7 +167,8 @@ try {
         'next_action' => (int)($_POST['next_action'] ?? 0),
         'next_action_notes' => sanitize_input($_POST['next_action_notes'] ?? ''),
         'next_action_date' => sanitize_input($_POST['next_action_date'] ?? ''),
-        'next_action_time' => sanitize_input($_POST['next_action_time'] ?? '')
+        'next_action_time' => sanitize_input($_POST['next_action_time'] ?? ''),
+        'next_action_priority' => (int)($_POST['next_action_priority'] ?? 5)
     ];
     
     // Handle file uploads for documents
@@ -315,6 +316,74 @@ try {
                 }
             }
             
+            // Send thank you email to lead
+            if (!empty($data['email'])) {
+                try {
+                    // Load language file for email templates
+                    $lang = include LANG . '/en.php';
+                    
+                    // Initialize email service and template generator
+                    $emailService = new EmailService();
+                    $emailTemplates = new LeadEmailTemplates($lang);
+                    
+                    // Generate email content based on lead source
+                    $lead_data_for_email = [
+                        'full_name' => $data['full_name'],
+                        'email' => $data['email'],
+                        'lead_source' => $data['lead_source']
+                    ];
+                    
+                    $email_content = $emailTemplates->generate_thank_you_email(
+                        $lead_data_for_email,
+                        $data['lead_source']
+                    );
+                    
+                    // Send the email
+                    $email_result = $emailService->send_email([
+                        'to_email' => $data['email'],
+                        'to_name' => $data['full_name'],
+                        'subject' => $email_content['subject'],
+                        'body_html' => $email_content['html'],
+                        'body_text' => $email_content['text'],
+                        'user_id' => $_SESSION['user_id'] ?? null,
+                        'lead_id' => $result['lead_id'],
+                        'contact_id' => $result['contact_id'],
+                        'email_type' => 'lead_thank_you',
+                        'lead_source_id' => $data['lead_source']
+                    ]);
+                    
+                    if ($email_result['success']) {
+                        // Log successful email send
+                        $audit->log(
+                            $_SESSION['user_id'] ?? 1,
+                            'lead_email_sent',
+                            "lead_{$result['lead_id']}",
+                            $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown',
+                            $_SERVER['REMOTE_ADDR'] ?? 'Unknown',
+                            $result['lead_id'],
+                            "Thank you email sent to {$data['email']}"
+                        );
+                    } else {
+                        // Log email send failure (but don't fail the lead creation)
+                        error_log("Failed to send thank you email for lead {$result['lead_id']}: {$email_result['message']}");
+                    }
+                    
+                } catch (Exception $e) {
+                    // Log email error but don't fail the lead creation
+                    error_log("Email sending error for lead {$result['lead_id']}: " . $e->getMessage());
+                    
+                    $audit->log(
+                        $_SESSION['user_id'] ?? 1,
+                        'lead_email_error',
+                        "lead_{$result['lead_id']}",
+                        $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown',
+                        $_SERVER['REMOTE_ADDR'] ?? 'Unknown',
+                        $result['lead_id'],
+                        "Email sending failed: " . $e->getMessage()
+                    );
+                }
+            }
+            
             // Process notes and next actions
             processNotesAndCalendarEvents($result['lead_id'], $data, $_SESSION['user_id'] ?? 1);
             
@@ -379,43 +448,59 @@ function processNotesAndCalendarEvents($lead_id, $data, $user_id) {
             
             $event_type = $action_to_event_type[$data['next_action']] ?? 1;
             
-            // Create datetime string
-            $start_datetime = $data['next_action_date'];
-            if (!empty($data['next_action_time'])) {
-                $start_datetime .= ' ' . $data['next_action_time'];
+            // Determine if this should be an all-day event
+            $is_all_day = empty($data['next_action_time']);
+            
+            // Create datetime string based on time availability
+            if ($is_all_day) {
+                $start_datetime = $data['next_action_date'] . ' 00:00:00';
             } else {
-                $start_datetime .= ' 09:00:00'; // Default to 9 AM if no time specified
+                $start_datetime = $data['next_action_date'] . ' ' . $data['next_action_time'];
             }
             
             // Get action type name for title
             $action_names = [
-                1 => 'Phone Call',
+                1 => 'Call',
                 2 => 'Email',
-                3 => 'Text Message', 
-                4 => 'Internal Note',
+                3 => 'Text', 
+                4 => 'Note',
                 5 => 'Virtual Meeting',
                 6 => 'In-Person Meeting'
             ];
             
             $action_name = $action_names[$data['next_action']] ?? 'Follow-up';
             
+            // Get contact name for event title
+            $contact_name = '';
+            try {
+                $leads = new Leads();
+                $lead_data = $leads->get_lead_by_id($lead_id);
+                if ($lead_data && !empty($lead_data['full_name'])) {
+                    $contact_name = $lead_data['full_name'];
+                } else {
+                    $contact_name = 'Lead #' . $lead_id;
+                }
+            } catch (Exception $e) {
+                $contact_name = 'Lead #' . $lead_id;
+            }
+            
             // Create calendar event
             $calendar = new CalendarEvent();
             $event_data = [
-                'title' => $action_name . ' - Lead #' . $data['lead_id'],
+                'title' => $action_name . ': ' . $contact_name,
                 'description' => $data['next_action_notes'] ?: 'Scheduled follow-up action',
                 'event_type' => $event_type,
                 'start_datetime' => $start_datetime,
                 'end_datetime' => null, // Let system calculate default duration
-                'all_day' => 0,
+                'all_day' => $is_all_day ? 1 : 0,
                 'status' => 1, // Active
-                'priority' => 5, // Normal priority
+                'priority' => $data['next_action_priority'] ?? 5,
                 'location' => '',
                 'notes' => $data['next_action_notes'] ?: '',
-                'reminder_minutes' => 15, // 15 minute reminder
+                'reminder_minutes' => $is_all_day ? 60 : 15, // 1 hour for all-day, 15 min for timed
                 'timezone' => $data['timezone'] ?: 'UTC',
                 'lead_id' => $lead_id,
-                'contact_id' => null // Will be linked through lead
+                'contact_id' => $lead_data['contact_id'] ?? null
             ];
             
             $event_id = $calendar->createEvent($event_data, $user_id);

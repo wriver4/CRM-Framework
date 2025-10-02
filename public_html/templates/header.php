@@ -100,6 +100,10 @@
   <link rel="stylesheet"
         href="<?php echo CSS . "/calendar.css"; ?>">
   <?php } ?>
+  <?php if ($dir == 'leads') { ?>
+  <link rel="stylesheet"
+        href="<?php echo CSS . "/leads.css"; ?>">
+  <?php } ?>
 
   <link rel="stylesheet"
         href="<?php echo CSS . "/style.css"; ?>">
