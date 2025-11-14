@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'public_html' && $_
     $stmt->execute();
     $result = $stmt->fetch();
 
-    if (!$result || in_array($result['rid'], $rid_denied)) {
+    if (!$result || in_array($result['role_id'], $rid_denied)) {
       $login_error_message = $lang['not_valid_login'];
     } else {
       if ($helper->verify_password($password, $result['password'])) {
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'public_html' && $_
         $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
         $_SESSION['user_id'] = $result['id']; // primary key
         $_SESSION['full_name'] = $result['full_name'];
-        $_SESSION['permissions'] = $rolesperms->get_session_roles_permissions($result['rid']);
+        $_SESSION['permissions'] = $rolesperms->get_session_roles_permissions($result['role_id']);
         $_SESSION['lang'] = isset($result['lang']) ? $result['lang'] : 'en';
         $_SESSION['loggedin'] = true;
         $_SESSION['refresh'] = true;

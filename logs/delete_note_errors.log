@@ -1,0 +1,18 @@
+[18-Oct-2025 00:11:08 UTC] === DELETE NOTE REQUEST STARTED (FIXED VERSION) ===
+[18-Oct-2025 00:11:08 UTC] Time: 2025-10-18 00:11:08
+[18-Oct-2025 00:11:08 UTC] Method: POST
+[18-Oct-2025 00:11:08 UTC] POST data: Array
+(
+    [note_id] => 1833
+    [lead_id] => 27
+)
+
+[18-Oct-2025 00:11:08 UTC] Creating Database connection directly...
+[18-Oct-2025 00:11:08 UTC] Database connection established successfully
+[18-Oct-2025 00:11:08 UTC] Verifying note 1833 belongs to lead 27
+[18-Oct-2025 00:11:08 UTC] Note verified successfully, proceeding with deletion
+[18-Oct-2025 00:11:08 UTC] Lead-note link deletion result: success
+[18-Oct-2025 00:11:08 UTC] Note deletion result: success
+[18-Oct-2025 00:11:08 UTC] Transaction committed successfully
+[18-Oct-2025 00:11:08 UTC] Attempting to create audit log entry...
+[18-Oct-2025 00:11:08 UTC] Audit error (non-fatal): SQLSTATE[23000]: Integrity constraint violation: 4025 CONSTRAINT `audit.data` failed for `democrm_democrm`.`audit`

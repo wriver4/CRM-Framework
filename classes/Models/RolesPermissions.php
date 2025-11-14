@@ -9,7 +9,7 @@ class RolesPermissions extends Database
 {
   /**
    * Table roles_permissions
-   * rid int(11) NOT NULL PRIMARY KEY
+   * role_id int(11) NOT NULL PRIMARY KEY
    * pid int(11) NOT NULL PRIMARY KEY
    * updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
    * created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -20,12 +20,12 @@ class RolesPermissions extends Database
     parent::__construct();
   }
 
-  public function get_session_roles_permissions($rid)
+  public function get_session_roles_permissions($role_id)
   {
     $session_roles_permissions = [];
-    $sql = "SELECT pid FROM roles_permissions where rid = ?";
+    $sql = "SELECT pid FROM roles_permissions where role_id = ?";
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->execute([$rid]);
+    $stmt->execute([$role_id]);
     $role_permissions = $stmt->fetchAll();
     array_walk($role_permissions, function ($value) use (&$session_roles_permissions) {
       $session_roles_permissions[] = $value['pid'];
@@ -49,14 +49,14 @@ class RolesPermissions extends Database
 
   /**
    * Get all permissions for a role
-   * @param  int $rid
+   * @param  int $role_id
    * @return array
    */
-  public function get_roles_permissions($rid)
+  public function get_roles_permissions($role_id)
   {
-    $sql = "SELECT pid FROM roles_permissions where rid = ?";
+    $sql = "SELECT pid FROM roles_permissions where role_id = ?";
     $stmt = $this->dbcrm()->prepare($sql);
-    $stmt->execute([$rid]);
+    $stmt->execute([$role_id]);
     $role_permissions = $stmt->fetchAll();
     return $role_permissions;
   }

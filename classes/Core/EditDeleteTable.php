@@ -19,7 +19,7 @@ class EditDeleteTable extends Table
   public function __construct($results, $column_names, $table_id)
   {
     parent::__construct($results, $column_names, $table_id);
-    //$this->row_id = $_SESSION['rid'];
+    $this->row_id = $_SESSION['user_id'] ?? 1;
     $this->table_id = $table_id;
 
     $this->column_names = $column_names;

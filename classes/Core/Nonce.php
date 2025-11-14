@@ -24,6 +24,7 @@ class Nonce
    */
 
   protected $age = 1000;
+  protected $secret; // Declare property to avoid PHP 8.4 deprecation
 
   public function __construct($age = null)
   {
@@ -50,9 +51,10 @@ class Nonce
     }
 
     $salt = random_bytes(14);
+    $saltEncoded = base64_encode($salt); // Encode binary salt to prevent colon issues
     $time = time() + $this->age;
     $toHash = $this->secret . $salt . $time;
-    $nonce = $salt . ':' . $form_id . ':' . $time . ':' . hash('sha256', $toHash);
+    $nonce = $saltEncoded . ':' . $form_id . ':' . $time . ':' . hash('sha256', $toHash);
     $this->store($form_id, $nonce);
     return $nonce;
   }
@@ -62,7 +64,8 @@ class Nonce
     if (count($split) !== 4) {
       return false;
     }
-    $salt = $split[0];
+    $saltEncoded = $split[0];
+    $salt = base64_decode($saltEncoded); // Decode the base64-encoded salt
     $form_id = $split[1];
     $time = intval($split[2]);
     $oldHash = $split[3];

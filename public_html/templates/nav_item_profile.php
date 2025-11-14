@@ -91,6 +91,12 @@ if ($currentUserId > 0) {
              <i class="fa fa-heartbeat me-2"></i><?= $lang['system_status']; ?>
            </a>
         </li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/system_email_management' ?>">
+             <i class="fa fa-file-text me-2"></i><?= $lang['email_templates']; ?>
+           </a>
+        </li>
       </ul>
     </li>
     <li class="dropdown dropend">

@@ -8,6 +8,9 @@
     <testsuite name="Unit">
       <directory>tests/phpunit/Unit</directory>
     </testsuite>
+    <testsuite name="Core">
+      <directory>tests/phpunit/Unit/Core</directory>
+    </testsuite>
     <testsuite name="Integration">
       <directory>tests/phpunit/Integration</directory>
     </testsuite>
@@ -43,7 +46,15 @@
   <php>
     <!-- Environment variables for testing -->
     <env name="APP_ENV" value="testing"/>
+    <env name="TESTING_MODE" value="true"/>
     <env name="BASE_URL" value="https://democrm.waveguardco.net"/>
+    <!-- Test database configuration -->
+    <env name="TEST_DB_HOST" value="localhost"/>
+    <env name="TEST_DB_NAME" value="democrm_test"/>
+    <env name="TEST_DB_USER" value="democrm_test"/>
+    <env name="TEST_DB_PASS" value="TestDB_2025_Secure!"/>
+    <!-- Testing mode type: auto, persistent, ephemeral -->
+    <env name="TESTING_MODE_TYPE" value="persistent"/>
     <!-- PHP settings -->
     <ini name="error_reporting" value="E_ALL"/>
     <ini name="display_errors" value="1"/>

@@ -63,14 +63,28 @@
 class Database
 {
     protected $sqlLogger;
+    protected $crm_host;
+    protected $crm_database;
+    protected $crm_username;
+    protected $crm_password;
+    protected $character_set;
+    protected $options;
 
     public function __construct()
     {
-        // server database connection information
-        $this->crm_host = 'localhost';
-        $this->crm_database = 'democrm_democrm';
-        $this->crm_username = 'democrm_democrm';
-        $this->crm_password = 'b3J2sy5T4JNm60';
+        // Check if we're in test environment and use test database credentials
+        if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'testing') {
+            $this->crm_host = $_ENV['DB_HOST'] ?? 'localhost';
+            $this->crm_database = $_ENV['DB_NAME'] ?? 'democrm_test';
+            $this->crm_username = $_ENV['DB_USER'] ?? 'democrm_test';
+            $this->crm_password = $_ENV['DB_PASS'] ?? 'TestDB_2025_Secure!';
+        } else {
+            // Production database connection information
+            $this->crm_host = 'localhost';
+            $this->crm_database = 'democrm_democrm';
+            $this->crm_username = 'democrm_democrm';
+            $this->crm_password = 'b3J2sy5T4JNm60';
+        }
 
         $this->character_set = 'utf8mb4';
         $this->options = [

@@ -9,16 +9,16 @@ $table_page = false;
 
 $title_icon = '<i class="fa fa-user" aria-hidden="true"></i>';
 
-$rid = "";
-$rname = "";
+$role_id = "";
+$role = "";
 
-$label_rid = "Role ID";
-$label_rname = "Role Name";
+$label_role_id = "Role ID";
+$label_role = "Role Name";
 $label_submit = "Submit";
 $label_cancel = "Cancel";
 
-$aria_label_rid = "Role ID";
-$aria_label_rname = "Role Name";
+$aria_label_role_id = "Role ID";
+$aria_label_role = "Role Name";
 $aria_label_submit = "Submit";
 $aria_label_cancel = "Cancel";
 
@@ -33,13 +33,13 @@ try {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $id = trim($_POST["id"]);
-  $rid = trim($_POST["rid"]);
-  $rname = trim($_POST["rname"]);
+  $role_id = trim($_POST["role_id"]);
+  $role = trim($_POST["role"]);
 
-  $sql = "INSERT INTO roles (rid, rname) VALUES (:rid, :rname)";
+  $sql = "INSERT INTO roles (role_id, role) VALUES (:role_id, :role)";
   $stmt = $pdo->prepare($sql);
-  $stmt->bindValue(':rid', $rid, PDO::PARAM_INT);
-  $stmt->bindValue(':rname', $rname, PDO::PARAM_STR);
+  $stmt->bindValue(':role_id', $role_id, PDO::PARAM_INT);
+  $stmt->bindValue(':role', $role, PDO::PARAM_STR);
   if ($stmt->execute()) {
     $stmt = null;
     header("location: list.php");
@@ -56,28 +56,28 @@ require_once SECTIONOPEN;
       action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"
       method="POST">
   <div class="form-group pb-1">
-    <label for="rid"
-           class="required pb-1 pt-1"><?php echo $label_rid; ?></label>
+    <label for="role_id"
+           class="required pb-1 pt-1"><?php echo $label_role_id; ?></label>
     <input type="text"
            required=""
-           name="rid"
+           name="role_id"
            maxlength="100"
-           id="rid"
+           id="role_id"
            class="form-control"
-           placeholder="<?php echo $label_rid; ?>"
+           placeholder="<?php echo $label_role_id; ?>"
            autofocus=" autofocus"
            tabindex="1">
   </div>
   <div class="form-group pb-1">
-    <label for=" rname"
-           class="required pb-1"><?php echo $label_rname; ?></label>
+    <label for="role"
+           class="required pb-1"><?php echo $label_role; ?></label>
     <input type="text"
            required=""
-           name="rname"
+           name="role"
            maxlength="100"
-           id="rname"
+           id="role"
            class="form-control"
-           placeholder="<?php echo $label_rname; ?>">
+           placeholder="<?php echo $label_role; ?>">
   </div>
   <p></p>
   <button type="submit"

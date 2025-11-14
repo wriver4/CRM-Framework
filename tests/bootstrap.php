@@ -15,9 +15,15 @@ date_default_timezone_set('UTC');
 $_ENV['APP_ENV'] = 'testing';
 $_ENV['BASE_URL'] = $_ENV['BASE_URL'] ?? 'https://democrm.waveguardco.net';
 
+// Define test database credentials
+$_ENV['DB_HOST'] = 'localhost';
+$_ENV['DB_NAME'] = 'democrm_test';
+$_ENV['DB_USER'] = 'democrm_test';
+$_ENV['DB_PASS'] = 'TestDB_2025_Secure!';
+
 // Define constants needed for testing
 if (!defined('NONCE_SECRET')) {
-    define('NONCE_SECRET', 'test-secret-key-for-nonce-generation');
+    define('NONCE_SECRET', 'test-secret-key-for-nonce-generation-minimum-32-chars');
 }
 
 // Load our base TestCase class
@@ -63,3 +69,4 @@ spl_autoload_register(function ($class) {
 });
 
 echo "✅ Test bootstrap loaded\n";
+echo "📊 Using test database: {$_ENV['DB_NAME']}\n";

@@ -66,10 +66,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
         $_SESSION['user_id'] = $result['id']; // primary key
         $_SESSION['full_name'] = $result['full_name'];
-        if (empty($result['rid'])) {
+        if (empty($result['role_id'])) {
           $_SESSION['permissions'] = ["1000"];
         } else {
-          $_SESSION['permissions'] = $rolesperms->get_session_roles_permissions($result['rid']);
+          $_SESSION['permissions'] = $rolesperms->get_session_roles_permissions($result['role_id']);
         }
         $_SESSION['lang'] = isset($result['lang']) ? $result['lang'] : 'en';
         $_SESSION['loggedin'] = true;

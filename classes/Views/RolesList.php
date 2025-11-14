@@ -12,8 +12,8 @@ class RolesList extends EditDeleteTable
     parent::__construct($results, $this->column_names, "roles-list");
     $this->column_names = [
       'action' => $lang['action'],
-      'rid' => $lang['role_id'],
-      'rname' => $lang['rname']
+      'role_id' => $lang['role_id'],
+      'role' => $lang['rname']
     ];
   }
 }

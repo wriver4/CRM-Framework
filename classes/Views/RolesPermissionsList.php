@@ -13,7 +13,7 @@ class RolesPermissionsList extends EditDeleteTable
 
     parent::__construct($results, $this->column_names, "roles-permissions-list");
     $this->column_names = [
-      'rid' => $lang['role_id'],
+      'role_id' => $lang['role_id'],
       'pid' => $lang['permission_id'],
     ];
   }

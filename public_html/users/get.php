@@ -12,7 +12,7 @@ if ($dir == 'users' && $page == 'list') {
 if ($dir == 'users' && $page == 'view') {
   $id = trim($_GET["id"]);
   $result = $users->get_by_id($id);
-  $rname = $result["rname"];
+  $rname = $result["role"];
   $full_name = $result["full_name"];
   $username = $result["username"];
   $password = $result["password"];
@@ -26,7 +26,7 @@ if ($dir == 'users' && $page == 'edit') {
    if ($form == "profile"){
     $id = trim($_GET["id"]);
     $result = $users->get_by_id($id);
-    $rid = $result["rid"];
+    $rid = $result["role_id"];
     $full_name = $result["full_name"];
     $username = $result["username"];
     $password = $result["password"];
@@ -38,7 +38,7 @@ if ($dir == 'users' && $page == 'edit') {
 if ($dir == 'users' && $page == 'delete') {
 $id = trim($_GET["id"]);
 $result = $users->get_by_id($id);
-$rid = $result["rname"];
+$rid = $result["role"];
 $full_name = $result["full_name"];
 $username = $result["username"];
 $password = $result["password"];

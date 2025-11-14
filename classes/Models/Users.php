@@ -66,9 +66,9 @@ class Users extends Database
 
 	public function new($rid, $full_name, $username, $email, $password)
 	{
-		$sql = "INSERT INTO users (rid, full_name, username, email, password  ) VALUES (:rid, :full_name, :username, :email, :password)";
+		$sql = "INSERT INTO users (role_id, full_name, username, email, password  ) VALUES (:role_id, :full_name, :username, :email, :password)";
 		$stmt = $this->dbcrm()->prepare($sql);
-		$stmt->bindValue(':rid', $rid, PDO::PARAM_INT);
+		$stmt->bindValue(':role_id', $rid, PDO::PARAM_INT);
 		$stmt->bindValue(':full_name', $full_name, PDO::PARAM_STR);
 		$stmt->bindValue(':username', $username, PDO::PARAM_STR);
 		$stmt->bindValue(':email', $email, PDO::PARAM_STR);
@@ -90,7 +90,7 @@ class Users extends Database
 		if (!$helper->is_password($password)) {
 			$sql .= "`password` = :password, ";
 		}
-		$sql .= "rid = :rid, ";
+		$sql .= "role_id = :role_id, ";
 		if (strlen($email) > 0) {
 			$sql .= "`email` = :email, ";
 		}
@@ -107,7 +107,7 @@ class Users extends Database
 			$password = $helper->hash_password($password);
 			$stmt->bindValue(':password', $password);
 		}
-		$stmt->bindValue(':rid', $rid);
+		$stmt->bindValue(':role_id', $rid);
 		if (strlen($email) > 0) {
 			$stmt->bindValue(':email', $email);
 		}
@@ -154,7 +154,7 @@ class Users extends Database
 
 	public function get_by_id($id)
 	{
-		$sql = 'SELECT u.*, r.rname from users u LEFT JOIN roles r ON u.rid = r.rid WHERE u.id = :id';
+		$sql = 'SELECT u.*, r.role from users u LEFT JOIN roles r ON u.role_id = r.role_id WHERE u.id = :id';
 		$stmt = $this->dbcrm()->prepare($sql);
 		$stmt->bindValue(':id', $id, PDO::PARAM_INT);
 		$stmt->execute();
@@ -164,7 +164,7 @@ class Users extends Database
 
 	public function get_all()
 	{
-		$sql = 'SELECT u.id, u.full_name, u.name, u.username, r.rname, u.status from users u LEFT JOIN roles r ON u.rid = r.rid';
+		$sql = 'SELECT u.id, u.full_name, u.name, u.username, r.role, u.status from users u LEFT JOIN roles r ON u.role_id = r.role_id';
 		$sql .= " ORDER BY u.full_name ASC";
 		$stmt = $this->dbcrm()->query($sql);
 		$stmt->execute();
@@ -174,7 +174,7 @@ class Users extends Database
 
 	public function get_all_active()
 	{
-		$sql = 'SELECT u.id, u.full_name, u.username, r.rname from users u LEFT JOIN roles r ON u.rid = r.rid WHERE u.status = 1 ORDER BY u.full_name ASC';
+		$sql = 'SELECT u.id, u.full_name, u.username, r.role from users u LEFT JOIN roles r ON u.role_id = r.role_id WHERE u.status = 1 ORDER BY u.full_name ASC';
 		$stmt = $this->dbcrm()->query($sql);
 		$stmt->execute();
 		$results = $stmt->fetchAll();
@@ -244,7 +244,7 @@ class Users extends Database
 	/*  future use
 	public function get_all_encoded()
 	{
-		$sql = 'SELECT u.id, u.full_name, u.username, r.rname, u.prop_id, u.status from users u LEFT JOIN roles r ON u.rid = r.rid';
+		$sql = 'SELECT u.id, u.full_name, u.username, r.role, u.prop_id, u.status from users u LEFT JOIN roles r ON u.role_id = r.role_id';
 		$sql .= " ORDER BY u.full_name ASC";
 		$stmt = $this->dbcrm()->query($sql);
 		$stmt->execute();
@@ -256,7 +256,7 @@ class Users extends Database
 					'id' => $result['id'],
 					'full_name' => $result['full_name'],
 					'username' => $result['username'],
-					'rname' => $result['rname'],
+					'role' => $result['role'],
 					'status' => $result['status']
 				);
 			}

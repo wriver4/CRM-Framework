@@ -74,6 +74,20 @@ spl_autoload_register(function ($class_name) {
 // 2. Composer's autoloader for vendor packages.
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// --- TESTING CONFIGURATION ---
+// Load testing configuration if in test mode
+$testConfig = null;
+if (php_sapi_name() === 'cli' && (getenv('TESTING_MODE') === 'true' || (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'testing'))) {
+    $testConfigFile = __DIR__ . '/testing.php';
+    if (file_exists($testConfigFile)) {
+        $testConfig = require $testConfigFile;
+        define('TESTING_MODE', true);
+        define('TEST_CONFIG', $testConfig);
+    }
+} else {
+    define('TESTING_MODE', false);
+}
+
 // --- DEBUG CONFIGURATION ---
 // SQL debugging - set to true to enable detailed SQL execution logging
 // WARNING: This will log all SQL queries and parameters - only enable for debugging
