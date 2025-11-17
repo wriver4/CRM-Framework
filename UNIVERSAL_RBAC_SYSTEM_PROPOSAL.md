@@ -1,8 +1,8 @@
 ---
 title: Universal RBAC (Role-Based Access Control) System Proposal
-date: 2025-01-15
-version: 3.0
-status: PROPOSAL
+date: 2025-11-17
+version: 4.0
+status: UPDATED - Implementation Ready
 scope: Multi-Application Enterprise System
 ---
 
@@ -14,9 +14,10 @@ This document outlines a **universal, application-agnostic Role-Based Access Con
 
 ✅ **Current**: DemoCRM software  
 ✅ **Future**: Manufacturing systems, Field operations, Finance, Client portals, etc.  
-✅ **Scalable**: 100+ role IDs with expansion headroom  
+✅ **Scalable**: 163 role IDs with strategic expansion headroom  
 ✅ **Flexible**: Use subsets of roles per application  
-✅ **Enterprise-Grade**: Support for 11+ departments/business functions  
+✅ **Enterprise-Grade**: Support for 9+ departments with clear role structure  
+✅ **Consolidated**: Simplified from previous structure for better maintainability  
 
 ---
 
@@ -33,7 +34,7 @@ Reserved **exclusively** for application/software system maintainers
 
 ---
 
-### **LAYER 2: EXECUTIVE LEADERSHIP (Roles 10-19)**
+### **LAYER 2: EXECUTIVE LEADERSHIP (Roles 10-14)**
 C-Suite and strategic decision makers (cross-functional)
 
 ```
@@ -47,254 +48,215 @@ C-Suite and strategic decision makers (cross-functional)
         │                 │                 │                 │
    ┌────▼─────┐      ┌───▼────┐       ┌───▼────┐        ┌───▼────┐
    │ROLE: 12  │      │ROLE: 13│       │ROLE: 11│        │ROLE: 14│
-   │CFO       │      │COO     │       │CTO     │        │COO-Ops │
-   │Finance   │      │Ops     │       │Tech    │        │Mfg/Ops │
+   │CIO       │      │CTO     │       │VP      │        │CMO     │
+   │Info Tech │      │Tech    │       │Ops/Mfg │        │Marketing
    └──────────┘      └────────┘       └────────┘        └────────┘
 ```
 
-|   ID   | Role              | Title                     | Department | Authority |       Scope        | Users |
-| :----: | ----------------- | ------------------------- | ---------- | :-------: | :----------------: | :---: |
-| **10** | **President**     | President / CEO           | Executive  |   ⭐⭐⭐⭐⭐   |    All Systems     |   1   |
-| **11** | **CTO**           | Chief Technology Officer  | Executive  |   ⭐⭐⭐⭐    |    Tech/Systems    |   1   |
-| **12** | **CFO**           | Chief Financial Officer   | Executive  |   ⭐⭐⭐⭐    | Finance/Accounting |   1   |
-| **13** | **COO**           | Chief Operations Officer  | Executive  |   ⭐⭐⭐⭐    |     Operations     |   1   |
-| **14** | **VP Operations** | VP Mfg & Field Operations | Executive  |   ⭐⭐⭐⭐    |   Mfg/Field Ops    |   1   |
+|   ID   | Role                      | Title                          | Department | Authority |       Scope        | Users |
+| :----: | ------------------------- | ------------------------------ | ---------- | :-------: | :----------------: | :---: |
+| **10** | **President**             | President / CEO                | Executive  |   ⭐⭐⭐⭐⭐   |    All Systems     |   1   |
+| **11** | **Vice President**         | VP - General Management        | Executive  |   ⭐⭐⭐⭐    | Cross-Functional   |   1   |
+| **12** | **Chief Information Officer** | CIO - Operations & IT        | Executive  |   ⭐⭐⭐⭐    | Technology/Systems |   1   |
+| **13** | **Chief Technology Officer** | CTO - Technology Executive   | Executive  |   ⭐⭐⭐⭐    | Tech Innovation    |   1   |
+| **14** | **Chief Marketing Officer** | CMO - Marketing & Sales       | Executive  |   ⭐⭐⭐⭐    | Marketing/Sales    |   1   |
 
 ---
 
-### **LAYER 3: DEPARTMENT HEADS (Roles 15-19)**
-Senior leadership for specific departments
-
-|   ID   | Role                 | Title                  | Department    | Authority |      Scope       |
-| :----: | -------------------- | ---------------------- | ------------- | :-------: | :--------------: |
-| **15** | **VP Sales**         | VP of Sales            | Sales         |    ⭐⭐⭐    |    All Sales     |
-| **16** | **VP Engineering**   | VP of Engineering      | Engineering   |    ⭐⭐⭐    | All Engineering  |
-| **17** | **VP Admin**         | VP of Administration   | Admin         |    ⭐⭐⭐    |  Admin Systems   |
-| **18** | **VP Manufacturing** | VP of Manufacturing    | Manufacturing |    ⭐⭐⭐    |  Manufacturing   |
-| **19** | **VP Field Ops**     | VP of Field Operations | Field Ops     |    ⭐⭐⭐    | Field Operations |
+### **LAYER 3: DEPARTMENT MANAGEMENT (Roles 30-99)**
+Operational leadership for specific departments (see detailed sections below)
 
 ---
 
-### **LAYER 4: SALES DEPARTMENT - INTERNAL (Roles 20-29)**
+### **SALES DEPARTMENT - INTERNAL (Roles 30-39)**
 Internal Sales team structure for direct customer engagement
 
 ```
-VP Sales (15)
+Executive (10-14)
     │
-    ├─ Sales Manager (20)  ── Sales Users (25)
-    ├─ Partner Manager (21) ── Partner Sales (26)
-    └─ Sales Lead (22)     ── [Support]
+    ├─ Sales Manager (30)   ── Sales Assistant (35)
+    └─ [Support roles: 31-34, 36-39 reserved]
 ```
 
-|   ID   | Role                | Title                   | Reports To       | Lead Access | Team Size | Users |
-| :----: | ------------------- | ----------------------- | ---------------- | :---------: | :-------: | :---: |
-| **20** | **Sales Manager**   | Sales Manager           | VP Sales (15)    |  All Leads  |   5-10    |  1-3  |
-| **21** | **Partner Manager** | Partner/Channel Manager | VP Sales (15)    |  Assigned   |    2-5    |  1-2  |
-| **22** | **Sales Lead**      | Sales Team Lead         | Sales Mgr (20)   | Team Leads  |    3-5    |  1-2  |
-| **25** | **Sales User**      | Sales Representative    | Sales Mgr (20)   |  All Leads  |     —     | 10-50 |
-| **26** | **Partner Sales**   | Partner Sales Rep       | Partner Mgr (21) |  Assigned   |     —     | 5-20  |
-| **23** | **Sales Lead**      | Additional Sales Lead   | Sales Mgr (20)   | Team Leads  |    3-5    |  1-2  |
-| **24** | *Reserved*          | —                       | —                |      —      |     —     |   —   |
-| **27** | *Reserved*          | —                       | —                |      —      |     —     |   —   |
-| **28** | *Reserved*          | —                       | —                |      —      |     —     |   —   |
-| **29** | *Reserved*          | —                       | —                |      —      |     —     |   —   |
+|   ID   | Role                | Title                   | Reports To       | Scope       | Team Size | Users  |
+| :----: | ------------------- | ----------------------- | ---------------- | :---------: | :-------: | :----: |
+| **30** | **Sales Manager**   | Sales Manager           | Executive        | All Leads   |   5-10    |  1-3   |
+| **35** | **Sales Assistant** | Sales Support           | Sales Mgr (30)   |  Assigned   |     —     | 10-50  |
+| **31** | *Reserved*          | —                       | —                |      —      |     —     |   —    |
+| **32** | *Reserved*          | —                       | —                |      —      |     —     |   —    |
+| **33** | *Reserved*          | —                       | —                |      —      |     —     |   —    |
+| **34** | *Reserved*          | —                       | —                |      —      |     —     |   —    |
+| **36** | *Reserved*          | —                       | —                |      —      |     —     |   —    |
+| **37** | *Reserved*          | —                       | —                |      —      |     —     |   —    |
+| **38** | *Reserved*          | —                       | —                |      —      |     —     |   —    |
+| **39** | *Reserved*          | —                       | —                |      —      |     —     |   —    |
 
 ---
 
-### **LAYER 4B: SALES - EXTERNAL PARTNERS (Roles 140-149)**
-External sales partner roles (Distributors, Installers, Applicators)
+### **EXTERNAL PARTNERS (Roles 100-159)**
+External partner relationships (Strategic partners, vendors, distributors, installers, applicators, contractors)
 
 ```
-VP Sales (15)
+Executive (10-14)
     │
-    ├─ Partner Manager (21)
-    │   ├─ Distributor (141)
-    │   ├─ Installer (142)
-    │   └─ Applicator (143)
-    │
-    └─ [Channel Management]
+    ├─ Strategic Partner (100)    ← Strategic relationships
+    ├─ Vendor (110)               ← Supplier/Vendor
+    ├─ Distributor (120)          ← Channel distributor
+    ├─ Installer (130)            ← Installation partner
+    ├─ Applicator (140)           ← Service/Application partner
+    └─ Contractor (150)           ← Contractor/Consultant
 ```
 
-|     ID      | Role            | Title               | Department | Reports To       | Authority | Team Size | Users  |
-| :---------: | --------------- | ------------------- | ---------- | ---------------- | :-------: | :-------: | :----: |
-|   **141**   | **Distributor** | Channel Distributor | Sales      | Partner Mgr (21) |     ⭐     |   10-20   | 10-100 |
-|   **142**   | **Installer**   | External Installer  | Sales      | Partner Mgr (21) |     ⭐     |   5-15    | 10-50  |
-|   **143**   | **Applicator**  | Field Applicator    | Sales      | Partner Mgr (21) |     ⭐     |   5-10    |  5-50  |
-| **144-149** | *Reserved*      | —                   | —          | —                |     —     |     —     |   —    |
+|     ID      | Role                | Title                   | Department | Purpose               | Authority |      Users       |
+| :---------: | ------------------- | ----------------------- | ---------- | --------------------- | :-------: | :--------------: |
+|   **100**   | **Strategic Partner**| Strategic Partner       | External   | Long-term Partnership |     ⭐     |    Unlimited     |
+|   **110**   | **Vendor**          | Vendor / Supplier       | External   | Supplier Portal       |     ⭐     |     10-100       |
+|   **120**   | **Distributor**     | Channel Distributor     | External   | Channel Distribution  |     ⭐     |     10-100       |
+|   **130**   | **Installer**       | Installation Partner    | External   | Installation Services |     ⭐     |     10-50        |
+|   **140**   | **Applicator**      | Application Partner     | External   | Service Delivery      |     ⭐     |      5-50        |
+|   **150**   | **Contractor**      | Contractor / Consultant | External   | Consulting Services   |     ⭐     |      5-50        |
+| **101-109** | *Reserved*          | —                       | —          | —                     |     —     |        —         |
+| **111-119** | *Reserved*          | —                       | —          | —                     |     —     |        —         |
+| **121-129** | *Reserved*          | —                       | —          | —                     |     —     |        —         |
+| **131-139** | *Reserved*          | —                       | —          | —                     |     —     |        —         |
+| **141-149** | *Reserved*          | —                       | —          | —                     |     —     |        —         |
+| **151-159** | *Reserved*          | —                       | —          | —                     |     —     |        —         |
 
 ---
 
-### **LAYER 5: ENGINEERING & TECHNICAL (Roles 30-39)**
+### **ENGINEERING & TECHNICAL (Roles 40-49)**
 Software, systems, and technical team
 
 ```
-VP Engineering (16)
+Executive (10-14)
     │
-    ├─ Engineering Manager (30) 
-    │   ├─ Tech Lead (31)
-    │   ├─ Technician 1 (32)
-    │   └─ Technician 2 (33)
+    ├─ Engineering Manager (40) 
+    │   ├─ Tech Lead (41)
+    │   ├─ Technician 1 (42)
+    │   └─ Technician 2 (43)
     │
-    └─ [Translator (34) - Support Role]
+    └─ [Reserved: 44-49]
 ```
 
-|    ID     | Role                    | Title                | Reports To   | Authority | Users |
-| :-------: | ----------------------- | -------------------- | ------------ | :-------: | :---: |
-|  **30**   | **Engineering Manager** | Engineering Manager  | VP Eng (16)  |    ⭐⭐     |  1-2  |
-|  **31**   | **Tech Lead**           | Technical Team Lead  | Eng Mgr (30) |     ⭐     |  1-2  |
-|  **32**   | **Technician 1**        | Senior Technician    | Eng Mgr (30) |     ⭐     |  2-5  |
-|  **33**   | **Technician 2**        | Junior Technician    | Eng Mgr (30) |     ⭐     |  2-5  |
-|  **34**   | **Translator**          | Technical Translator | Eng Mgr (30) |     ⭐     |  1-3  |
-| **35-39** | *Reserved*              | —                    | —            |     —     |   —   |
+|    ID     | Role                    | Title                | Reports To    | Authority | Users |
+| :-------: | ----------------------- | -------------------- | ------------- | :-------: | :---: |
+|  **40**   | **Engineering Manager** | Engineering Manager  | Executive     |    ⭐⭐     |  1-2  |
+|  **41**   | **Tech Lead**           | Technical Team Lead  | Eng Mgr (40)  |     ⭐     |  1-2  |
+|  **42**   | **Technician 1**        | Senior Technician    | Eng Mgr (40)  |     ⭐     |  2-5  |
+|  **43**   | **Technician 2**        | Junior Technician    | Eng Mgr (40)  |     ⭐     |  2-5  |
+| **44-49** | *Reserved*              | —                    | —             |     —     |   —   |
 
 ---
 
-### **LAYER 6: MANUFACTURING & OPERATIONS (Roles 40-49)**
+### **MANUFACTURING & OPERATIONS (Roles 50-59)**
 Production, quality control, and manufacturing operations
 
 ```
-VP Manufacturing (18)
+Executive (10-14)
     │
-    ├─ Manufacturing Manager (40)
-    │   ├─ Production Lead (41)
-    │   ├─ Quality Lead (42)
-    │   └─ Production Tech (43)
+    ├─ Manufacturing Manager (50)
+    │   ├─ Manufacturing Tech 1 (51)
+    │   └─ Manufacturing Tech 2 (52)
     │
-    └─ Installer (47)
+    └─ [Reserved: 53-59]
 ```
 
-|    ID     | Role                      | Title                 | Department     | Reports To     | Authority | Team Size | Users |
-| :-------: | ------------------------- | --------------------- | -------------- | -------------- | :-------: | :-------: | :---: |
-|  **40**   | **Manufacturing Manager** | Mfg Manager           | Manufacturing  | VP Mfg (18)    |    ⭐⭐     |   15-30   |  1-2  |
-|  **41**   | **Production Lead**       | Production Supervisor | Manufacturing  | Mfg Mgr (40)   |     ⭐     |   5-10    |  2-4  |
-|  **42**   | **Quality Lead**          | QC Lead / Supervisor  | Manufacturing  | Mfg Mgr (40)   |     ⭐     |   5-10    |  1-2  |
-|  **43**   | **Production Tech**       | Production Technician | Manufacturing  | Prod Lead (41) |     ⭐     |     —     | 10-50 |
-|  **44**   | **Quality Tech**          | QC Technician         | Manufacturing  | QC Lead (42)   |     ⭐     |     —     | 5-15  |
-|  **47**   | **Installer**             | Field Installer       | Field Ops (19) | Field Mgr (50) |     ⭐     |     —     | 5-50  |
-| **48-49** | *Reserved*                | —                     | —              | —              |     —     |     —     |   —   |
+|    ID     | Role                        | Title                 | Department     | Reports To       | Authority | Team Size | Users |
+| :-------: | --------------------------- | --------------------- | -------------- | ---------------- | :-------: | :-------: | :---: |
+|  **50**   | **Manufacturing Manager**   | Mfg Manager           | Manufacturing  | Executive        |    ⭐⭐     |   15-30   |  1-2  |
+|  **51**   | **Manufacturing Tech 1**    | Manufacturing Tech Sr | Manufacturing  | Mfg Mgr (50)     |     ⭐     |   5-10    |  2-4  |
+|  **52**   | **Manufacturing Tech 2**    | Manufacturing Tech Jr | Manufacturing  | Mfg Mgr (50)     |     ⭐     |   5-10    |  1-2  |
+| **53-59** | *Reserved*                  | —                     | —              | —                |     —     |     —     |   —   |
 
 ---
 
-### **LAYER 7: FIELD OPERATIONS & SERVICE (Roles 50-59)**
+### **FIELD SERVICE & OPERATIONS (Roles 60-69)**
 Field service, installations, maintenance, and support
 
 ```
-VP Field Operations (19)
+Executive (10-14)
     │
-    ├─ Field Manager (50)
-    │   ├─ Service Lead (51)
-    │   └─ Field Tech (52)
-    │
-    └─ Installer (47)
+    ├─ Field Manager (60)
+    │   └─ [Reserved: 61-69]
 ```
 
-|    ID     | Role                 | Title                    | Department | Reports To        | Authority | Team  | Users  |
-| :-------: | -------------------- | ------------------------ | ---------- | ----------------- | :-------: | :---: | :----: |
-|  **50**   | **Field Manager**    | Field Operations Manager | Field Ops  | VP Field (19)     |    ⭐⭐     | 20-50 |  1-2   |
-|  **51**   | **Service Lead**     | Service Team Lead        | Field Ops  | Field Mgr (50)    |     ⭐     | 5-10  |  2-4   |
-|  **52**   | **Field Technician** | Field Service Tech       | Field Ops  | Service Lead (51) |     ⭐     |   —   | 10-100 |
-|  **53**   | **Installer Lead**   | Installation Supervisor  | Field Ops  | Field Mgr (50)    |     ⭐     | 5-15  |  1-2   |
-|  **54**   | **Installer**        | Field Installer (see 47) | Field Ops  | Install Lead (53) |     ⭐     |   —   |  5-50  |
-| **55-59** | *Reserved*           | —                        | —          | —                 |     —     |   —   |   —    |
+|    ID     | Role                 | Title                    | Department | Reports To       | Authority | Team  | Users  |
+| :-------: | -------------------- | ------------------------ | ---------- | ---------------- | :-------: | :---: | :----: |
+|  **60**   | **Field Manager**    | Field Operations Manager | Field Ops  | Executive        |    ⭐⭐     | 20-50 |  1-2   |
+| **61-69** | *Reserved*           | —                        | —          | —                |     —     |   —   |   —    |
 
 ---
 
-### **LAYER 8: ADMINISTRATION & OPERATIONS (Roles 60-69)**
-HR, legal, compliance, business operations
+### **HUMAN RESOURCES & ADMINISTRATION (Roles 70-79)**
+HR, office management, compliance, and business operations
 
 ```
-VP Administration (17)
+Executive (10-14)
     │
-    ├─ HR Manager (60)
-    ├─ Compliance Manager (61)
-    ├─ Office Manager (62)
-    └─ [Translator (34) - also here for documentation]
+    ├─ HR Manager (70)
+    ├─ Office Manager (72)
+    └─ [Reserved: 71, 73-79]
 ```
 
 |    ID     | Role                   | Title                     | Department | Reports To      | Authority | Users |
 | :-------: | ---------------------- | ------------------------- | ---------- | --------------- | :-------: | :---: |
-|  **60**   | **HR Manager**         | Human Resources Manager   | Admin      | VP Admin (17)   |    ⭐⭐     |  1-2  |
-|  **61**   | **Compliance Manager** | Compliance / Legal        | Admin      | VP Admin (17)   |    ⭐⭐     |  1-2  |
-|  **62**   | **Office Manager**     | Office Operations Manager | Admin      | VP Admin (17)   |     ⭐     |  1-2  |
-|  **63**   | **HR Specialist**      | HR Specialist             | Admin      | HR Mgr (60)     |     ⭐     |  1-3  |
-|  **64**   | **Compliance Officer** | Compliance Officer        | Admin      | Compliance (61) |     ⭐     |  1-2  |
-| **65-69** | *Reserved*             | —                         | —          | —               |     —     |   —   |
+|  **70**   | **HR Manager**         | Human Resources Manager   | Admin      | Executive       |    ⭐⭐     |  1-2  |
+|  **72**   | **Office Manager**     | Office Operations Manager | Admin      | Executive       |     ⭐     |  1-2  |
+| **71**    | *Reserved*             | —                         | —          | —               |     —     |   —   |
+| **73-79** | *Reserved*             | —                         | —          | —               |     —     |   —   |
 
 ---
 
-### **LAYER 9: ACCOUNTING & FINANCE (Roles 70-79)**
+### **ACCOUNTING & FINANCE (Roles 80-89)**
 Bookkeeping, accounting, financial operations, invoicing
 
 ```
-CFO (12)
+Executive (10-14)
     │
-    ├─ Accounting Manager (70)
-    │   ├─ Bookkeeper (71)
-    │   ├─ AP/AR Clerk (72)
-    │   └─ Accountant (73)
-    │
-    └─ Finance Analyst (74)
+    ├─ Accounting Manager (80)
+    ├─ AP/AR Clerk (82)
+    └─ [Reserved: 81, 83-89]
 ```
 
-|    ID     | Role                   | Title                       | Department | Reports To    | Authority | Users |
-| :-------: | ---------------------- | --------------------------- | ---------- | ------------- | :-------: | :---: |
-|  **70**   | **Accounting Manager** | Accounting Manager          | Finance    | CFO (12)      |    ⭐⭐     |  1-2  |
-|  **71**   | **Bookkeeper**         | Bookkeeper                  | Finance    | Acct Mgr (70) |     ⭐     |  1-3  |
-|  **72**   | **AP/AR Clerk**        | Accounts Payable/Receivable | Finance    | Acct Mgr (70) |     ⭐     |  1-2  |
-|  **73**   | **Accountant**         | Staff Accountant            | Finance    | Acct Mgr (70) |     ⭐     |  1-2  |
-|  **74**   | **Finance Analyst**    | Financial Analyst           | Finance    | CFO (12)      |     ⭐     |  1-2  |
-|  **75**   | **Auditor**            | Internal Auditor            | Finance    | CFO (12)      |     ⭐     |   1   |
-| **76-79** | *Reserved*             | —                           | —          | —             |     —     |   —   |
+|    ID     | Role                   | Title                       | Department | Reports To       | Authority | Users |
+| :-------: | ---------------------- | --------------------------- | ---------- | ---------------- | :-------: | :---: |
+|  **80**   | **Accounting Manager** | Accounting Manager          | Finance    | Executive        |    ⭐⭐     |  1-2  |
+|  **82**   | **AP/AR Clerk**        | Accounts Payable/Receivable | Finance    | Acct Mgr (80)    |     ⭐     |  1-2  |
+| **81**    | *Reserved*             | —                           | —          | —                |     —     |   —   |
+| **83-89** | *Reserved*             | —                           | —          | —                |     —     |   —   |
 
 ---
 
-### **LAYER 10: SPECIALIZED SUPPORT & SERVICES (Roles 80-89)**
-Translators, documentation, training, support specialists
+### **SUPPORT & TRAINING (Roles 90-99)**
+Customer support, training, and internal support services
+
+```
+Executive (10-14)
+    │
+    ├─ Support Manager (90)
+    └─ [Reserved: 91-99]
+```
 
 |    ID     | Role                    | Title                        | Department | Reports To       | Authority | Users |
 | :-------: | ----------------------- | ---------------------------- | ---------- | ---------------- | :-------: | :---: |
-|  **80**   | **Translator**          | Translator / Localization    | Support    | VP Admin (17)    |     ⭐     |  1-5  |
-|  **81**   | **Technical Writer**    | Technical Documentation      | Support    | VP Eng (16)      |     ⭐     |  1-3  |
-|  **82**   | **Training Specialist** | Training & Development       | Support    | HR Mgr (60)      |     ⭐     |  1-2  |
-|  **83**   | **Support Manager**     | Customer Support Manager     | Support    | Sales Mgr (20)   |    ⭐⭐     |   1   |
-|  **84**   | **Support Agent**       | Customer Support / Help Desk | Support    | Support Mgr (83) |     ⭐     | 2-10  |
-|  **85**   | **QA Specialist**       | Quality Assurance            | Support    | Eng Mgr (30)     |     ⭐     |  1-3  |
-| **86-89** | *Reserved*              | —                            | —          | —                |     —     |   —   |
+|  **90**   | **Support Manager**     | Support & Training Manager   | Support    | Executive        |    ⭐⭐     |   1   |
+| **91-99** | *Reserved*              | —                            | —          | —                |     —     |   —   |
 
 ---
 
-### **LAYER 11: EXTERNAL & PARTNERS (Roles 90-99)**
-Vendor, supplier, and other external stakeholders (non-sales)
-
-```
-├─ Vendor (90)           ← Supplier / Vendor
-├─ Partner (91)          ← Strategic Partner
-├─ Contractor (92)       ← Contractor / Consultant
-├─ Guest (93)            ← Guest / Trial User
-└─ Viewer (99)           ← Read-Only Access
-```
-
-|   ID   | Role           | Title                   | Purpose          | Lead Access | Authority |   Users   |
-| :----: | -------------- | ----------------------- | ---------------- | :---------: | :-------: | :-------: |
-| **90** | **Vendor**     | Vendor / Supplier       | Supplier Portal  | Own Records |     ⭐     |  10-100   |
-| **91** | **Partner**    | Strategic Partner       | Partner Portal   |  Assigned   |     ⭐     | Unlimited |
-| **92** | **Contractor** | Contractor / Consultant | Contractor Work  |  Assigned   |     ⭐     |   5-50    |
-| **93** | **Guest**      | Guest / Trial User      | Trial Access     |    None     |     ⭐     | Unlimited |
-| **99** | **Viewer**     | Read-Only Access        | Audit/Compliance |  View Only  |     ⭐     |  10-100   |
-
----
-
-### **LAYER 12: CLIENTS & ACCOUNTS (Roles 150-159)**
+### **CLIENTS & ACCOUNTS (Roles 160-163)**
 Customer accounts and client portal users (primary customer interface)
 
 ```
-└─ Client (150)          ← Customer/Account Owner
+└─ Client (160-163)      ← Customer/Account Tiers
 ```
 
-|     ID      | Role       | Title                  | Purpose       | Lead Access | Authority |   Users   |
-| :---------: | ---------- | ---------------------- | ------------- | :---------: | :-------: | :-------: |
-|   **150**   | **Client** | Customer/Account Owner | Client Portal | Own Account |     ⭐     | Unlimited |
-| **151-159** | *Reserved* | —                      | —             |      —      |     —     |     —     |
+|     ID      | Role                    | Title                  | Purpose            | Lead Access | Authority |   Users   |
+| :---------: | ----------------------- | ---------------------- | ------------------ | :---------: | :-------: | :-------: |
+|   **160**   | **Client Standard**     | Standard Client        | Client Portal      | Own Account |     ⭐     | Unlimited |
+|   **161**   | **Client Restricted**   | Restricted Access      | Limited Features   | Own Account |     ⭐     | Unlimited |
+|   **162**   | **Client Advanced**     | Advanced Features      | Premium Features   | Own Account |     ⭐     | Unlimited |
+|   **163**   | **Client Status**       | Status Reporting Only  | Read-Only Viewing  | Own Account |     ⭐     | Unlimited |
 
 ---
 

@@ -1,20 +1,21 @@
 ---
 title: RBAC System Restructure Implementation Guide
-date: 2025-01-15
-version: 1.0
-status: READY FOR DEPLOYMENT
+date: 2025-11-17
+version: 2.0
+status: DOCUMENTATION UPDATED - Ready for Code Implementation
 ---
 
-# 🚀 RBAC System Restructure - Implementation Guide
+# 🚀 RBAC System Restructure - Implementation Guide (Updated)
 
 ## Overview
 
-This document provides step-by-step instructions for implementing the updated Universal RBAC system with the following key changes:
+This document provides step-by-step instructions for implementing the consolidated RBAC system with the following key changes:
 
-✅ **Internal Sales Restructure** (Roles 20-29)
-✅ **External Sales Partners** (Roles 141-143): Distributors, Installers, Applicators
-✅ **Clients Moved to Role 150** (Previously scattered roles)
-✅ **Full Role Expansion** (50+ roles across 12 organizational layers)
+✅ **Executive Simplified** (Roles 10-14): 5 core C-suite roles
+✅ **Department Consolidation** (Roles 30-99): Sales, Engineering, Manufacturing, Field Service, HR, Accounting, Support
+✅ **Partners Consolidated** (Roles 100-159): Strategic Partner, Vendor, Distributor, Installer, Applicator, Contractor
+✅ **Clients Clarified** (Roles 160-163): Standard, Restricted, Advanced, Status
+✅ **Clean Hierarchy**: 32 active roles with clear role ranges
 ✅ **Multi-Language Support** (English & Spanish)
 
 ---
@@ -22,160 +23,137 @@ This document provides step-by-step instructions for implementing the updated Un
 ## 📋 Files Modified
 
 ### 1. **Database Schema**
-- **File**: `/sql/2025_01_15_RBAC_RESTRUCTURE_MIGRATION.sql`
-- **Action**: Adds all 50+ roles to the database
-- **Status**: ✅ Ready to execute
+- **File**: `/sql/migrations/2025_11_17_role_consolidation.sql`
+- **Action**: Reorganizes roles to new consolidated structure (32 active roles)
+- **Status**: ⏳ Ready for creation
 
 ### 2. **PHP Code - Roles Model**
 - **File**: `/classes/Models/Roles.php`
 - **Changes**:
-  - Updated `get_role_array()` method with 50+ roles
-  - Added null-coalescing operators for fallback translations
-  - Reorganized roles by department with comments
-  - Updated `select_role()` to properly exclude system roles (1-9)
+  - Update `get_role_array()` method with new consolidated role structure
+  - Update role constants for new role ID ranges
+  - Update role name mappings
+  - Ensure system roles (1-2) are excluded from role selections
+  - Status: ⏳ Pending update
 
 ### 3. **Language Files**
 - **English**: `/public_html/admin/languages/en.php`
 - **Spanish**: `/public_html/admin/languages/es.php`
-- **Changes**: Updated all role translations for new role structure
+- **Changes**: Update all role translations for new role structure
+- **Status**: ⏳ Pending update
 
 ---
 
 ## 🗄️ New Role Structure
 
-### System Maintenance (1-2) - UNCHANGED
+### System Maintenance (1-2)
 ```
 Role 1:  Super Administrator
 Role 2:  Administrator
 ```
 
-### Executive Leadership (10-19)
+### Executive Leadership (10-14)
 ```
 Role 10: President
-Role 11: CTO (Chief Technology Officer)
-Role 12: CFO (Chief Financial Officer)
-Role 13: COO (Chief Operations Officer)
-Role 14: VP Operations
-Role 15: VP Sales
-Role 16: VP Engineering
-Role 17: VP Administration
-Role 18: VP Manufacturing
-Role 19: VP Field Operations
+Role 11: Vice President
+Role 12: Chief Information Officer (CIO)
+Role 13: Chief Technology Officer (CTO)
+Role 14: Chief Marketing Officer (CMO)
 ```
 
-### Internal Sales (20-29)
+### Sales Department (30-39)
 ```
-Role 20: Sales Manager
-Role 21: Partner Manager
-Role 22: Sales Lead
-Role 23: Sales Lead 2
-Role 25: Sales User
-Role 26: Partner Sales
+Role 30: Sales Manager
+Role 35: Sales Assistant
+Roles 31-34, 36-39: Reserved
 ```
 
-### Engineering (30-39)
+### Engineering Department (40-49)
 ```
-Role 30: Engineering Manager
-Role 31: Tech Lead
-Role 32: Technician 1
-Role 33: Technician 2
-Role 34: Translator
-```
-
-### Manufacturing (40-49)
-```
-Role 40: Manufacturing Manager
-Role 41: Production Lead
-Role 42: Quality Lead
-Role 43: Production Tech
-Role 44: Quality Tech
-Role 47: Installer
+Role 40: Engineering Manager
+Role 41: Tech Lead
+Role 42: Technician 1
+Role 43: Technician 2
+Roles 44-49: Reserved
 ```
 
-### Field Operations (50-59)
+### Manufacturing Department (50-59)
 ```
-Role 50: Field Manager
-Role 51: Service Lead
-Role 52: Field Technician
-Role 53: Installer Lead
-Role 54: Field Installer
-```
-
-### Administration (60-69)
-```
-Role 60: HR Manager
-Role 61: Compliance Manager
-Role 62: Office Manager
-Role 63: HR Specialist
-Role 64: Compliance Officer
+Role 50: Manufacturing Manager
+Role 51: Manufacturing Tech 1
+Role 52: Manufacturing Tech 2
+Roles 53-59: Reserved
 ```
 
-### Finance (70-79)
+### HR & Administration Department (70-79)
 ```
-Role 70: Accounting Manager
-Role 71: Bookkeeper (✅ NEW)
-Role 72: AP/AR Clerk
-Role 73: Accountant
-Role 74: Finance Analyst
-Role 75: Auditor
+Role 70: HR Manager
+Role 72: Office Manager
+Roles 71, 73-79: Reserved
 ```
 
-### Support (80-89)
+### Accounting & Finance Department (80-89)
 ```
-Role 80: Translator
-Role 81: Technical Writer
-Role 82: Training Specialist
-Role 83: Support Manager
-Role 84: Support Agent
-Role 85: QA Specialist
+Role 80: Accounting Manager
+Role 82: AP/AR Clerk
+Roles 81, 83-89: Reserved
 ```
 
-### External Partners (90-99)
+### Support & Training Department (90-99)
 ```
-Role 90: Vendor
-Role 91: Strategic Partner
-Role 92: Contractor
-Role 93: Guest
-Role 99: Viewer
+Role 90: Support Manager
+Roles 91-99: Reserved
 ```
 
-### **NEW** External Sales Partners (141-143)
+### External Partners (100-159)
 ```
-Role 141: Distributor (✅ NEW)
-Role 142: Installer (✅ NEW)
-Role 143: Applicator (✅ NEW)
+Role 100: Strategic Partner
+Role 110: Vendor
+Role 120: Distributor
+Role 130: Installer
+Role 140: Applicator
+Role 150: Contractor
+Roles 101-109, 111-119, 121-129, 131-139, 141-149, 151-159: Reserved
 ```
 
-### **NEW** Clients (150)
+### Client Accounts (160-163)
 ```
-Role 150: Client (✅ MOVED FROM ROLES 18-21)
+Role 160: Client Standard
+Role 161: Client Restricted
+Role 162: Client Advanced
+Role 163: Client Status
 ```
 
 ---
 
 ## 📊 Key Changes Summary
 
-### Sales Department Restructuring
+### Complete Role Consolidation
 
-**Before:**
-- Internal Sales mixed with external partners
-- Client roles scattered (18, 19, 20, 21)
-- No clear separation
+**Before (Multiple Restructures):**
+- Executive: 10-19 (10 roles)
+- Sales: 20-29 (scattered)
+- Engineering: 30-39
+- Manufacturing: 7-9, 40-49 (fragmented)
+- Field Service: 50-59
+- HR: 60-69
+- Accounting: 70-79
+- Support: 80-89
+- Partners: 90-99, 141-143 (scattered)
+- Clients: 150-154
 
-**After:**
-- **Internal Sales (20-29)**: Pure internal team structure
-  - Sales Manager (20) → Sales Users (25)
-  - Partner Manager (21) → Partner Sales (26)
-  - Sales Leads (22, 23)
-
-- **External Sales Partners (141-143)**: Separate layer for external relationships
-  - Distributor (141): Channel distribution partners
-  - Installer (142): Installation service partners
-  - Applicator (143): Field application specialists
-
-- **Clients (150)**: Dedicated tier for customer accounts
-  - Customer/Account Owner access
-  - Separate from employee structure
+**After (Consolidated):**
+- **System**: Roles 1-2 (Super Admin, Admin)
+- **Executive**: Roles 10-14 (5 C-suite roles - simplified from 10)
+- **Sales**: Roles 30-39 (Manager, Assistant, + reserves)
+- **Engineering**: Roles 40-49 (Manager, Tech Lead, Technicians)
+- **Manufacturing**: Roles 50-59 (Manager, Technicians)
+- **Field Service**: Roles 60-69 (Manager, + reserves)
+- **HR/Admin**: Roles 70-79 (Manager, Office Manager, + reserves)
+- **Accounting/Finance**: Roles 80-89 (Manager, Clerk, + reserves)
+- **Support**: Roles 90-99 (Manager, + reserves)
+- **Partners**: Roles 100-159 (6 strategic partner types with reserved ranges)
+- **Clients**: Roles 160-163 (4 client tier levels)
 
 ---
 
@@ -183,65 +161,92 @@ Role 150: Client (✅ MOVED FROM ROLES 18-21)
 
 ### Step 1: Backup Database
 ```bash
-# Backup current database
-mysqldump -u democrm_user -p democrm_democrm > backup_before_rbac_restructure.sql
+# Backup current database via SSH
+ssh wswg "mysqldump -u democrm_democrm -p'b3J2sy5T4JNm60' democrm_democrm > /home/democrm/backup_rbac_2025_11_17.sql"
 ```
 
-### Step 2: Execute SQL Migration
+### Step 2: Create SQL Migration Script
+Create `/sql/migrations/2025_11_17_role_consolidation.sql` with all role ID updates
+- Status: ⏳ To be created in next phase
+
+### Step 3: Execute SQL Migration
 ```bash
 # Execute migration via SSH
-ssh wswg "mysql -u democrm_user -p democrm_democrm < /home/democrm/sql/2025_01_15_RBAC_RESTRUCTURE_MIGRATION.sql"
-
-# Or execute via MySQL client
-mysql -u democrm_user -p democrm_democrm < /home/democrm/sql/2025_01_15_RBAC_RESTRUCTURE_MIGRATION.sql
+ssh wswg "mysql -u democrm_democrm -p'b3J2sy5T4JNm60' democrm_democrm < /home/democrm/sql/migrations/2025_11_17_role_consolidation.sql"
 ```
 
-### Step 3: Verify Database Changes
+### Step 4: Verify Database Changes
 ```sql
--- Count total roles
-SELECT COUNT(*) as total_roles FROM roles;
+-- Count total active roles (should be 32)
+SELECT COUNT(*) as total_roles FROM roles WHERE id >= 1 AND id <= 163;
 
--- List all roles by category
-SELECT role_id, role FROM roles 
-WHERE role_id BETWEEN 1 AND 99 OR role_id >= 140
-ORDER BY role_id;
+-- List all roles by department
+SELECT 
+  CASE 
+    WHEN id BETWEEN 1 AND 2 THEN 'System'
+    WHEN id BETWEEN 10 AND 14 THEN 'Executive'
+    WHEN id BETWEEN 30 AND 39 THEN 'Sales'
+    WHEN id BETWEEN 40 AND 49 THEN 'Engineering'
+    WHEN id BETWEEN 50 AND 59 THEN 'Manufacturing'
+    WHEN id BETWEEN 60 AND 69 THEN 'Field Service'
+    WHEN id BETWEEN 70 AND 79 THEN 'HR'
+    WHEN id BETWEEN 80 AND 89 THEN 'Accounting'
+    WHEN id BETWEEN 90 AND 99 THEN 'Support'
+    WHEN id BETWEEN 100 AND 159 THEN 'Partners'
+    WHEN id BETWEEN 160 AND 163 THEN 'Clients'
+  END as department,
+  COUNT(*) as count
+FROM roles
+GROUP BY department
+ORDER BY MIN(id);
 
--- Verify sales structure
-SELECT role_id, role FROM roles 
-WHERE role_id IN (20, 21, 22, 23, 25, 26, 141, 142, 143)
-ORDER BY role_id;
+-- Verify executive roles (10-14)
+SELECT id, rname FROM roles WHERE id BETWEEN 10 AND 14 ORDER BY id;
 
--- Verify client role
-SELECT role_id, role FROM roles WHERE role_id = 150;
+-- Verify partner roles (100, 110, 120, 130, 140, 150)
+SELECT id, rname FROM roles WHERE id IN (100, 110, 120, 130, 140, 150) ORDER BY id;
+
+-- Verify client roles (160-163)
+SELECT id, rname FROM roles WHERE id BETWEEN 160 AND 163 ORDER BY id;
 ```
 
-### Step 4: Deploy Code Changes
+### Step 5: Deploy Code Changes
 
 1. **Update Roles.php**
    - File: `/classes/Models/Roles.php`
-   - Changes already included in this package
-   - No breaking changes - fully backward compatible
+   - Update `get_role_array()` method with new role structure
+   - Update role constants for new ID ranges
+   - Status: ⏳ Pending update
 
 2. **Update Language Files**
    - English: `/public_html/admin/languages/en.php`
    - Spanish: `/public_html/admin/languages/es.php`
-   - Changes already included in this package
+   - Add/update translations for all 32 active roles
+   - Status: ⏳ Pending update
 
-### Step 5: Clear Application Cache (if applicable)
+3. **Update Security/Permission Classes**
+   - Check for hardcoded role ID checks
+   - Update role hierarchy references
+   - Status: ⏳ To be assessed
+
+### Step 6: Clear Application Cache (if applicable)
 ```bash
-# If using any caching mechanism
-rm -rf /home/democrm/tmp/session/*
+# SSH into server and clear cache
+ssh wswg "rm -rf /home/democrm/tmp/session/*"
 # Clear browser cache (user-side)
 ```
 
-### Step 6: Test Role Assignments
+### Step 7: Test Role Assignments
 
 Navigate to Users > Edit User and verify:
-- ✅ All 50+ roles appear in dropdown
-- ✅ System roles (1-9) excluded from selection
+- ✅ All 32 active roles appear in dropdown
+- ✅ System roles (1-2) excluded from selection  
+- ✅ Executive roles (10-14) visible
+- ✅ Department roles (30-99) visible and grouped correctly
+- ✅ Partner roles (100, 110, 120, 130, 140, 150) visible
+- ✅ Client roles (160-163) visible
 - ✅ Role names display correctly in both English and Spanish
-- ✅ External Sales Partners (141-143) appear in dropdown
-- ✅ Client role (150) appears in dropdown
+- ✅ User role assignments still functional with migrated role IDs
 
 ---
 

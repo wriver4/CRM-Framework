@@ -111,89 +111,38 @@ $lang = [
   'role_delete' => 'Delete Role',
   'role_id' => 'Role Id',
   'select_rid' => 'Select User Role',
-  // System Maintenance (1-2)
   'role_id_1' => 'Super Administrator',
   'role_id_2' => 'Administrator',
-  
-  // Executive (10-19)
   'role_id_10' => 'President',
-  'role_id_11' => 'CTO',
-  'role_id_12' => 'CFO',
-  'role_id_13' => 'COO',
-  'role_id_14' => 'VP Operations',
-  'role_id_15' => 'VP Sales',
-  'role_id_16' => 'VP Engineering',
-  'role_id_17' => 'VP Administration',
-  'role_id_18' => 'VP Manufacturing',
-  'role_id_19' => 'VP Field Operations',
-  
-  // Internal Sales (20-29)
-  'role_id_20' => 'Sales Manager',
-  'role_id_21' => 'Partner Manager',
-  'role_id_22' => 'Sales Lead',
-  'role_id_23' => 'Sales Lead 2',
-  'role_id_25' => 'Sales User',
-  'role_id_26' => 'Partner Sales',
-  
-  // Engineering (30-39)
-  'role_id_30' => 'Engineering Manager',
-  'role_id_31' => 'Tech Lead',
-  'role_id_32' => 'Technician 1',
-  'role_id_33' => 'Technician 2',
-  'role_id_34' => 'Translator',
-  
-  // Manufacturing (40-49)
-  'role_id_40' => 'Manufacturing Manager',
-  'role_id_41' => 'Production Lead',
-  'role_id_42' => 'Quality Lead',
-  'role_id_43' => 'Production Tech',
-  'role_id_44' => 'Quality Tech',
-  'role_id_47' => 'Installer',
-  
-  // Field Operations (50-59)
-  'role_id_50' => 'Field Manager',
-  'role_id_51' => 'Service Lead',
-  'role_id_52' => 'Field Technician',
-  'role_id_53' => 'Installer Lead',
-  'role_id_54' => 'Field Installer',
-  
-  // Administration (60-69)
-  'role_id_60' => 'HR Manager',
-  'role_id_61' => 'Compliance Manager',
-  'role_id_62' => 'Office Manager',
-  'role_id_63' => 'HR Specialist',
-  'role_id_64' => 'Compliance Officer',
-  
-  // Finance (70-79)
-  'role_id_70' => 'Accounting Manager',
-  'role_id_71' => 'Bookkeeper',
-  'role_id_72' => 'AP/AR Clerk',
-  'role_id_73' => 'Accountant',
-  'role_id_74' => 'Finance Analyst',
-  'role_id_75' => 'Auditor',
-  
-  // Support (80-89)
-  'role_id_80' => 'Translator',
-  'role_id_81' => 'Technical Writer',
-  'role_id_82' => 'Training Specialist',
-  'role_id_83' => 'Support Manager',
-  'role_id_84' => 'Support Agent',
-  'role_id_85' => 'QA Specialist',
-  
-  // External Partners (90-99)
-  'role_id_90' => 'Vendor',
-  'role_id_91' => 'Strategic Partner',
-  'role_id_92' => 'Contractor',
-  'role_id_93' => 'Guest',
-  'role_id_99' => 'Viewer',
-  
-  // External Sales Partners (141-143)
-  'role_id_141' => 'Distributor',
-  'role_id_142' => 'Installer',
-  'role_id_143' => 'Applicator',
-  
-  // Clients (150)
-  'role_id_150' => 'Client',
+  'role_id_11' => 'Vice President',
+  'role_id_12' => 'Chief Information Officer',
+  'role_id_13' => 'Chief Technology Officer',
+  'role_id_14' => 'Chief Marketing Officer',
+  'role_id_30' => 'Sales Manager',
+  'role_id_35' => 'Sales Assistant',
+  'role_id_40' => 'Engineering Manager',
+  'role_id_41' => 'Tech Lead',
+  'role_id_42' => 'Technician 1',
+  'role_id_43' => 'Technician 2',
+  'role_id_50' => 'Manufacturing Manager',
+  'role_id_51' => 'Manufacturing Tech 1',
+  'role_id_52' => 'Manufacturing Tech 2',
+  'role_id_60' => 'Field Service Manager',
+  'role_id_70' => 'HR Manager',
+  'role_id_72' => 'Office Manager',
+  'role_id_80' => 'Accounting Manager',
+  'role_id_82' => 'AP/AR Clerk',
+  'role_id_90' => 'Support Manager',
+  'role_id_100' => 'Strategic Partner',
+  'role_id_110' => 'Vendor',
+  'role_id_120' => 'Distributor',
+  'role_id_130' => 'Installer',
+  'role_id_140' => 'Applicator',
+  'role_id_150' => 'Contractor',
+  'role_id_160' => 'Client Standard',
+  'role_id_161' => 'Client Restricted',
+  'role_id_162' => 'Client Advanced',
+  'role_id_163' => 'Client Status',
   // Permissions
   'permissions' => 'Permissions',
   'permission_new' => 'New Permission',

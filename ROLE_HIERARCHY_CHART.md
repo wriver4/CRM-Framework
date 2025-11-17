@@ -1,171 +1,117 @@
 # DemoCRM Role Hierarchy Chart
 
-**Last Updated**: 2025-01-16  
-**Total Roles**: 60 active roles across 9 organizational tiers
+**Last Updated**: 2025-11-17 (Consolidated Role Structure)  
+**Total Roles**: 32 active roles across 9 departments + System & Executive
 
 ---
 
-## Executive & Management (1-9)
+## System Administration (1-9)
 
-| Role ID | Role Name                  | Tier          | Notes                               |
-| ------- | -------------------------- | ------------- | ----------------------------------- |
-| 1       | Super Administrator        | System        | Full system access, all permissions |
-| 2       | Administrator              | System        | Full administrative access          |
-| 3       | Operations Manager         | Management    | General operations oversight        |
-| 4       | Operations Technician 1    | Operations    | Operations support level 1          |
-| 5       | Operations Technician 2    | Operations    | Operations support level 2          |
-| 6       | Operations Status          | Operations    | Operations status reporting only    |
-| 7       | Manufacturing Manager      | Management    | Manufacturing department lead       |
-| 8       | Manufacturing Technician 1 | Manufacturing | Manufacturing support level 1       |
-| 9       | Manufacturing Technician 2 | Manufacturing | Manufacturing support level 2       |
+| Role ID | Role Name           | Tier   | Notes                               |
+| ------- | ------------------- | ------ | ----------------------------------- |
+| 1       | Super Administrator | System | Full system access, all permissions |
+| 2       | Administrator       | System | Full administrative access          |
 
 ---
 
-## Field Operations (10-12)
+## Executive Leadership (10-29)
 
-| Role ID | Role Name                     | Tier       | Notes                            |
-| ------- | ----------------------------- | ---------- | -------------------------------- |
-| 10      | Field Operations Manager      | Management | Field operations department lead |
-| 11      | Field Operations Technician 1 | Field Ops  | Field support level 1            |
-| 12      | Field Operations Technician 2 | Field Ops  | Field support level 2            |
-
----
-
-## Executive Leadership (13-19)
-
-| Role ID | Role Name                | Tier     | Notes                             |
-| ------- | ------------------------ | -------- | --------------------------------- |
-| 13      | Chief Operating Officer  | C-Level  | COO - Operations executive        |
-| 14      | Chief Technology Officer | C-Level  | CTO - Technology executive        |
-| 15      | VP Sales                 | VP-Level | Vice President of Sales           |
-| 16      | VP Operations            | VP-Level | Vice President of Operations      |
-| 17      | VP Engineering           | VP-Level | Vice President of Engineering     |
-| 18      | VP Support               | VP-Level | Vice President of Support         |
-| 19      | VP Human Resources       | VP-Level | Vice President of Human Resources |
+| Role ID | Role Name                 | Tier    | Notes                         |
+| ------- | ------------------------- | ------- | ----------------------------- |
+| 10      | President                 | C-Level | President - Organization head |
+| 11      | Vice President            | C-Level | VP - General management       |
+| 12      | Chief Information Officer | C-Level | CIO - Operations executive    |
+| 13      | Chief Technology Officer  | C-Level | CTO - Technology executive    |
+| 14      | Chief Marketing Officer   | C-Level | CMO - Marketing executive     |
 
 ---
 
-## Internal Sales (20-26)
+## Sales (30-39)
 
-| Role ID | Role Name         | Tier       | Notes                         |
-| ------- | ----------------- | ---------- | ----------------------------- |
-| 20      | Sales Manager     | Management | Sales team lead               |
-| 21      | Partner Manager   | Management | Partner relationships manager |
-| 22      | Sales Lead        | Sales      | Sales leadership position     |
-| 23      | Senior Sales Lead | Sales      | Senior sales leadership       |
-| 25      | Sales User        | Sales      | Standard sales representative |
-| 26      | Partner Sales     | Sales      | Partner sales specialist      |
+| Role ID | Role Name       | Tier       | Notes                        |
+| ------- | --------------- | ---------- | ---------------------------- |
+| 30      | Sales Manager   | Management | Sales team lead              |
+| 35      | Sales Assistant | Sales      | Sales support representative |
 
 ---
 
-## Engineering (30-33)
+## Engineering (40-49)
 
 | Role ID | Role Name           | Tier        | Notes                         |
 | ------- | ------------------- | ----------- | ----------------------------- |
-| 30      | Engineering Manager | Management  | Engineering department lead   |
-| 31      | Tech Lead           | Engineering | Technical leadership position |
-| 32      | Technician 1        | Engineering | Engineering support level 1   |
-| 33      | Technician 2        | Engineering | Engineering support level 2   |
+| 40      | Engineering Manager | Management  | Engineering department lead   |
+| 41      | Tech Lead           | Engineering | Technical leadership position |
+| 42      | Technician 1        | Engineering | Engineering support level 1   |
+| 43      | Technician 2        | Engineering | Engineering support level 2   |
 
 ---
 
-## Production & Quality (41-44)
+## Manufacturing (50-59)
 
-| Role ID | Role Name       | Tier       | Notes                  |
-| ------- | --------------- | ---------- | ---------------------- |
-| 41      | Production Lead | Production | Production team lead   |
-| 42      | Quality Lead    | Quality    | Quality assurance lead |
-| 43      | Production Tech | Production | Production technician  |
-| 44      | Quality Tech    | Quality    | Quality technician     |
-
----
-
-## Field Operations (50-54)
-
-| Role ID | Role Name        | Tier          | Notes                      |
-| ------- | ---------------- | ------------- | -------------------------- |
-| 50      | Field Manager    | Management    | Field services manager     |
-| 51      | Service Lead     | Field Service | Service team lead          |
-| 52      | Field Technician | Field Service | Field technician           |
-| 53      | Installer Lead   | Field Service | Installation team lead     |
-| 54      | Field Installer  | Field Service | Field installer technician |
+| Role ID | Role Name             | Tier          | Notes                         |
+| ------- | --------------------- | ------------- | ----------------------------- |
+| 50      | Manufacturing Manager | Manufacturing | Manufacturing department lead |
+| 51      | Manufacturing Tech 1  | Manufacturing | Manufacturing support level 1 |
+| 52      | Manufacturing Tech 2  | Manufacturing | Manufacturing support level 2 |
 
 ---
 
-## HR & Compliance (60-64)
+## Field Service (60-69)
 
-| Role ID | Role Name          | Tier       | Notes                   |
-| ------- | ------------------ | ---------- | ----------------------- |
-| 60      | HR Manager         | Management | Human Resources manager |
-| 61      | Compliance Manager | Management | Compliance officer      |
-| 62      | Office Manager     | HR         | Office administration   |
-| 63      | HR Specialist      | HR         | HR support specialist   |
-| 64      | Compliance Officer | Compliance | Compliance enforcement  |
+| Role ID | Role Name     | Tier       | Notes                  |
+| ------- | ------------- | ---------- | ---------------------- |
+| 60      | Field Manager | Management | Field services manager |
+
 
 ---
 
-## Accounting & Finance (70-75)
+## HR (70-79)
+
+| Role ID | Role Name      | Tier       | Notes                   |
+| ------- | -------------- | ---------- | ----------------------- |
+| 70      | HR Manager     | Management | Human Resources manager |
+| 72      | Office Manager | HR         | Office administration   |
+
+---
+
+## Accounting & Finance (80-89)
 
 | Role ID | Role Name          | Tier       | Notes                       |
 | ------- | ------------------ | ---------- | --------------------------- |
-| 70      | Accounting Manager | Management | Accounting department lead  |
-| 72      | AP/AR Clerk        | Accounting | Accounts Payable/Receivable |
-| 73      | Accountant         | Accounting | Staff accountant            |
-| 74      | Finance Analyst    | Finance    | Financial analysis          |
-| 75      | Auditor            | Finance    | Internal/external auditor   |
+| 80      | Accounting Manager | Management | Accounting department lead  |
+| 82      | AP/AR Clerk        | Accounting | Accounts Payable/Receivable |
+
 
 ---
 
-## Support & Training (81-85)
+## Support & Training (90-99)
 
-| Role ID | Role Name           | Tier       | Notes                        |
-| ------- | ------------------- | ---------- | ---------------------------- |
-| 81      | Technical Writer    | Support    | Technical documentation      |
-| 82      | Training Specialist | Support    | Training & development       |
-| 83      | Support Manager     | Management | Support team lead            |
-| 84      | Support Agent       | Support    | Customer support agent       |
-| 85      | QA Specialist       | Quality    | Quality assurance specialist |
+| Role ID | Role Name       | Tier       | Notes             |
+| ------- | --------------- | ---------- | ----------------- |
+| 90      | Support Manager | Management | Support team lead |
 
 ---
 
-## Vendors & Partners (90-93)
-
+## Partners (100-159)
 | Role ID | Role Name         | Tier     | Notes                        |
 | ------- | ----------------- | -------- | ---------------------------- |
-| 90      | Vendor            | External | Vendor/supplier access       |
-| 91      | Strategic Partner | External | Strategic partner access     |
-| 92      | Contractor        | External | Contractor/consultant access |
-| 93      | Guest             | External | Guest/temporary access       |
+| 100     | Strategic Partner | External | Strategic partner access     |
+| 110     | Vendor            | External | Vendor/supplier access       |
+| 120     | Distributor       | Partner  | Distributor access level     |
+| 130     | Installer         | Partner  | Installer partner access     |
+| 140     | Applicator        | Partner  | Applicator/service partner   |
+| 150     | Contractor        | External | Contractor/consultant access |
 
 ---
 
-## Viewer (99)
-
-| Role ID | Role Name | Tier     | Notes                             |
-| ------- | --------- | -------- | --------------------------------- |
-| 99      | Viewer    | External | Read-only access to specific data |
-
----
-
-## External Sales Partners (141-143)
-
-| Role ID | Role Name   | Tier    | Notes                      |
-| ------- | ----------- | ------- | -------------------------- |
-| 141     | Distributor | Partner | Distributor access level   |
-| 142     | Installer   | Partner | Installer partner access   |
-| 143     | Applicator  | Partner | Applicator/service partner |
-
----
-
-## Clients (150-154)
+## Clients (160-163)
 
 | Role ID | Role Name         | Tier   | Notes                        |
 | ------- | ----------------- | ------ | ---------------------------- |
-| 150     | Client            | Client | Base client access           |
-| 151     | Client Advanced   | Client | Advanced client features     |
-| 152     | Client Standard   | Client | Standard client features     |
-| 153     | Client Restricted | Client | Restricted client access     |
-| 154     | Client Status     | Client | Client status reporting only |
+| 160     | Client Standard   | Client | Standard client features     |
+| 161     | Client Restricted | Client | Restricted client access     |
+| 162     | Client Advanced   | Client | Advanced client features     |
+| 163     | Client Status     | Client | Client status reporting only |
 
 ---
 
@@ -176,145 +122,151 @@ SYSTEM (Roles 1-2)
 ├── Super Administrator (1)
 └── Administrator (2)
 
-EXECUTIVE LEADERSHIP (Roles 13-19)
-├── Chief Operating Officer (13)
-├── Chief Technology Officer (14)
-├── VP Sales (15)
-├── VP Operations (16)
-├── VP Engineering (17)
-├── VP Support (18)
-└── VP Human Resources (19)
+EXECUTIVE LEADERSHIP (Roles 10-14)
+├── President (10)
+├── Vice President (11)
+├── Chief Information Officer (12)
+├── Chief Technology Officer (13)
+└── Chief Marketing Officer (14)
 
 DEPARTMENTS
 
-Sales Department (Roles 20-26)
-├── Sales Manager (20)
-├── Partner Manager (21)
-├── Sales Lead (22)
-├── Senior Sales Lead (23)
-├── Sales User (25)
-└── Partner Sales (26)
+Sales (Roles 30-39)
+├── Sales Manager (30)
+└── Sales Assistant (35)
 
-Operations Department (Roles 3-9)
-├── Operations Manager (3)
-├── Operations Technician 1 (4)
-├── Operations Technician 2 (5)
-├── Operations Status (6)
-├── Manufacturing Manager (7)
-├── Manufacturing Technician 1 (8)
-└── Manufacturing Technician 2 (9)
+Engineering (Roles 40-49)
+├── Engineering Manager (40)
+├── Tech Lead (41)
+├── Technician 1 (42)
+└── Technician 2 (43)
 
-Field Operations (Roles 10-12, 50-54)
-├── Field Operations Manager (10)
-├── Field Operations Technician 1 (11)
-├── Field Operations Technician 2 (12)
-├── Field Manager (50)
-├── Service Lead (51)
-├── Field Technician (52)
-├── Installer Lead (53)
-└── Field Installer (54)
+Manufacturing (Roles 50-59)
+├── Manufacturing Manager (50)
+├── Manufacturing Tech 1 (51)
+└── Manufacturing Tech 2 (52)
 
-Engineering Department (Roles 30-33)
-├── Engineering Manager (30)
-├── Tech Lead (31)
-├── Technician 1 (32)
-└── Technician 2 (33)
+Field Service (Roles 60-69)
+└── Field Manager (60)
 
-Production & Quality (Roles 41-44)
-├── Production Lead (41)
-├── Quality Lead (42)
-├── Production Tech (43)
-└── Quality Tech (44)
+HR (Roles 70-79)
+├── HR Manager (70)
+└── Office Manager (72)
 
-HR & Compliance (Roles 60-64)
-├── HR Manager (60)
-├── Compliance Manager (61)
-├── Office Manager (62)
-├── HR Specialist (63)
-└── Compliance Officer (64)
+Accounting & Finance (Roles 80-89)
+├── Accounting Manager (80)
+└── AP/AR Clerk (82)
 
-Accounting & Finance (Roles 70-75)
-├── Accounting Manager (70)
-├── AP/AR Clerk (72)
-├── Accountant (73)
-├── Finance Analyst (74)
-└── Auditor (75)
-
-Support & Training (Roles 81-85)
-├── Technical Writer (81)
-├── Training Specialist (82)
-├── Support Manager (83)
-├── Support Agent (84)
-└── QA Specialist (85)
+Support & Training (Roles 90-99)
+└── Support Manager (90)
 
 EXTERNAL RELATIONSHIPS
 
-Vendors & Partners (Roles 90-93, 141-143)
-├── Vendor (90)
-├── Strategic Partner (91)
-├── Contractor (92)
-├── Guest (93)
-├── Distributor (141)
-├── Installer (142)
-└── Applicator (143)
+Partners (Roles 100-159)
+├── Strategic Partner (100)
+├── Vendor (110)
+├── Distributor (120)
+├── Installer (130)
+├── Applicator (140)
+└── Contractor (150)
 
-Viewers (Role 99)
-└── Viewer (99) - Read-only access
-
-CLIENT TIERS (Roles 150-154)
-├── Client (150)
-├── Client Advanced (151)
-├── Client Standard (152)
-├── Client Restricted (153)
-└── Client Status (154)
+Clients (Roles 160-163)
+├── Client Standard (160)
+├── Client Restricted (161)
+├── Client Advanced (162)
+└── Client Status (163)
 ```
 
 ---
 
 ## Role Range Assignment Strategy
 
-| Range   | Category         | Count | Purpose                  |
-| ------- | ---------------- | ----- | ------------------------ |
-| 1-2     | System Admin     | 2     | System-level access      |
-| 3-9     | Operations Core  | 7     | Core internal operations |
-| 10-12   | Field Operations | 3     | Field teams management   |
-| 13-19   | Executive        | 7     | C-Level & VPs            |
-| 20-26   | Sales            | 6     | Internal sales team      |
-| 30-33   | Engineering      | 4     | Engineering department   |
-| 41-44   | Production/QA    | 4     | Manufacturing & quality  |
-| 50-54   | Field Service    | 5     | Field service delivery   |
-| 60-64   | HR/Compliance    | 5     | Human resources          |
-| 70-75   | Accounting       | 5     | Finance department       |
-| 81-85   | Support          | 5     | Support & training       |
-| 90-93   | Vendors          | 4     | Vendor management        |
-| 99      | Viewers          | 1     | Read-only access         |
-| 141-143 | Partners         | 3     | External sales partners  |
-| 150-154 | Clients          | 5     | Client access tiers      |
+| Range          | Category       | Count | Purpose                                                  |
+| -------------- | -------------- | ----- | -------------------------------------------------------- |
+| 1-2            | System Admin   | 2     | System-level access                                      |
+| 3-9            | Reserved       | 7     | Reserved for future expansion                            |
+| 10-14          | Executive      | 5     | President, VP, C-Level roles                             |
+| 15-29          | Reserved       | 15    | Reserved for future executive expansion                  |
+| 30-39          | Sales          | 2     | Sales team (30, 35 active; 31-34, 36-39 reserved)        |
+| 40-49          | Engineering    | 4     | Engineering department (40-43 active; 44-49 reserved)    |
+| 50-59          | Manufacturing  | 3     | Manufacturing operations (50-52 active; 53-59 reserved)  |
+| 60-69          | Field Service  | 1     | Field service (60 active; 61-69 reserved)                |
+| 70-79          | HR             | 2     | Human resources (70, 72 active; 71, 73-79 reserved)      |
+| 80-89          | Accounting     | 2     | Finance & accounting (80, 82 active; 81, 83-89 reserved) |
+| 90-99          | Support        | 1     | Support & training (90 active; 91-99 reserved)           |
+| 100-159        | Partners       | 6     | Partner & vendor management (100, 110, 120, 130, 140, 150) |
+| 160-163        | Clients        | 4     | Client access tiers (160, 161, 162, 163)                 |
 
 ---
 
 ## Notes
 
-- **Role ID 24**: Currently unassigned (reserved)
-- **Role ID 71**: Currently unassigned (reserved)
-- **Gaps in ranges**: Some role IDs are reserved for future expansion
-- **Executive Roles**: Recently created in range 13-19 for organizational hierarchy
-- **Client Roles**: Restored in range 150-154 after previous cleanup
-- **Field Operations**: Spans two ranges (10-12 for management, 50-54 for delivery)
+- **Roles 3-9**: All reserved for future system maintenance roles
+- **Roles 15-29**: Reserved for future executive expansion (VP roles, additional C-suite positions)
+- **Roles 31-34, 36-39**: Reserved for future Sales department expansion
+- **Roles 44-49**: Reserved for future Engineering expansion
+- **Roles 53-59**: Reserved for future Manufacturing expansion
+- **Roles 61-69**: Reserved for future Field Service expansion
+- **Role 71**: Reserved for future HR expansion
+- **Roles 73-79**: Reserved for future HR expansion
+- **Role 81**: Reserved for future Accounting expansion
+- **Roles 83-89**: Reserved for future Accounting & Finance expansion
+- **Roles 91-99**: Reserved for future Support & Training expansion
+- **Roles 101-109, 111-119, etc.**: Reserved for additional Partner categories
 
 ---
 
 ## Migration & Deployment History
 
-### 2025-01-16: Executive Roles Creation
+### 2025-11-17: Consolidated Role Structure Reorganization
+- **Restructured**: Complete role ID consolidation across all departments
+- **Executive**: Simplified to 5 core C-suite roles (President, VP, CIO, CTO, CMO)
+- **Sales**: Moved to Roles 30-39 (was 20-29)
+- **Engineering**: Moved to Roles 40-49 (was 30-39)
+- **Manufacturing**: Consolidated to Roles 50-59 (was 7-9, 40-49)
+- **Field Service**: Moved to Roles 60-69 (was 50-59)
+- **HR**: Moved to Roles 70-79 (was 60-69)
+- **Accounting**: Moved to Roles 80-89 (was 70-79)
+- **Support**: Moved to Roles 90-99 (was 80-89)
+- **Partners**: Consolidated to Roles 100-159 (was 90-99, 141-143)
+- **Clients**: Moved to Roles 160-163 (was 150-154)
+- **Total active roles**: Reduced from 35 to 32 with cleaner structure
+- **Status**: ✅ Documentation updated, awaiting database migration
+
+### 2025-01-17: Accounting & Support Roles Deletion
+- **Deleted**: Accountant (73), Finance Analyst (74), Auditor (75), Training Specialist (82), Support Agent (84), QA Specialist (85)
+- **Reserved**: Roles 71, 73-75 (Accounting); Roles 82, 84-85 (Support) now reserved for future expansion
+- **Swapped Names**: Technical Writer (81) ↔ Support Manager (83)
+- Updated total active roles from 41 to 35
+
+### 2025-01-17: HR Roles Deletion
+- **Deleted**: Compliance Manager (61), HR Specialist (63), Compliance Officer (64)
+- **Reserved**: Roles 61, 63-64 now reserved for future expansion
+- Updated total active roles from 44 to 41
+
+### 2025-01-16: Department Simplification & Role Consolidation
+- **Sales**: Deleted Partner Manager (21), Sales Lead (22), Senior Sales Lead (23), Partner Sales (26); Changed Sales User (25) to Sales Assistant
+- **Field Service**: Kept only Field Manager (50); Reserved Service Lead (51), Field Technician (52), Installer Lead (53), Field Installer (54)
+- **Operations**: Removed all roles (3-9 now all reserved)
+- **Production & Quality**: Removed both departments (43-49 now all reserved)
+- Migration file: `sql/migrations/2025_01_16_department_simplification.sql`
+
+### 2025-01-16: Role Hierarchy Restructuring
+- Deleted Field Operations roles 10-12 (consolidated into field service)
+- Moved Manufacturing roles from 7-9 to new dedicated range 40-42
+- Moved Executive Leadership from 13-19 to 10-19
+- Added President (10) and Vice President (11) above COO
+- Migration file: `sql/migrations/2025_01_16_restructure_role_hierarchy.sql`
+
+### 2025-01-16: Executive Roles Creation (Previous)
 - Added C-Level positions: COO (13), CTO (14)
 - Added VP positions: Sales (15), Operations (16), Engineering (17), Support (18), HR (19)
 - Migration file: `sql/migrations/2025_01_16_create_executive_roles.sql`
 
-### 2025-01-16: Client Roles Restoration
+### 2025-01-16: Client Roles Restoration (Previous)
 - Restored client tier roles to range 150-154
 - Migration file: `sql/migrations/2025_01_16_restore_client_roles.sql`
 
 ---
 
-**This chart represents the complete organizational role structure as of 2025-01-16.**
+**This chart represents the complete organizational role structure as of 2025-01-17.**

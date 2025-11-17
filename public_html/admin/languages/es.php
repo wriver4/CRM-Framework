@@ -104,89 +104,38 @@ $lang = [
   'role_delete' => 'Eliminar Rol',
   'role_id' => 'ID de Rol',
   'select_rid' => 'Seleccionar Rol de Usuario',
-  // System Maintenance (1-2)
   'role_id_1' => 'Super Administrador',
   'role_id_2' => 'Administrador',
-  
-  // Executive (10-19)
   'role_id_10' => 'Presidente',
-  'role_id_11' => 'Director de Tecnología (CTO)',
-  'role_id_12' => 'Director Financiero (CFO)',
-  'role_id_13' => 'Director de Operaciones (COO)',
-  'role_id_14' => 'VP de Operaciones',
-  'role_id_15' => 'VP de Ventas',
-  'role_id_16' => 'VP de Ingeniería',
-  'role_id_17' => 'VP de Administración',
-  'role_id_18' => 'VP de Manufactura',
-  'role_id_19' => 'VP de Operaciones de Campo',
-  
-  // Internal Sales (20-29)
-  'role_id_20' => 'Gerente de Ventas',
-  'role_id_21' => 'Gerente de Socios',
-  'role_id_22' => 'Líder de Ventas',
-  'role_id_23' => 'Líder de Ventas 2',
-  'role_id_25' => 'Usuario de Ventas',
-  'role_id_26' => 'Vendedor de Socios',
-  
-  // Engineering (30-39)
-  'role_id_30' => 'Gerente de Ingeniería',
-  'role_id_31' => 'Líder Técnico',
-  'role_id_32' => 'Técnico 1',
-  'role_id_33' => 'Técnico 2',
-  'role_id_34' => 'Traductor',
-  
-  // Manufacturing (40-49)
-  'role_id_40' => 'Gerente de Manufactura',
-  'role_id_41' => 'Líder de Producción',
-  'role_id_42' => 'Líder de Calidad',
-  'role_id_43' => 'Técnico de Producción',
-  'role_id_44' => 'Técnico de Calidad',
-  'role_id_47' => 'Instalador',
-  
-  // Field Operations (50-59)
-  'role_id_50' => 'Gerente de Operaciones de Campo',
-  'role_id_51' => 'Líder de Servicio',
-  'role_id_52' => 'Técnico de Campo',
-  'role_id_53' => 'Líder de Instalación',
-  'role_id_54' => 'Instalador de Campo',
-  
-  // Administration (60-69)
-  'role_id_60' => 'Gerente de Recursos Humanos',
-  'role_id_61' => 'Gerente de Cumplimiento',
-  'role_id_62' => 'Gerente de Oficina',
-  'role_id_63' => 'Especialista en Recursos Humanos',
-  'role_id_64' => 'Oficial de Cumplimiento',
-  
-  // Finance (70-79)
-  'role_id_70' => 'Gerente de Contabilidad',
-  'role_id_71' => 'Contador',
-  'role_id_72' => 'Oficinista de Cuentas',
-  'role_id_73' => 'Contador de Personal',
-  'role_id_74' => 'Analista Financiero',
-  'role_id_75' => 'Auditor',
-  
-  // Support (80-89)
-  'role_id_80' => 'Traductor',
-  'role_id_81' => 'Escritor Técnico',
-  'role_id_82' => 'Especialista en Capacitación',
-  'role_id_83' => 'Gerente de Soporte',
-  'role_id_84' => 'Agente de Soporte',
-  'role_id_85' => 'Especialista en QA',
-  
-  // External Partners (90-99)
-  'role_id_90' => 'Proveedor',
-  'role_id_91' => 'Socio Estratégico',
-  'role_id_92' => 'Contratista',
-  'role_id_93' => 'Invitado',
-  'role_id_99' => 'Visor',
-  
-  // External Sales Partners (141-143)
-  'role_id_141' => 'Distribuidor',
-  'role_id_142' => 'Instalador',
-  'role_id_143' => 'Aplicador',
-  
-  // Clients (150)
-  'role_id_150' => 'Cliente',
+  'role_id_11' => 'Vicepresidente',
+  'role_id_12' => 'Director de Información (CIO)',
+  'role_id_13' => 'Director de Tecnología (CTO)',
+  'role_id_14' => 'Director de Marketing (CMO)',
+  'role_id_30' => 'Gerente de Ventas',
+  'role_id_35' => 'Asistente de Ventas',
+  'role_id_40' => 'Gerente de Ingeniería',
+  'role_id_41' => 'Líder Técnico',
+  'role_id_42' => 'Técnico 1',
+  'role_id_43' => 'Técnico 2',
+  'role_id_50' => 'Gerente de Manufactura',
+  'role_id_51' => 'Técnico de Manufactura 1',
+  'role_id_52' => 'Técnico de Manufactura 2',
+  'role_id_60' => 'Gerente de Servicio en Campo',
+  'role_id_70' => 'Gerente de Recursos Humanos',
+  'role_id_72' => 'Gerente de Oficina',
+  'role_id_80' => 'Gerente de Contabilidad',
+  'role_id_82' => 'Analista de AP/AR',
+  'role_id_90' => 'Gerente de Soporte',
+  'role_id_100' => 'Socio Estratégico',
+  'role_id_110' => 'Proveedor',
+  'role_id_120' => 'Distribuidor',
+  'role_id_130' => 'Instalador',
+  'role_id_140' => 'Aplicador',
+  'role_id_150' => 'Contratista',
+  'role_id_160' => 'Cliente Estándar',
+  'role_id_161' => 'Cliente Restringido',
+  'role_id_162' => 'Cliente Avanzado',
+  'role_id_163' => 'Cliente Estado',
   // Permissions
   'permissions' => 'Permisos',
   'permission_new' => 'Nuevo Permiso',
