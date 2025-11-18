@@ -12,23 +12,6 @@
   ?>&nbsp;waveGUARD&TRADE;&nbsp;Corporation.&nbsp;
   <?= isset($lang['all_rights_reserved']) ? $lang['all_rights_reserved'] : 'All rights reserved'; ?>
 </div>
-
-<?php
-// ========================================
-// BANDAID FIX: Load jQuery ONCE at the top
-// ========================================
-$needs_jquery = (
-  ($dir == 'leads' && $page == 'edit') ||
-  ($dir == 'test') ||
-  ($dir == 'tickets' && $page == 'view') ||
-  ($table_page == true)
-);
-
-if ($needs_jquery) {
-  echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>';
-}
-?>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
         crossorigin="anonymous"></script>
@@ -47,7 +30,8 @@ if ($dir == 'leads' && $page == 'new') {
 }
 // hide empty Structure Other/Additional on edit view
 if ($dir == 'leads' && $page == 'edit') {
-  // jQuery already loaded at top - removed duplicate
+  // Load jQuery first for leads edit functionality
+  echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>';
   echo '<script src="' . JS . '/hide-empty-structure.js"></script>';
   echo '<script src="/assets/js/contact-selector.js"></script>';
   
@@ -195,12 +179,12 @@ function validateForm() {
 /* end dev only */
 
 
-// Test and tickets - jQuery already loaded at top
+
 if ($dir == 'test') {
-  // jQuery already loaded at top - removed duplicate
+  echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>';
 }
 if ($dir == 'tickets' && $page == 'view') {
-  // jQuery already loaded at top - removed duplicate
+  echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>';
   echo '<script src="' . JS . '/tickets_view_labor.js"></script>';
 }
 
@@ -215,7 +199,7 @@ if ($dir == 'calendar') {
 
 // datatables
 if ($table_page == true) {
-  // jQuery already loaded at top - removed duplicate
+  echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>';
   echo '<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.12.1/fh-3.2.4/r-2.3.0/datatables.min.js"></script>';
 
 

@@ -2,8 +2,10 @@
 require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 $not->loggedin();
 // Direct routing variables - these determine page navigation and template inclusion
-$dir = 'security';
-$subdir = 'roles_permissions';
+$dir = 'admin';
+$subdir = 'security';
+$sub_subdir = 'roles_permissions';
+$sub_sub_subdir = '';
 $page = 'list';
 
 $table_page = true;

@@ -160,13 +160,13 @@ if ($currentUserId > 0) {
       </a>
       <ul class="dropdown-menu" aria-labelledby="securityDropdown">
         <li><a class="dropdown-item"
-             href="<?php echo URL . '/security/roles/list' ?>"><?= $lang['roles']; ?></a>
+             href="<?php echo URL . '/admin/security/roles/list' ?>"><?= $lang['roles']; ?></a>
         </li>
         <li><a class="dropdown-item"
-             href="<?php echo URL . '/security/permissions/list' ?>"><?= $lang['permissions']; ?></a>
+             href="<?php echo URL . '/admin/security/permissions/list' ?>"><?= $lang['permissions']; ?></a>
         </li>
         <li><a class="dropdown-item"
-             href="<?php echo URL . '/security/roles_permissions/list' ?>"><?= $lang['roles_permissions']; ?></a>
+             href="<?php echo URL . '/admin/security/roles_permissions/list' ?>"><?= $lang['roles_permissions']; ?></a>
         </li>
       </ul>
     </li>
