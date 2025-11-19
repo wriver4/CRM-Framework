@@ -56,7 +56,7 @@ require 'get.php';
     <label for="password"
            class="required pb-1 pt-1"><?= $lang['password']; ?></label>
     <input type="password"
-           <?= in_array(8, $_SESSION['permissions']) ? '' : 'disabled'; ?>
+           <?= in_array(1023, $_SESSION['permissions']) ? '' : 'disabled'; ?>
            name="password"
            maxlength="250"
            id="password"

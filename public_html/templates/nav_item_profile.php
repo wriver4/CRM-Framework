@@ -49,7 +49,7 @@ if ($currentUserId > 0) {
     <li><hr class="dropdown-divider"></li>
     
     <!-- Administration Section -->
-    <?php if (in_array(8, $_SESSION['permissions'] ?? [])) : ?>
+    <?php if (in_array(1030, $_SESSION['permissions'] ?? [])) : ?>
     <li><h6 class="dropdown-header"><?= $lang['navbar_administration']; ?></h6></li>
     <li><a class="dropdown-item<?php echo ($dir == "admin/leads") ? ' active' : ''; ?>"
          href="<?php echo URL . '/admin/leads/list' ?>">

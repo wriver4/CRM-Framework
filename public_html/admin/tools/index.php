@@ -14,8 +14,8 @@ require_once dirname(__DIR__, 3) . '/config/system.php';
 // Check if user is logged in
 $not->loggedin();
 
-// Check if user has admin permissions (permission 8)
-if (!in_array(8, $_SESSION['permissions'] ?? [])) {
+// Check if user has admin permissions (permission 1030 - admin.access)
+if (!in_array(1030, $_SESSION['permissions'] ?? [])) {
     header('Location: ' . URL . '/index');
     exit;
 }

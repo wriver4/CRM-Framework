@@ -130,9 +130,27 @@ try {
     $schema = preg_replace('/CREATE DATABASE.*?;/i', '', $schema);
     $schema = preg_replace('/USE .*?;/i', '', $schema);
     
+    // Remove problematic ALTER TABLE statements for roles (will be fixed by migrations)
+    $schema = preg_replace('/ALTER TABLE `roles`.*?;/is', '', $schema);
+    $schema = preg_replace('/ALTER TABLE `roles_permissions`.*?;/is', '', $schema);
+    
     // Execute schema
     $pdo->exec($schema);
     echo "✅ Schema imported\n";
+    
+    // Apply RBAC schema enhancements migration
+    echo "📋 Applying RBAC schema enhancements...\n";
+    $rbacMigrationFile = __DIR__ . '/../sql/migrations/2025_11_18_RBAC_SCHEMA_ENHANCEMENT.sql';
+    
+    if (file_exists($rbacMigrationFile)) {
+        $rbacMigration = file_get_contents($rbacMigrationFile);
+        // Remove verification queries and comments
+        $rbacMigration = preg_replace('/SELECT\s+\'MIGRATION VERIFICATION\'.*?;/is', '', $rbacMigration);
+        $pdo->exec($rbacMigration);
+        echo "✅ RBAC schema enhancements applied\n";
+    } else {
+        echo "⚠️  RBAC migration file not found, skipping enhancements\n";
+    }
     
     // Seed test data
     if ($config['seeding']['enabled']) {
@@ -173,7 +191,11 @@ try {
         // Seed contacts
         if (isset($dataset['contacts'])) {
             echo "  → Creating {$dataset['contacts']} test contacts...\n";
-            seedContacts($pdo, $dataset['contacts']);
+            try {
+                seedContacts($pdo, $dataset['contacts']);
+            } catch (Exception $e) {
+                echo "  ⚠️  Skipping contacts seeding: " . $e->getMessage() . "\n";
+            }
         }
         
         echo "✅ Test data seeded\n";
@@ -210,8 +232,8 @@ try {
 function seedUsers(PDO $pdo, int $count): void
 {
     $stmt = $pdo->prepare("
-        INSERT INTO users (username, password, full_name, email, role_id, state_id) 
-        VALUES (:username, :password, :full_name, :email, :role_id, :state_id)
+        INSERT INTO users (username, password, full_name, email, role_id, status) 
+        VALUES (:username, :password, :full_name, :email, :role_id, :status)
     ");
     
     for ($i = 1; $i <= $count; $i++) {
@@ -221,22 +243,31 @@ function seedUsers(PDO $pdo, int $count): void
             'full_name' => "Test User $i",
             'email' => "test_user_$i@test.com",
             'role_id' => ($i === 1) ? 1 : 2, // First user is admin
-            'state_id' => 1, // Active
+            'status' => 1, // Active
         ]);
     }
 }
 
 function seedRoles(PDO $pdo, int $count): void
 {
-    $roles = ['Admin', 'Manager', 'User', 'Viewer', 'Restricted'];
+    $roles = [
+        ['id' => 1, 'name' => 'Admin'],
+        ['id' => 2, 'name' => 'Manager'],
+        ['id' => 3, 'name' => 'User'],
+        ['id' => 4, 'name' => 'Viewer'],
+        ['id' => 5, 'name' => 'Restricted']
+    ];
     
     $stmt = $pdo->prepare("
-        INSERT INTO roles (role, updated_at, created_at) 
-        VALUES (:name, NOW(), NOW())
+        INSERT INTO roles (role_id, role, created_at, updated_at) 
+        VALUES (:role_id, :name, NOW(), NOW())
     ");
     
     for ($i = 0; $i < min($count, count($roles)); $i++) {
-        $stmt->execute(['name' => $roles[$i]]);
+        $stmt->execute([
+            'role_id' => $roles[$i]['id'],
+            'name' => $roles[$i]['name']
+        ]);
     }
 }
 
@@ -249,12 +280,13 @@ function seedPermissions(PDO $pdo, int $count): void
     ];
     
     $stmt = $pdo->prepare("
-        INSERT INTO permissions (pobject, pdescription, updated_at, created_at) 
-        VALUES (:object, :description, NOW(), NOW())
+        INSERT INTO permissions (pid, pobject, pdescription, updated_at, created_at) 
+        VALUES (:pid, :object, :description, NOW(), NOW())
     ");
     
     for ($i = 0; $i < min($count, count($permissions)); $i++) {
         $stmt->execute([
+            'pid' => $i + 100,
             'object' => $permissions[$i],
             'description' => ucfirst(str_replace('.', ' ', $permissions[$i])),
         ]);
@@ -263,16 +295,28 @@ function seedPermissions(PDO $pdo, int $count): void
 
 function seedRbacData(PDO $pdo, array $rbacConfig): void
 {
-    // Create test roles
+    // Create test roles (skip duplicates)
+    $roleId = 100;
     foreach ($rbacConfig['test_roles'] as $roleName => $description) {
-        $pdo->prepare("INSERT INTO roles (role, updated_at, created_at) VALUES (?, NOW(), NOW())")
-            ->execute([$roleName]);
+        try {
+            $pdo->prepare("INSERT INTO roles (role_id, role, updated_at, created_at) VALUES (?, ?, NOW(), NOW())")
+                ->execute([$roleId++, $roleName]);
+        } catch (Exception $e) {
+            // Skip if role already exists
+            $roleId++;
+        }
     }
     
-    // Create test permissions
+    // Create test permissions (skip duplicates)
+    $permId = 1000;
     foreach ($rbacConfig['test_permissions'] as $permission) {
-        $pdo->prepare("INSERT INTO permissions (pobject, pdescription, updated_at, created_at) VALUES (?, ?, NOW(), NOW())")
-            ->execute([$permission, ucfirst(str_replace('.', ' ', $permission))]);
+        try {
+            $pdo->prepare("INSERT INTO permissions (pid, pobject, pdescription, updated_at, created_at) VALUES (?, ?, ?, NOW(), NOW())")
+                ->execute([$permId++, $permission, ucfirst(str_replace('.', ' ', $permission))]);
+        } catch (Exception $e) {
+            // Skip if permission already exists
+            $permId++;
+        }
     }
 }
 
@@ -283,7 +327,7 @@ function seedLeads(PDO $pdo, int $count): void
         VALUES (:first_name, :family_name, :phone, :email, :stage, NOW())
     ");
     
-    $stages = ['New', 'Contacted', 'Qualified', 'Proposal', 'Closed Won', 'Closed Lost'];
+    $stages = [1, 2, 3, 4, 5, 6]; // Integer stage IDs
     
     for ($i = 1; $i <= $count; $i++) {
         $stmt->execute([

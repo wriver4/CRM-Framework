@@ -9,7 +9,7 @@ require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 $not->loggedin();
 
 // Check admin permissions
-if (!in_array(8, $_SESSION['permissions'] ?? [])) {
+if (!in_array(1030, $_SESSION['permissions'] ?? [])) {
     header("Location: " . URL . "/dashboard");
     exit;
 }

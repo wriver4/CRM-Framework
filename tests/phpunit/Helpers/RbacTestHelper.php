@@ -297,4 +297,229 @@ class RbacTestHelper
         $this->pdo->exec("DELETE FROM roles WHERE id > 0");
         $this->pdo->exec("DELETE FROM users WHERE username LIKE 'test_%'");
     }
+    
+    // ============== 4-LEVEL RBAC METHODS ===============
+    
+    /**
+     * Create permission with module/action/field/scope structure
+     */
+    public function createPermissionWithStructure(
+        string $module,
+        string $action,
+        string $description = '',
+        ?string $fieldName = null,
+        string $scope = 'all'
+    ): int {
+        $pobject = "{$module}.{$action}";
+        if ($fieldName) {
+            $pobject .= ".{$fieldName}";
+        }
+        
+        $stmt = $this->pdo->prepare("
+            INSERT INTO permissions (pobject, pdescription, module, action, field_name, scope, updated_at, created_at) 
+            VALUES (:pobject, :description, :module, :action, :field_name, :scope, NOW(), NOW())
+        ");
+        $stmt->execute([
+            'pobject' => $pobject,
+            'description' => $description,
+            'module' => $module,
+            'action' => $action,
+            'field_name' => $fieldName,
+            'scope' => $scope
+        ]);
+        
+        return (int) $this->pdo->lastInsertId();
+    }
+    
+    /**
+     * Create field-level permission
+     */
+    public function createFieldPermission(
+        int $permissionId,
+        string $module,
+        string $fieldName,
+        string $accessLevel = 'view'
+    ): int {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO field_permissions (permission_id, module, field_name, access_level, updated_at, created_at)
+            VALUES (:permission_id, :module, :field_name, :access_level, NOW(), NOW())
+        ");
+        $stmt->execute([
+            'permission_id' => $permissionId,
+            'module' => $module,
+            'field_name' => $fieldName,
+            'access_level' => $accessLevel
+        ]);
+        
+        return (int) $this->pdo->lastInsertId();
+    }
+    
+    /**
+     * Create record ownership
+     */
+    public function createRecordOwnership(
+        string $recordType,
+        int $recordId,
+        int $ownerUserId,
+        ?int $teamId = null,
+        string $accessType = 'owner'
+    ): int {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO record_ownership (record_type, record_id, owner_user_id, team_id, access_type, updated_at, created_at)
+            VALUES (:record_type, :record_id, :owner_user_id, :team_id, :access_type, NOW(), NOW())
+            ON DUPLICATE KEY UPDATE team_id = :team_id, access_type = :access_type, updated_at = NOW()
+        ");
+        $stmt->execute([
+            'record_type' => $recordType,
+            'record_id' => $recordId,
+            'owner_user_id' => $ownerUserId,
+            'team_id' => $teamId,
+            'access_type' => $accessType
+        ]);
+        
+        return (int) $this->pdo->lastInsertId();
+    }
+    
+    /**
+     * Create test team
+     */
+    public function createTeam(
+        string $name,
+        string $description = '',
+        ?int $managerUserId = null,
+        string $status = 'active'
+    ): int {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO teams (name, description, manager_user_id, status, updated_at, created_at)
+            VALUES (:name, :description, :manager_user_id, :status, NOW(), NOW())
+        ");
+        $stmt->execute([
+            'name' => $name,
+            'description' => $description,
+            'manager_user_id' => $managerUserId,
+            'status' => $status
+        ]);
+        
+        return (int) $this->pdo->lastInsertId();
+    }
+    
+    /**
+     * Assign user to team
+     */
+    public function assignUserToTeam(
+        int $teamId,
+        int $userId,
+        string $teamRole = 'member',
+        bool $isLead = false
+    ): int {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO team_members (team_id, user_id, team_role, is_lead, updated_at, created_at)
+            VALUES (:team_id, :user_id, :team_role, :is_lead, NOW(), NOW())
+            ON DUPLICATE KEY UPDATE team_role = :team_role, is_lead = :is_lead, updated_at = NOW()
+        ");
+        $stmt->execute([
+            'team_id' => $teamId,
+            'user_id' => $userId,
+            'team_role' => $teamRole,
+            'is_lead' => $isLead ? 1 : 0
+        ]);
+        
+        return (int) $this->pdo->lastInsertId();
+    }
+    
+    /**
+     * Check user permission using stored procedure
+     */
+    public function checkUserPermission(
+        int $userId,
+        string $module,
+        string $action,
+        ?string $recordType = null,
+        ?int $recordId = null
+    ): bool {
+        $stmt = $this->pdo->prepare("CALL check_user_permission(:user_id, :module, :action, :record_type, :record_id, @has_permission)");
+        $stmt->execute([
+            'user_id' => $userId,
+            'module' => $module,
+            'action' => $action,
+            'record_type' => $recordType,
+            'record_id' => $recordId
+        ]);
+        
+        // Fetch the result
+        $result = $this->pdo->query("SELECT @has_permission as has_permission")->fetch(\PDO::FETCH_ASSOC);
+        return (bool) $result['has_permission'];
+    }
+    
+    /**
+     * Get team members
+     */
+    public function getTeamMembers(int $teamId): array
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT tm.*, u.username, u.full_name, u.email
+            FROM team_members tm
+            JOIN users u ON tm.user_id = u.id
+            WHERE tm.team_id = :team_id AND tm.is_active = TRUE
+        ");
+        $stmt->execute(['team_id' => $teamId]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * Get user teams
+     */
+    public function getUserTeams(int $userId): array
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT t.*, tm.team_role, tm.is_lead
+            FROM teams t
+            JOIN team_members tm ON t.id = tm.team_id
+            WHERE tm.user_id = :user_id AND tm.is_active = TRUE AND t.status = 'active'
+        ");
+        $stmt->execute(['user_id' => $userId]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * Cache permission lookup
+     */
+    public function cachePermission(
+        int $userId,
+        int $permissionId,
+        string $module,
+        string $action,
+        bool $hasPermission,
+        int $ttlSeconds = 3600
+    ): void {
+        $stmt = $this->pdo->prepare("CALL cache_user_permission(:user_id, :permission_id, :module, :action, :has_permission, :ttl)");
+        $stmt->execute([
+            'user_id' => $userId,
+            'permission_id' => $permissionId,
+            'module' => $module,
+            'action' => $action,
+            'has_permission' => $hasPermission ? 1 : 0,
+            'ttl' => $ttlSeconds
+        ]);
+    }
+    
+    /**
+     * Get cached permission
+     */
+    public function getCachedPermission(int $userId, int $permissionId): ?bool
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT has_permission
+            FROM permission_cache
+            WHERE user_id = :user_id AND permission_id = :permission_id
+            AND (expires_at IS NULL OR expires_at > NOW())
+        ");
+        $stmt->execute([
+            'user_id' => $userId,
+            'permission_id' => $permissionId
+        ]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        
+        return $result ? (bool) $result['has_permission'] : null;
+    }
 }
