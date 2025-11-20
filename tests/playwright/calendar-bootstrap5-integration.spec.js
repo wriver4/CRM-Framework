@@ -1,9 +1,10 @@
 const { test, expect } = require('@playwright/test');
 const { login, logout, isLoggedIn } = require('./auth-helper');
+const { DEFAULT_TEST_USER } = require('./test-credentials');
 
 test.describe('Calendar Bootstrap 5 Integration Tests', () => {
-  const testUsername = process.env.CRM_TEST_USERNAME || 'admin';
-  const testPassword = process.env.CRM_TEST_PASSWORD || 'admin123';
+  const testUsername = DEFAULT_TEST_USER.username;
+  const testPassword = DEFAULT_TEST_USER.password;
 
   test.beforeEach(async ({ page }) => {
     await page.setExtraHTTPHeaders({

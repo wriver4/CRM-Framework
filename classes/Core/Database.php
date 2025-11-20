@@ -72,18 +72,30 @@ class Database
 
     public function __construct()
     {
-        // Check if we're in test environment and use test database credentials
-        if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'testing') {
-            $this->crm_host = $_ENV['DB_HOST'] ?? 'localhost';
-            $this->crm_database = $_ENV['DB_NAME'] ?? 'democrm_test';
-            $this->crm_username = $_ENV['DB_USER'] ?? 'democrm_test';
-            $this->crm_password = $_ENV['DB_PASS'] ?? 'TestDB_2025_Secure!';
+        // Check if we're in test environment (explicit ENV or Playwright test header)
+        $hasPlaywrightHeader = isset($_SERVER['HTTP_X_PLAYWRIGHT_TEST']) && $_SERVER['HTTP_X_PLAYWRIGHT_TEST'] === 'true';
+        $hasEnvVar = isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'testing';
+        $isTestMode = $hasPlaywrightHeader || $hasEnvVar;
+        
+        if ($isTestMode) {
+            $this->crm_host = $_ENV['DB_HOST'] ?? $_ENV['TEST_DB_HOST'] ?? 'localhost';
+            $this->crm_database = $_ENV['DB_NAME'] ?? $_ENV['TEST_DB_NAME'] ?? 'democrm_test';
+            $this->crm_username = $_ENV['DB_USER'] ?? $_ENV['TEST_DB_USER'] ?? 'democrm_test';
+            $this->crm_password = $_ENV['DB_PASS'] ?? $_ENV['TEST_DB_PASS'] ?? 'TestDB_2025_Secure!';
+            
+            if (php_sapi_name() !== 'cli') {
+                error_log("TEST MODE ACTIVE: Using database {$this->crm_database} (header: $hasPlaywrightHeader, env: $hasEnvVar)");
+            }
         } else {
             // Production database connection information
             $this->crm_host = 'localhost';
             $this->crm_database = 'democrm_democrm';
             $this->crm_username = 'democrm_democrm';
             $this->crm_password = 'b3J2sy5T4JNm60';
+            
+            if (php_sapi_name() !== 'cli' && isset($_SERVER['HTTP_X_PLAYWRIGHT_TEST'])) {
+                error_log("PLAYWRIGHT HEADER RECEIVED BUT NOT IN TEST MODE");
+            }
         }
 
         $this->character_set = 'utf8mb4';

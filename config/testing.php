@@ -32,8 +32,8 @@ return [
             'username' => getenv('TEST_DB_USER') ?: 'democrm_test',
             'password' => getenv('TEST_DB_PASS') ?: 'TestDB_2025_Secure!',
             'charset' => 'utf8mb4',
-            'auto_create' => true,  // Automatically create database if it doesn't exist
-            'auto_destroy' => true, // Automatically destroy after test run
+            'auto_create' => true,
+            'auto_destroy' => true,
         ],
         
         // Persistent test database (reset between tests but not destroyed)
@@ -43,9 +43,9 @@ return [
             'username' => getenv('TEST_DB_USER') ?: 'democrm_test',
             'password' => getenv('TEST_DB_PASS') ?: 'TestDB_2025_Secure!',
             'charset' => 'utf8mb4',
-            'auto_create' => true,  // Create if doesn't exist
-            'auto_destroy' => false, // Keep database between runs
-            'auto_reset' => true,   // Reset data between test suites
+            'auto_create' => true,
+            'auto_destroy' => false,
+            'auto_reset' => true,
         ],
         
         // Database snapshot configuration

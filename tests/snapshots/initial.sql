@@ -67,10 +67,7 @@ CREATE TABLE `calendar_event_attendees` (
   PRIMARY KEY (`id`),
   KEY `idx_event_id` (`event_id`),
   KEY `idx_contact_id` (`contact_id`),
-  KEY `idx_user_id` (`user_id`),
-  CONSTRAINT `fk_attendees_contact` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `fk_attendees_event` FOREIGN KEY (`event_id`) REFERENCES `calendar_events` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_attendees_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+  KEY `idx_user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -103,9 +100,7 @@ CREATE TABLE `calendar_event_reminders` (
   KEY `idx_event_id` (`event_id`),
   KEY `idx_user_id` (`user_id`),
   KEY `idx_reminder_datetime` (`reminder_datetime`),
-  KEY `idx_is_sent` (`is_sent`),
-  CONSTRAINT `fk_reminders_event` FOREIGN KEY (`event_id`) REFERENCES `calendar_events` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_reminders_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  KEY `idx_is_sent` (`is_sent`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -157,12 +152,7 @@ CREATE TABLE `calendar_events` (
   KEY `idx_status` (`status`),
   KEY `idx_priority` (`priority`),
   KEY `fk_calendar_events_created_by` (`created_by`),
-  KEY `fk_calendar_events_updated_by` (`updated_by`),
-  CONSTRAINT `fk_calendar_events_contact` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `fk_calendar_events_created_by` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_calendar_events_lead` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `fk_calendar_events_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_calendar_events_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  KEY `fk_calendar_events_updated_by` (`updated_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -196,8 +186,7 @@ CREATE TABLE `calendar_user_settings` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_user_id` (`user_id`),
-  CONSTRAINT `fk_calendar_settings_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  UNIQUE KEY `idx_user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -262,7 +251,7 @@ CREATE TABLE `contacts` (
   KEY `idx_contacts_lead_id` (`lead_id`),
   KEY `idx_contacts_email` (`personal_email`),
   KEY `idx_contacts_phone` (`cell_phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -271,6 +260,37 @@ CREATE TABLE `contacts` (
 
 LOCK TABLES `contacts` WRITE;
 /*!40000 ALTER TABLE `contacts` DISABLE KEYS */;
+INSERT INTO `contacts` VALUES
+(1,NULL,1,NULL,'Contact','Test 1','','555-1001',NULL,NULL,'','contact_test_1@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(2,NULL,1,NULL,'Contact','Test 2','','555-1002',NULL,NULL,'','contact_test_2@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(3,NULL,1,NULL,'Contact','Test 3','','555-1003',NULL,NULL,'','contact_test_3@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(4,NULL,1,NULL,'Contact','Test 4','','555-1004',NULL,NULL,'','contact_test_4@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(5,NULL,1,NULL,'Contact','Test 5','','555-1005',NULL,NULL,'','contact_test_5@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(6,NULL,1,NULL,'Contact','Test 6','','555-1006',NULL,NULL,'','contact_test_6@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(7,NULL,1,NULL,'Contact','Test 7','','555-1007',NULL,NULL,'','contact_test_7@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(8,NULL,1,NULL,'Contact','Test 8','','555-1008',NULL,NULL,'','contact_test_8@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(9,NULL,1,NULL,'Contact','Test 9','','555-1009',NULL,NULL,'','contact_test_9@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(10,NULL,1,NULL,'Contact','Test 10','','555-1010',NULL,NULL,'','contact_test_10@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(11,NULL,1,NULL,'Contact','Test 11','','555-1011',NULL,NULL,'','contact_test_11@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(12,NULL,1,NULL,'Contact','Test 12','','555-1012',NULL,NULL,'','contact_test_12@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(13,NULL,1,NULL,'Contact','Test 13','','555-1013',NULL,NULL,'','contact_test_13@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(14,NULL,1,NULL,'Contact','Test 14','','555-1014',NULL,NULL,'','contact_test_14@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(15,NULL,1,NULL,'Contact','Test 15','','555-1015',NULL,NULL,'','contact_test_15@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(16,NULL,1,NULL,'Contact','Test 16','','555-1016',NULL,NULL,'','contact_test_16@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(17,NULL,1,NULL,'Contact','Test 17','','555-1017',NULL,NULL,'','contact_test_17@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(18,NULL,1,NULL,'Contact','Test 18','','555-1018',NULL,NULL,'','contact_test_18@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(19,NULL,1,NULL,'Contact','Test 19','','555-1019',NULL,NULL,'','contact_test_19@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(20,NULL,1,NULL,'Contact','Test 20','','555-1020',NULL,NULL,'','contact_test_20@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(21,NULL,1,NULL,'Contact','Test 21','','555-1021',NULL,NULL,'','contact_test_21@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(22,NULL,1,NULL,'Contact','Test 22','','555-1022',NULL,NULL,'','contact_test_22@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(23,NULL,1,NULL,'Contact','Test 23','','555-1023',NULL,NULL,'','contact_test_23@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(24,NULL,1,NULL,'Contact','Test 24','','555-1024',NULL,NULL,'','contact_test_24@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(25,NULL,1,NULL,'Contact','Test 25','','555-1025',NULL,NULL,'','contact_test_25@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(26,NULL,1,NULL,'Contact','Test 26','','555-1026',NULL,NULL,'','contact_test_26@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(27,NULL,1,NULL,'Contact','Test 27','','555-1027',NULL,NULL,'','contact_test_27@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(28,NULL,1,NULL,'Contact','Test 28','','555-1028',NULL,NULL,'','contact_test_28@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(29,NULL,1,NULL,'Contact','Test 29','','555-1029',NULL,NULL,'','contact_test_29@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20'),
+(30,NULL,1,NULL,'Contact','Test 30','','555-1030',NULL,NULL,'','contact_test_30@test.com',NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'2025-11-20 02:15:53','2025-11-20');
 /*!40000 ALTER TABLE `contacts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -355,8 +375,7 @@ CREATE TABLE `crm_sync_queue` (
   KEY `idx_next_retry` (`next_retry_at`),
   KEY `idx_external_system` (`external_system`),
   KEY `idx_lead_id` (`lead_id`),
-  KEY `idx_created_at` (`created_at`),
-  CONSTRAINT `fk_crm_sync_lead_id` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE
+  KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Queue for syncing leads to external CRM systems';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -367,6 +386,44 @@ CREATE TABLE `crm_sync_queue` (
 LOCK TABLES `crm_sync_queue` WRITE;
 /*!40000 ALTER TABLE `crm_sync_queue` DISABLE KEYS */;
 /*!40000 ALTER TABLE `crm_sync_queue` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `effective_permissions_cache`
+--
+
+DROP TABLE IF EXISTS `effective_permissions_cache`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `effective_permissions_cache` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  `permission_id` int(11) NOT NULL,
+  `permission_source` enum('direct','inherited','delegated','temporary') DEFAULT 'direct',
+  `calculation_method` enum('full','hierarchy','delegation','approval') DEFAULT 'full',
+  `is_active` tinyint(1) DEFAULT 1,
+  `cached_at` datetime NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_user_perm_cache` (`user_id`,`permission_id`,`role_id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_permission_id` (`permission_id`),
+  KEY `idx_expires_at` (`expires_at`),
+  KEY `idx_permission_source` (`permission_source`),
+  KEY `fk_cache_role` (`role_id`),
+  KEY `idx_effective_perm_user` (`user_id`,`permission_source`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Cache of effective permissions (direct + inherited + delegated)';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `effective_permissions_cache`
+--
+
+LOCK TABLES `effective_permissions_cache` WRITE;
+/*!40000 ALTER TABLE `effective_permissions_cache` DISABLE KEYS */;
+/*!40000 ALTER TABLE `effective_permissions_cache` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -434,8 +491,7 @@ CREATE TABLE `email_form_processing` (
   KEY `idx_processed_at` (`processed_at`),
   KEY `idx_sender_email` (`sender_email`),
   KEY `idx_message_id` (`message_id`),
-  KEY `fk_email_processing_lead_id` (`lead_id`),
-  CONSTRAINT `fk_email_processing_lead_id` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE SET NULL
+  KEY `fk_email_processing_lead_id` (`lead_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Log of email form processing activities';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -446,6 +502,260 @@ CREATE TABLE `email_form_processing` (
 LOCK TABLES `email_form_processing` WRITE;
 /*!40000 ALTER TABLE `email_form_processing` DISABLE KEYS */;
 /*!40000 ALTER TABLE `email_form_processing` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `email_global_templates`
+--
+
+DROP TABLE IF EXISTS `email_global_templates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `email_global_templates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `template_type` enum('header','footer') NOT NULL,
+  `language_code` varchar(5) NOT NULL DEFAULT 'en',
+  `html_content` text NOT NULL,
+  `plain_text_content` text DEFAULT NULL,
+  `active` tinyint(1) DEFAULT 1,
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `type_language` (`template_type`,`language_code`),
+  KEY `language_code` (`language_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Global header/footer templates inherited by all modules';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `email_global_templates`
+--
+
+LOCK TABLES `email_global_templates` WRITE;
+/*!40000 ALTER TABLE `email_global_templates` DISABLE KEYS */;
+/*!40000 ALTER TABLE `email_global_templates` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `email_queue`
+--
+
+DROP TABLE IF EXISTS `email_queue`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `email_queue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `template_id` int(11) NOT NULL,
+  `module` varchar(50) NOT NULL,
+  `record_id` int(11) NOT NULL COMMENT 'ID of lead, referral, etc.',
+  `recipient_email` varchar(255) NOT NULL,
+  `recipient_name` varchar(255) DEFAULT NULL COMMENT 'Uses full_name from source table',
+  `language_code` varchar(5) DEFAULT 'en',
+  `subject` varchar(255) NOT NULL,
+  `body_html` text NOT NULL,
+  `body_plain_text` text DEFAULT NULL,
+  `variables_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Rendered variables for this email' CHECK (json_valid(`variables_json`)),
+  `status` enum('pending','approved','sent','failed','cancelled') DEFAULT 'pending',
+  `requires_approval` tinyint(1) DEFAULT 0,
+  `approved_by` int(11) DEFAULT NULL,
+  `approved_at` datetime DEFAULT NULL,
+  `scheduled_send_at` datetime DEFAULT NULL COMMENT 'For future scheduled emails',
+  `sent_at` datetime DEFAULT NULL,
+  `error_message` text DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `status` (`status`),
+  KEY `module_record` (`module`,`record_id`),
+  KEY `scheduled_send_at` (`scheduled_send_at`),
+  KEY `template_id` (`template_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Queue for emails pending approval or scheduled sending';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `email_queue`
+--
+
+LOCK TABLES `email_queue` WRITE;
+/*!40000 ALTER TABLE `email_queue` DISABLE KEYS */;
+/*!40000 ALTER TABLE `email_queue` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `email_send_log`
+--
+
+DROP TABLE IF EXISTS `email_send_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `email_send_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `smtp_config_id` int(11) DEFAULT NULL COMMENT 'SMTP config used',
+  `lead_id` int(11) DEFAULT NULL COMMENT 'Related lead ID',
+  `contact_id` int(11) DEFAULT NULL COMMENT 'Related contact ID',
+  `user_id` int(11) DEFAULT NULL COMMENT 'User who triggered the email',
+  `email_type` varchar(50) NOT NULL COMMENT 'Type of email (lead_thank_you, notification, etc)',
+  `lead_source_id` int(11) DEFAULT NULL COMMENT 'Lead source type (1-6)',
+  `recipient_email` varchar(255) NOT NULL COMMENT 'Recipient email address',
+  `recipient_name` varchar(255) DEFAULT NULL COMMENT 'Recipient name',
+  `subject` varchar(500) NOT NULL COMMENT 'Email subject',
+  `body_html` longtext DEFAULT NULL COMMENT 'HTML email body',
+  `body_text` longtext DEFAULT NULL COMMENT 'Plain text email body',
+  `status` enum('pending','sent','failed','bounced') NOT NULL DEFAULT 'pending' COMMENT 'Email status',
+  `error_message` text DEFAULT NULL COMMENT 'Error message if failed',
+  `sent_at` timestamp NULL DEFAULT NULL COMMENT 'When email was sent',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_smtp_config_id` (`smtp_config_id`),
+  KEY `idx_lead_id` (`lead_id`),
+  KEY `idx_contact_id` (`contact_id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_email_type` (`email_type`),
+  KEY `idx_lead_source_id` (`lead_source_id`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Log of all emails sent from the system';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `email_send_log`
+--
+
+LOCK TABLES `email_send_log` WRITE;
+/*!40000 ALTER TABLE `email_send_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `email_send_log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `email_template_content`
+--
+
+DROP TABLE IF EXISTS `email_template_content`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `email_template_content` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `template_id` int(11) NOT NULL,
+  `language_code` varchar(5) NOT NULL DEFAULT 'en',
+  `subject` varchar(255) NOT NULL,
+  `body_html` text NOT NULL COMMENT 'Main email body with shortcodes',
+  `body_plain_text` text DEFAULT NULL COMMENT 'Plain text version',
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `template_language` (`template_id`,`language_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Multilingual content for email templates (body only, header/footer inherited)';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `email_template_content`
+--
+
+LOCK TABLES `email_template_content` WRITE;
+/*!40000 ALTER TABLE `email_template_content` DISABLE KEYS */;
+/*!40000 ALTER TABLE `email_template_content` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `email_template_variables`
+--
+
+DROP TABLE IF EXISTS `email_template_variables`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `email_template_variables` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `template_id` int(11) NOT NULL,
+  `variable_key` varchar(100) NOT NULL COMMENT 'e.g., lead_name, company_name, assigned_user',
+  `variable_label` varchar(255) NOT NULL,
+  `variable_description` text DEFAULT NULL,
+  `variable_type` varchar(50) DEFAULT 'text' COMMENT 'text, date, currency, url, phone',
+  `variable_source` varchar(100) DEFAULT NULL COMMENT 'Database field or method to get value',
+  `sort_order` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `template_id` (`template_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Available variables/shortcodes for each template';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `email_template_variables`
+--
+
+LOCK TABLES `email_template_variables` WRITE;
+/*!40000 ALTER TABLE `email_template_variables` DISABLE KEYS */;
+/*!40000 ALTER TABLE `email_template_variables` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `email_templates`
+--
+
+DROP TABLE IF EXISTS `email_templates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `email_templates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `template_key` varchar(100) NOT NULL COMMENT 'Unique identifier (e.g., lead_welcome, lead_assigned)',
+  `template_name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `module` varchar(50) NOT NULL COMMENT 'leads, referrals, prospects, contacts, users',
+  `category` varchar(50) DEFAULT 'general' COMMENT 'welcome, status_change, assignment, reminder',
+  `trigger_event` varchar(100) DEFAULT NULL COMMENT 'stage_change, assignment, manual, scheduled',
+  `trigger_conditions` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Conditions for automatic sending' CHECK (json_valid(`trigger_conditions`)),
+  `requires_approval` tinyint(1) DEFAULT 0 COMMENT '0=auto send, 1=requires approval',
+  `log_to_communications` tinyint(1) DEFAULT 1 COMMENT '1=log in communications table',
+  `supports_sms` tinyint(1) DEFAULT 0 COMMENT 'Future: can be sent as SMS',
+  `active` tinyint(1) DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `template_key` (`template_key`),
+  KEY `module` (`module`),
+  KEY `trigger_event` (`trigger_event`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Module-specific email templates with trigger configuration';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `email_templates`
+--
+
+LOCK TABLES `email_templates` WRITE;
+/*!40000 ALTER TABLE `email_templates` DISABLE KEYS */;
+/*!40000 ALTER TABLE `email_templates` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `email_trigger_rules`
+--
+
+DROP TABLE IF EXISTS `email_trigger_rules`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `email_trigger_rules` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `template_id` int(11) NOT NULL,
+  `module` varchar(50) NOT NULL,
+  `trigger_type` enum('stage_change','assignment','field_update','time_based') NOT NULL,
+  `trigger_condition` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Conditions: stage_from, stage_to, field_name, etc.' CHECK (json_valid(`trigger_condition`)),
+  `recipient_type` enum('lead_contact','assigned_user','custom_email','both') DEFAULT 'lead_contact',
+  `custom_recipient_email` varchar(255) DEFAULT NULL COMMENT 'For custom_email recipient type',
+  `delay_minutes` int(11) DEFAULT 0 COMMENT 'Delay before sending (0=immediate)',
+  `active` tinyint(1) DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `created_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `template_id` (`template_id`),
+  KEY `module_trigger` (`module`,`trigger_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Rules for automatic email triggering based on events';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `email_trigger_rules`
+--
+
+LOCK TABLES `email_trigger_rules` WRITE;
+/*!40000 ALTER TABLE `email_trigger_rules` DISABLE KEYS */;
+/*!40000 ALTER TABLE `email_trigger_rules` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -466,7 +776,6 @@ CREATE TABLE `field_permissions` (
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_permission_field` (`permission_id`,`field_name`),
-  KEY `idx_permission_id` (`permission_id`),
   KEY `idx_field_name` (`field_name`),
   KEY `idx_access_level` (`access_level`),
   KEY `idx_module_name` (`module_name`)
@@ -568,8 +877,7 @@ CREATE TABLE `lead_contracting` (
   KEY `idx_contract_number` (`contract_number`),
   KEY `idx_project_status` (`project_status`),
   KEY `idx_project_manager` (`project_manager_id`),
-  KEY `idx_completion_date` (`estimated_completion_date`),
-  CONSTRAINT `lead_contracting_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE
+  KEY `idx_completion_date` (`estimated_completion_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -606,8 +914,7 @@ CREATE TABLE `lead_documents` (
   PRIMARY KEY (`id`),
   KEY `idx_lead_id` (`lead_id`),
   KEY `idx_document_type` (`document_type`),
-  KEY `idx_category` (`document_category`),
-  CONSTRAINT `lead_documents_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE
+  KEY `idx_category` (`document_category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -662,8 +969,7 @@ CREATE TABLE `lead_prospects` (
   KEY `idx_survey_date` (`site_survey_date`),
   KEY `idx_proposal_status` (`proposal_status`),
   KEY `idx_follow_up_date` (`next_follow_up_date`),
-  KEY `idx_temperature` (`prospect_temperature`),
-  CONSTRAINT `lead_prospects_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE
+  KEY `idx_temperature` (`prospect_temperature`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -706,9 +1012,7 @@ CREATE TABLE `lead_referrals` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_lead_referral` (`lead_id`),
   KEY `idx_referral_contact` (`referral_contact_id`),
-  KEY `idx_referral_status` (`referral_status`),
-  CONSTRAINT `lead_referrals_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `lead_referrals_ibfk_2` FOREIGN KEY (`referral_contact_id`) REFERENCES `contacts` (`id`) ON DELETE SET NULL
+  KEY `idx_referral_status` (`referral_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -750,8 +1054,7 @@ CREATE TABLE `lead_structure_info` (
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_lead_structure` (`lead_id`),
-  CONSTRAINT `lead_structure_info_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE
+  UNIQUE KEY `unique_lead_structure` (`lead_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -832,8 +1135,7 @@ CREATE TABLE `leads` (
   KEY `idx_leads_timezone` (`timezone`),
   KEY `idx_leads_contact_id` (`contact_id`),
   KEY `idx_leads_email` (`email`),
-  KEY `idx_leads_phone` (`cell_phone`),
-  CONSTRAINT `fk_leads_contact_id` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE SET NULL
+  KEY `idx_leads_phone` (`cell_phone`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -844,109 +1146,27 @@ CREATE TABLE `leads` (
 LOCK TABLES `leads` WRITE;
 /*!40000 ALTER TABLE `leads` DISABLE KEYS */;
 INSERT INTO `leads` VALUES
-(1,NULL,NULL,1,'Lead','Test 1',NULL,'555-0001','lead_test_1@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(2,NULL,NULL,1,'Lead','Test 2',NULL,'555-0002','lead_test_2@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(3,NULL,NULL,4,'Lead','Test 3',NULL,'555-0003','lead_test_3@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(4,NULL,NULL,6,'Lead','Test 4',NULL,'555-0004','lead_test_4@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(5,NULL,NULL,4,'Lead','Test 5',NULL,'555-0005','lead_test_5@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(6,NULL,NULL,5,'Lead','Test 6',NULL,'555-0006','lead_test_6@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(7,NULL,NULL,4,'Lead','Test 7',NULL,'555-0007','lead_test_7@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(8,NULL,NULL,4,'Lead','Test 8',NULL,'555-0008','lead_test_8@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(9,NULL,NULL,2,'Lead','Test 9',NULL,'555-0009','lead_test_9@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(10,NULL,NULL,5,'Lead','Test 10',NULL,'555-0010','lead_test_10@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(11,NULL,NULL,2,'Lead','Test 11',NULL,'555-0011','lead_test_11@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(12,NULL,NULL,6,'Lead','Test 12',NULL,'555-0012','lead_test_12@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(13,NULL,NULL,5,'Lead','Test 13',NULL,'555-0013','lead_test_13@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(14,NULL,NULL,2,'Lead','Test 14',NULL,'555-0014','lead_test_14@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(15,NULL,NULL,3,'Lead','Test 15',NULL,'555-0015','lead_test_15@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(16,NULL,NULL,6,'Lead','Test 16',NULL,'555-0016','lead_test_16@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(17,NULL,NULL,1,'Lead','Test 17',NULL,'555-0017','lead_test_17@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(18,NULL,NULL,1,'Lead','Test 18',NULL,'555-0018','lead_test_18@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(19,NULL,NULL,5,'Lead','Test 19',NULL,'555-0019','lead_test_19@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(20,NULL,NULL,4,'Lead','Test 20',NULL,'555-0020','lead_test_20@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14');
+(1,NULL,NULL,6,'Lead','Test 1',NULL,'555-0001','lead_test_1@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(2,NULL,NULL,1,'Lead','Test 2',NULL,'555-0002','lead_test_2@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(3,NULL,NULL,6,'Lead','Test 3',NULL,'555-0003','lead_test_3@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(4,NULL,NULL,2,'Lead','Test 4',NULL,'555-0004','lead_test_4@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(5,NULL,NULL,4,'Lead','Test 5',NULL,'555-0005','lead_test_5@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(6,NULL,NULL,4,'Lead','Test 6',NULL,'555-0006','lead_test_6@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(7,NULL,NULL,3,'Lead','Test 7',NULL,'555-0007','lead_test_7@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(8,NULL,NULL,1,'Lead','Test 8',NULL,'555-0008','lead_test_8@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(9,NULL,NULL,5,'Lead','Test 9',NULL,'555-0009','lead_test_9@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(10,NULL,NULL,5,'Lead','Test 10',NULL,'555-0010','lead_test_10@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(11,NULL,NULL,6,'Lead','Test 11',NULL,'555-0011','lead_test_11@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(12,NULL,NULL,1,'Lead','Test 12',NULL,'555-0012','lead_test_12@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(13,NULL,NULL,2,'Lead','Test 13',NULL,'555-0013','lead_test_13@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(14,NULL,NULL,2,'Lead','Test 14',NULL,'555-0014','lead_test_14@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(15,NULL,NULL,5,'Lead','Test 15',NULL,'555-0015','lead_test_15@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(16,NULL,NULL,4,'Lead','Test 16',NULL,'555-0016','lead_test_16@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(17,NULL,NULL,1,'Lead','Test 17',NULL,'555-0017','lead_test_17@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(18,NULL,NULL,4,'Lead','Test 18',NULL,'555-0018','lead_test_18@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(19,NULL,NULL,1,'Lead','Test 19',NULL,'555-0019','lead_test_19@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(20,NULL,NULL,3,'Lead','Test 20',NULL,'555-0020','lead_test_20@test.com',NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,0,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53');
 /*!40000 ALTER TABLE `leads` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `leads_backup_20241209`
---
-
-DROP TABLE IF EXISTS `leads_backup_20241209`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `leads_backup_20241209` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `contact_id` int(11) DEFAULT NULL,
-  `lead_id` int(11) DEFAULT NULL,
-  `stage` varchar(20) DEFAULT 'Lead',
-  `first_name` varchar(100) NOT NULL DEFAULT '',
-  `family_name` varchar(255) DEFAULT NULL,
-  `full_name` varchar(200) DEFAULT NULL,
-  `cell_phone` varchar(15) DEFAULT NULL,
-  `email` varchar(255) NOT NULL DEFAULT '',
-  `business_name` varchar(255) DEFAULT NULL,
-  `project_name` varchar(255) DEFAULT NULL,
-  `contact_type` int(11) NOT NULL DEFAULT 1,
-  `form_street_1` varchar(100) DEFAULT NULL,
-  `form_street_2` varchar(50) DEFAULT NULL,
-  `form_city` varchar(50) DEFAULT NULL,
-  `form_state` varchar(10) DEFAULT NULL,
-  `form_postcode` varchar(15) DEFAULT NULL,
-  `form_country` varchar(5) DEFAULT 'US',
-  `timezone` varchar(50) DEFAULT NULL COMMENT 'Client timezone (e.g., America/New_York)',
-  `full_address` varchar(512) DEFAULT NULL,
-  `services_interested_in` varchar(20) DEFAULT NULL,
-  `structure_type` tinyint(4) DEFAULT 1,
-  `structure_description` varchar(20) DEFAULT NULL,
-  `structure_other` varchar(255) DEFAULT NULL,
-  `structure_additional` text DEFAULT NULL,
-  `eng_system_cost_low` int(11) DEFAULT NULL COMMENT 'Engineering estimate - system cost low range (whole dollars)',
-  `eng_system_cost_high` int(11) DEFAULT NULL COMMENT 'Engineering estimate - system cost high range (whole dollars)',
-  `eng_protected_area` int(11) DEFAULT NULL COMMENT 'Engineering estimate - protected area (square feet)',
-  `sales_system_cost_low` int(11) DEFAULT NULL COMMENT 'Sales estimate - system cost low range (whole dollars)',
-  `sales_system_cost_high` int(11) DEFAULT NULL COMMENT 'Sales estimate - system cost high range (whole dollars)',
-  `sales_protected_area` int(11) DEFAULT NULL COMMENT 'Sales estimate - protected area (square feet)',
-  `picture_submitted_1` varchar(255) DEFAULT NULL,
-  `picture_submitted_2` varchar(255) DEFAULT NULL,
-  `picture_submitted_3` varchar(255) DEFAULT NULL,
-  `plans_submitted_1` varchar(255) DEFAULT NULL,
-  `plans_submitted_2` varchar(255) DEFAULT NULL,
-  `plans_submitted_3` varchar(255) DEFAULT NULL,
-  `picture_submitted` text DEFAULT NULL,
-  `plans_submitted` text DEFAULT NULL,
-  `get_updates` int(1) DEFAULT 1,
-  `hear_about` varchar(20) DEFAULT NULL,
-  `hear_about_other` varchar(255) DEFAULT NULL,
-  `picture_upload_link` varchar(500) DEFAULT NULL,
-  `plans_upload_link` varchar(500) DEFAULT NULL,
-  `plans_and_pics` int(1) DEFAULT 0,
-  `lead_source` tinyint(4) NOT NULL DEFAULT 1,
-  `last_edited_by` int(11) DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `idx_lead_source` (`lead_source`),
-  KEY `idx_email` (`email`),
-  KEY `idx_stage` (`stage`),
-  KEY `idx_created_at` (`created_at`),
-  KEY `idx_state` (`form_state`),
-  KEY `idx_country` (`form_country`),
-  KEY `idx_structure_type` (`structure_type`),
-  KEY `idx_last_edited_by` (`last_edited_by`),
-  KEY `idx_leads_timezone` (`timezone`),
-  KEY `idx_leads_contact_id` (`contact_id`),
-  KEY `idx_leads_email` (`email`),
-  KEY `idx_leads_phone` (`cell_phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `leads_backup_20241209`
---
-
-LOCK TABLES `leads_backup_20241209` WRITE;
-/*!40000 ALTER TABLE `leads_backup_20241209` DISABLE KEYS */;
-/*!40000 ALTER TABLE `leads_backup_20241209` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -968,9 +1188,7 @@ CREATE TABLE `leads_contacts` (
   UNIQUE KEY `unique_lead_contact_relationship` (`lead_id`,`contact_id`,`relationship_type`),
   KEY `idx_lead_id` (`lead_id`),
   KEY `idx_contact_id` (`contact_id`),
-  KEY `idx_relationship_type` (`relationship_type`),
-  CONSTRAINT `fk_leads_contacts_contact_id` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_leads_contacts_lead_id` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE
+  KEY `idx_relationship_type` (`relationship_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1089,9 +1307,7 @@ CREATE TABLE `leads_notes` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_lead_note` (`lead_id`,`note_id`),
   KEY `idx_lead_id` (`lead_id`),
-  KEY `idx_note_id` (`note_id`),
-  CONSTRAINT `leads_notes_ibfk_1` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `leads_notes_ibfk_2` FOREIGN KEY (`note_id`) REFERENCES `notes` (`id`) ON DELETE CASCADE
+  KEY `idx_note_id` (`note_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1102,69 +1318,6 @@ CREATE TABLE `leads_notes` (
 LOCK TABLES `leads_notes` WRITE;
 /*!40000 ALTER TABLE `leads_notes` DISABLE KEYS */;
 /*!40000 ALTER TABLE `leads_notes` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `leads_old`
---
-
-DROP TABLE IF EXISTS `leads_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `leads_old` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `address` text DEFAULT NULL,
-  `estimate_number` int(11) DEFAULT NULL,
-  `stage` varchar(50) DEFAULT NULL,
-  `proposal_sent_date` date DEFAULT NULL,
-  `scheduled_date` date DEFAULT NULL,
-  `structure_type` varchar(50) DEFAULT NULL,
-  `lead_source` varchar(50) DEFAULT NULL,
-  `lead_lost_notes` text DEFAULT NULL,
-  `plans_submitted` varchar(5) DEFAULT NULL,
-  `structure_description` text DEFAULT NULL,
-  `structure_other` text DEFAULT NULL,
-  `site_visit_by` varchar(255) DEFAULT NULL,
-  `picture_submitted` varchar(5) DEFAULT NULL,
-  `referred_to` varchar(255) DEFAULT NULL,
-  `picture_upload_link` text DEFAULT NULL,
-  `plans_upload_link` text DEFAULT NULL,
-  `existing_client` varchar(5) DEFAULT NULL,
-  `get_updates` varchar(5) DEFAULT NULL,
-  `hear_about` varchar(255) DEFAULT NULL,
-  `hear_about_other` text DEFAULT NULL,
-  `structure_additional` text DEFAULT NULL,
-  `lead_notes` text DEFAULT NULL,
-  `prospect_notes` text DEFAULT NULL,
-  `lead_lost` varchar(5) DEFAULT NULL,
-  `site_visit_completed` varchar(5) DEFAULT NULL,
-  `closer` varchar(255) DEFAULT NULL,
-  `referred_services` text DEFAULT NULL,
-  `assigned_to` varchar(255) DEFAULT NULL,
-  `referred` varchar(5) DEFAULT NULL,
-  `site_visit_date` date DEFAULT NULL,
-  `date_qualified` date DEFAULT NULL,
-  `contacted_date` date DEFAULT NULL,
-  `referral_done` varchar(5) DEFAULT NULL,
-  `jd_referral_notes` text DEFAULT NULL,
-  `closing_notes` text DEFAULT NULL,
-  `prospect_lost` varchar(5) DEFAULT NULL,
-  `to_contracting` varchar(5) DEFAULT NULL,
-  `plans_and_pics` varchar(5) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `leads_old`
---
-
-LOCK TABLES `leads_old` WRITE;
-/*!40000 ALTER TABLE `leads_old` DISABLE KEYS */;
-/*!40000 ALTER TABLE `leads_old` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1196,6 +1349,90 @@ CREATE TABLE `notes` (
 LOCK TABLES `notes` WRITE;
 /*!40000 ALTER TABLE `notes` DISABLE KEYS */;
 /*!40000 ALTER TABLE `notes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `permission_approval_requests`
+--
+
+DROP TABLE IF EXISTS `permission_approval_requests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permission_approval_requests` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `requestor_user_id` int(11) NOT NULL COMMENT 'User requesting permission',
+  `permission_id` int(11) NOT NULL,
+  `requested_role_id` int(11) DEFAULT NULL COMMENT 'Role context',
+  `business_justification` text NOT NULL,
+  `approval_chain` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Array of approvers in sequence' CHECK (json_valid(`approval_chain`)),
+  `current_approver_user_id` int(11) DEFAULT NULL COMMENT 'Next person to approve',
+  `approval_status` enum('pending','approved','rejected','pending_more_info','expired') DEFAULT 'pending',
+  `approval_level` int(11) DEFAULT 0 COMMENT 'How many levels approved so far',
+  `requested_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `approved_at` datetime DEFAULT NULL,
+  `expires_at` datetime DEFAULT NULL COMMENT 'Request validity expires',
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_requestor_user_id` (`requestor_user_id`),
+  KEY `idx_current_approver_user_id` (`current_approver_user_id`),
+  KEY `idx_permission_id` (`permission_id`),
+  KEY `idx_approval_status` (`approval_status`),
+  KEY `idx_requested_at` (`requested_at`),
+  KEY `idx_expires_at` (`expires_at`),
+  KEY `fk_approval_role` (`requested_role_id`),
+  KEY `idx_approval_chain` (`current_approver_user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Multi-level permission approval requests workflow';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permission_approval_requests`
+--
+
+LOCK TABLES `permission_approval_requests` WRITE;
+/*!40000 ALTER TABLE `permission_approval_requests` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permission_approval_requests` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `permission_audit_log`
+--
+
+DROP TABLE IF EXISTS `permission_audit_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permission_audit_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL COMMENT 'User who made the change',
+  `action_type` enum('grant','revoke','delegate','approve_delegation','reject_delegation','modify','inherit') NOT NULL,
+  `target_user_id` int(11) DEFAULT NULL COMMENT 'User affected by the action',
+  `target_role_id` int(11) DEFAULT NULL COMMENT 'Role affected by the action',
+  `permission_id` int(11) DEFAULT NULL COMMENT 'Permission affected by the action',
+  `delegation_id` int(11) DEFAULT NULL COMMENT 'Delegation affected (if applicable)',
+  `old_value` text DEFAULT NULL COMMENT 'Previous value',
+  `new_value` text DEFAULT NULL COMMENT 'New value',
+  `change_reason` text DEFAULT NULL COMMENT 'Reason for the change',
+  `ip_address` varchar(45) DEFAULT NULL COMMENT 'IP address of user making change',
+  `user_agent` text DEFAULT NULL COMMENT 'Browser user agent',
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_target_user_id` (`target_user_id`),
+  KEY `idx_target_role_id` (`target_role_id`),
+  KEY `idx_permission_id` (`permission_id`),
+  KEY `idx_action_type` (`action_type`),
+  KEY `idx_created_at` (`created_at`),
+  KEY `idx_delegation_id` (`delegation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Complete audit trail of all permission changes';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permission_audit_log`
+--
+
+LOCK TABLES `permission_audit_log` WRITE;
+/*!40000 ALTER TABLE `permission_audit_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permission_audit_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1233,6 +1470,86 @@ LOCK TABLES `permission_cache` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `permission_delegations`
+--
+
+DROP TABLE IF EXISTS `permission_delegations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permission_delegations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `delegating_user_id` int(11) NOT NULL COMMENT 'User granting the permission',
+  `receiving_user_id` int(11) NOT NULL COMMENT 'User receiving the permission',
+  `permission_id` int(11) NOT NULL,
+  `granted_role_id` int(11) DEFAULT NULL COMMENT 'Role context in which permission is delegated',
+  `delegation_type` enum('temporary','conditional','approval_pending') DEFAULT 'temporary',
+  `approval_status` enum('pending','approved','rejected','revoked') DEFAULT 'pending',
+  `approved_by_user_id` int(11) DEFAULT NULL COMMENT 'User who approved the delegation',
+  `restrictions` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'Field-level or record-level restrictions' CHECK (json_valid(`restrictions`)),
+  `reason` text DEFAULT NULL COMMENT 'Reason for delegation',
+  `start_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `end_date` datetime DEFAULT NULL COMMENT 'When delegation expires',
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_receiving_user_id` (`receiving_user_id`),
+  KEY `idx_delegating_user_id` (`delegating_user_id`),
+  KEY `idx_permission_id` (`permission_id`),
+  KEY `idx_granted_role_id` (`granted_role_id`),
+  KEY `idx_approval_status` (`approval_status`),
+  KEY `idx_delegation_type` (`delegation_type`),
+  KEY `idx_start_date` (`start_date`),
+  KEY `idx_end_date` (`end_date`),
+  KEY `fk_approving_user` (`approved_by_user_id`),
+  KEY `idx_perm_deleg_status` (`approval_status`,`end_date`),
+  KEY `idx_perm_deleg_user_date` (`receiving_user_id`,`end_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Tracks temporary permission delegations with approval workflow';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permission_delegations`
+--
+
+LOCK TABLES `permission_delegations` WRITE;
+/*!40000 ALTER TABLE `permission_delegations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permission_delegations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `permission_restrictions`
+--
+
+DROP TABLE IF EXISTS `permission_restrictions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permission_restrictions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `permission_id` int(11) NOT NULL,
+  `restriction_type` enum('field_restriction','record_restriction','time_based','ip_based') NOT NULL,
+  `restriction_rule` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Specific restriction configuration' CHECK (json_valid(`restriction_rule`)),
+  `priority` int(11) DEFAULT 1 COMMENT 'Higher priority restrictions override lower',
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_permission_id` (`permission_id`),
+  KEY `idx_restriction_type` (`restriction_type`),
+  KEY `idx_priority` (`priority`),
+  KEY `idx_is_active` (`is_active`),
+  KEY `idx_restriction_active` (`is_active`,`restriction_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Advanced restrictions on permissions (field-level, time-based, IP-based)';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permission_restrictions`
+--
+
+LOCK TABLES `permission_restrictions` WRITE;
+/*!40000 ALTER TABLE `permission_restrictions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permission_restrictions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `permissions`
 --
 
@@ -1243,20 +1560,23 @@ CREATE TABLE `permissions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) NOT NULL,
   `pobject` varchar(100) NOT NULL,
-  `pdescription` varchar(255) NOT NULL,
   `module` varchar(50) NOT NULL DEFAULT 'general',
   `action` varchar(50) NOT NULL DEFAULT 'access',
   `field_name` varchar(100) DEFAULT NULL,
   `scope` varchar(20) DEFAULT 'all',
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `is_active` tinyint(1) DEFAULT 1,
+  `pdescription` varchar(100) NOT NULL,
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  UNIQUE KEY `pid` (`pid`),
-  KEY `idx_pid` (`pid`),
-  KEY `idx_pobject` (`pobject`),
+  UNIQUE KEY `pid` (`pid`) USING BTREE,
+  KEY `pobject` (`pobject`) USING BTREE,
   KEY `idx_module_action` (`module`,`action`),
-  KEY `idx_scope` (`scope`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `idx_scope` (`scope`),
+  KEY `idx_field_name` (`field_name`),
+  KEY `idx_is_active` (`is_active`),
+  KEY `idx_module_action_scope` (`module`,`action`,`scope`)
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1266,61 +1586,39 @@ CREATE TABLE `permissions` (
 LOCK TABLES `permissions` WRITE;
 /*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
 INSERT INTO `permissions` VALUES
-(1,1000,'leads.access','Access Leads Module','leads','access',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(2,1001,'leads.view','View Leads','leads','view',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(3,1002,'leads.create','Create Leads','leads','create',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(4,1003,'leads.edit','Edit Leads','leads','edit',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(5,1004,'leads.delete','Delete Leads','leads','delete',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(6,1005,'leads.export','Export Leads','leads','export',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(7,1010,'contacts.access','Access Contacts Module','contacts','access',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(8,1011,'contacts.view','View Contacts','contacts','view',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(9,1012,'contacts.create','Create Contacts','contacts','create',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(10,1013,'contacts.edit','Edit Contacts','contacts','edit',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(11,1014,'contacts.delete','Delete Contacts','contacts','delete',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(12,1020,'users.access','Access Users Module','users','access',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(13,1021,'users.view','View Users','users','view',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(14,1022,'users.create','Create Users','users','create',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(15,1023,'users.edit','Edit Users','users','edit',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(16,1024,'users.delete','Delete Users','users','delete',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(17,1030,'admin.access','Access Admin Module','admin','access',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(18,1031,'admin.security','Manage Security','admin','security',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(19,1032,'admin.settings','Manage Settings','admin','settings',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(20,1033,'admin.users','Manage Users','admin','users',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(21,1034,'admin.roles','Manage Roles','admin','roles',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(22,1035,'admin.permissions','Manage Permissions','admin','permissions',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(23,1040,'calendar.access','Access Calendar Module','calendar','access',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(24,1041,'calendar.view','View Calendar','calendar','view',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(25,1042,'calendar.create','Create Events','calendar','create',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(26,1043,'calendar.edit','Edit Events','calendar','edit',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(27,1044,'calendar.delete','Delete Events','calendar','delete',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(28,1050,'reports.access','Access Reports Module','reports','access',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(29,1051,'reports.view','View Reports','reports','view',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(30,1052,'reports.create','Create Reports','reports','create',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(31,1053,'reports.export','Export Reports','reports','export',NULL,'all','2025-11-18 20:29:13','2025-11-18 20:29:13'),
-(32,100,'leads.access','Leads access','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(33,101,'leads.view','Leads view','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(34,102,'leads.create','Leads create','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(35,103,'leads.edit','Leads edit','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(36,104,'leads.delete','Leads delete','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(37,105,'contacts.access','Contacts access','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(38,106,'contacts.view','Contacts view','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(39,107,'contacts.create','Contacts create','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(40,108,'contacts.edit','Contacts edit','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(41,109,'contacts.delete','Contacts delete','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(42,110,'admin.access','Admin access','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(43,111,'admin.users','Admin users','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(44,112,'admin.roles','Admin roles','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(45,113,'admin.permissions','Admin permissions','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(49,1006,'leads.view','Leads view','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(50,1007,'leads.create','Leads create','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(51,1008,'leads.edit','Leads edit','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(52,1009,'leads.delete','Leads delete','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(56,1016,'contacts.edit','Contacts edit','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(57,1017,'contacts.delete','Contacts delete','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(58,1018,'leads.view.email','Leads view email','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(59,1019,'leads.edit.stage','Leads edit stage','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(63,1026,'leads.view.team','Leads view team','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(64,1027,'leads.view.all','Leads view all','general','access',NULL,'all','2025-11-18 20:29:14','2025-11-18 20:29:14');
+(1,100,'leads.access','general','access',NULL,'all',1,'Leads access','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(2,101,'leads.view','general','access',NULL,'all',1,'Leads view','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(3,102,'leads.create','general','access',NULL,'all',1,'Leads create','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(4,103,'leads.edit','general','access',NULL,'all',1,'Leads edit','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(5,104,'leads.delete','general','access',NULL,'all',1,'Leads delete','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(6,105,'contacts.access','general','access',NULL,'all',1,'Contacts access','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(7,106,'contacts.view','general','access',NULL,'all',1,'Contacts view','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(8,107,'contacts.create','general','access',NULL,'all',1,'Contacts create','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(9,108,'contacts.edit','general','access',NULL,'all',1,'Contacts edit','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(10,109,'contacts.delete','general','access',NULL,'all',1,'Contacts delete','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(11,110,'admin.access','general','access',NULL,'all',1,'Admin access','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(12,111,'admin.users','general','access',NULL,'all',1,'Admin users','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(13,112,'admin.roles','general','access',NULL,'all',1,'Admin roles','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(14,113,'admin.permissions','general','access',NULL,'all',1,'Admin permissions','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(15,1000,'leads.access','general','access',NULL,'all',1,'Leads access','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(16,1001,'contacts.access','general','access',NULL,'all',1,'Contacts access','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(17,1002,'admin.access','general','access',NULL,'all',1,'Admin access','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(18,1003,'leads.view','general','access',NULL,'all',1,'Leads view','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(19,1004,'leads.create','general','access',NULL,'all',1,'Leads create','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(20,1005,'leads.edit','general','access',NULL,'all',1,'Leads edit','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(21,1006,'leads.delete','general','access',NULL,'all',1,'Leads delete','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(22,1007,'leads.export','general','access',NULL,'all',1,'Leads export','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(23,1008,'contacts.view','general','access',NULL,'all',1,'Contacts view','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(24,1009,'contacts.create','general','access',NULL,'all',1,'Contacts create','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(25,1010,'contacts.edit','general','access',NULL,'all',1,'Contacts edit','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(26,1011,'contacts.delete','general','access',NULL,'all',1,'Contacts delete','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(27,1012,'leads.view.email','general','access',NULL,'all',1,'Leads view email','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(28,1013,'leads.edit.stage','general','access',NULL,'all',1,'Leads edit stage','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(29,1014,'leads.view.notes','general','access',NULL,'all',1,'Leads view notes','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(30,1015,'leads.view.own','general','access',NULL,'all',1,'Leads view own','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(31,1016,'leads.edit.own','general','access',NULL,'all',1,'Leads edit own','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(32,1017,'leads.view.team','general','access',NULL,'all',1,'Leads view team','2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(33,1018,'leads.view.all','general','access',NULL,'all',1,'Leads view all','2025-11-20 02:15:53','2025-11-20 02:15:53');
 /*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1388,9 +1686,7 @@ CREATE TABLE `phplist_subscribers` (
   KEY `idx_sync_status` (`sync_status`),
   KEY `idx_phplist_subscriber_id` (`phplist_subscriber_id`),
   KEY `idx_last_sync_attempt` (`last_sync_attempt`),
-  KEY `idx_sync_pending` (`sync_status`,`sync_attempts`,`last_sync_attempt`),
-  CONSTRAINT `fk_phplist_subscribers_contact` FOREIGN KEY (`contact_id`) REFERENCES `contacts` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `fk_phplist_subscribers_lead` FOREIGN KEY (`lead_id`) REFERENCES `leads` (`id`) ON DELETE CASCADE
+  KEY `idx_sync_pending` (`sync_status`,`sync_attempts`,`last_sync_attempt`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='phpList subscriber management and sync tracking';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1423,8 +1719,7 @@ CREATE TABLE `phplist_sync_log` (
   KEY `idx_subscriber_id` (`subscriber_id`),
   KEY `idx_sync_type` (`sync_type`),
   KEY `idx_status` (`status`),
-  KEY `idx_created_at` (`created_at`),
-  CONSTRAINT `fk_phplist_sync_log_subscriber` FOREIGN KEY (`subscriber_id`) REFERENCES `phplist_subscribers` (`id`) ON DELETE CASCADE
+  KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='phpList sync operation logging';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1502,6 +1797,103 @@ LOCK TABLES `role_hierarchy` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `role_hierarchy_cache`
+--
+
+DROP TABLE IF EXISTS `role_hierarchy_cache`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `role_hierarchy_cache` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_id` int(11) NOT NULL,
+  `inherited_role_id` int(11) NOT NULL,
+  `hierarchy_level` int(11) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_hierarchy` (`role_id`,`inherited_role_id`),
+  KEY `idx_inherited_role` (`inherited_role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `role_hierarchy_cache`
+--
+
+LOCK TABLES `role_hierarchy_cache` WRITE;
+/*!40000 ALTER TABLE `role_hierarchy_cache` DISABLE KEYS */;
+/*!40000 ALTER TABLE `role_hierarchy_cache` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `role_inheritance`
+--
+
+DROP TABLE IF EXISTS `role_inheritance`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `role_inheritance` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_role_id` int(11) NOT NULL,
+  `child_role_id` int(11) NOT NULL,
+  `inheritance_type` enum('full','partial','none') DEFAULT 'full' COMMENT 'full=all perms, partial=selected, none=no inheritance',
+  `depth` int(11) NOT NULL COMMENT 'Distance in hierarchy from parent to child',
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_parent_child` (`parent_role_id`,`child_role_id`),
+  KEY `idx_child_role_id` (`child_role_id`),
+  KEY `idx_inheritance_type` (`inheritance_type`),
+  KEY `idx_is_active` (`is_active`),
+  KEY `idx_depth` (`depth`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Maps role hierarchy relationships with inheritance types';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `role_inheritance`
+--
+
+LOCK TABLES `role_inheritance` WRITE;
+/*!40000 ALTER TABLE `role_inheritance` DISABLE KEYS */;
+/*!40000 ALTER TABLE `role_inheritance` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `role_permission_inheritance`
+--
+
+DROP TABLE IF EXISTS `role_permission_inheritance`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `role_permission_inheritance` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_id` int(11) NOT NULL,
+  `permission_id` int(11) NOT NULL,
+  `inherited_from_role_id` int(11) NOT NULL COMMENT 'Original role in hierarchy',
+  `inheritance_depth` int(11) NOT NULL COMMENT 'Number of levels inherited from parent',
+  `inheritance_method` enum('direct','inherited','delegated') DEFAULT 'direct',
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_role_perm_source` (`role_id`,`permission_id`,`inherited_from_role_id`),
+  KEY `idx_permission_id` (`permission_id`),
+  KEY `idx_inherited_from` (`inherited_from_role_id`),
+  KEY `idx_inheritance_depth` (`inheritance_depth`),
+  KEY `idx_inheritance_method` (`inheritance_method`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Tracks which permissions are inherited vs directly assigned';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `role_permission_inheritance`
+--
+
+LOCK TABLES `role_permission_inheritance` WRITE;
+/*!40000 ALTER TABLE `role_permission_inheritance` DISABLE KEYS */;
+/*!40000 ALTER TABLE `role_permission_inheritance` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `roles`
 --
 
@@ -1509,20 +1901,20 @@ DROP TABLE IF EXISTS `roles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `roles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
   `role` varchar(50) NOT NULL,
   `parent_role_id` int(11) DEFAULT NULL,
   `hierarchy_level` int(11) DEFAULT 0,
+  `hierarchy_version` int(11) DEFAULT 0,
+  `max_delegable_depth` int(11) DEFAULT 1,
+  `allows_delegation` tinyint(1) DEFAULT 1,
   `description` text DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `role_id` (`role_id`),
-  UNIQUE KEY `role` (`role`),
-  KEY `idx_role_id` (`role_id`),
-  KEY `idx_role` (`role`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `is_system` tinyint(1) DEFAULT 0,
+  `is_active` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1532,14 +1924,16 @@ CREATE TABLE `roles` (
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
 INSERT INTO `roles` VALUES
-(1,1,'Admin',NULL,0,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(2,2,'Manager',NULL,0,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(3,3,'User',NULL,0,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(4,4,'Viewer',NULL,0,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(5,5,'Restricted',NULL,0,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(6,100,'super_admin',NULL,0,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(7,101,'sales_manager',NULL,0,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(8,102,'sales_rep',NULL,0,NULL,'2025-11-18 20:29:14','2025-11-18 20:29:14');
+(0,1,'Admin',NULL,0,0,1,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53',0,1),
+(0,2,'Manager',NULL,0,0,1,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53',0,1),
+(0,3,'User',NULL,0,0,1,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53',0,1),
+(0,4,'Viewer',NULL,0,0,1,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53',0,1),
+(0,5,'Restricted',NULL,0,0,1,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53',0,1),
+(0,100,'super_admin',NULL,0,0,1,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53',0,1),
+(0,101,'sales_manager',NULL,0,0,1,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53',0,1),
+(0,102,'sales_rep',NULL,0,0,1,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53',0,1),
+(0,103,'viewer',NULL,0,0,1,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53',0,1),
+(0,104,'restricted',NULL,0,0,1,1,NULL,'2025-11-20 02:15:53','2025-11-20 02:15:53',0,1);
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1553,12 +1947,10 @@ DROP TABLE IF EXISTS `roles_permissions`;
 CREATE TABLE `roles_permissions` (
   `role_id` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`role_id`,`pid`),
-  KEY `idx_role_id` (`role_id`),
-  KEY `idx_pid` (`pid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `is_active` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1568,6 +1960,45 @@ CREATE TABLE `roles_permissions` (
 LOCK TABLES `roles_permissions` WRITE;
 /*!40000 ALTER TABLE `roles_permissions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `roles_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `smtp_config`
+--
+
+DROP TABLE IF EXISTS `smtp_config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `smtp_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL COMMENT 'User ID (NULL = default for all users)',
+  `config_name` varchar(100) NOT NULL COMMENT 'Friendly name for this configuration',
+  `smtp_host` varchar(255) NOT NULL COMMENT 'SMTP server hostname',
+  `smtp_port` int(11) NOT NULL DEFAULT 587 COMMENT 'SMTP port (587 for TLS, 465 for SSL)',
+  `smtp_encryption` enum('tls','ssl') NOT NULL DEFAULT 'tls' COMMENT 'Encryption type',
+  `smtp_username` varchar(255) NOT NULL COMMENT 'SMTP authentication username',
+  `smtp_password` text NOT NULL COMMENT 'Encrypted SMTP password',
+  `from_email` varchar(255) NOT NULL COMMENT 'From email address',
+  `from_name` varchar(255) NOT NULL COMMENT 'From name',
+  `reply_to_email` varchar(255) DEFAULT NULL COMMENT 'Reply-to email address',
+  `is_default` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Is this the default config for the user',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Is this configuration active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_is_default` (`is_default`),
+  KEY `idx_is_active` (`is_active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='SMTP server configurations for sending emails';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `smtp_config`
+--
+
+LOCK TABLES `smtp_config` WRITE;
+/*!40000 ALTER TABLE `smtp_config` DISABLE KEYS */;
+/*!40000 ALTER TABLE `smtp_config` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1586,11 +2017,16 @@ CREATE TABLE `team_members` (
   `joined_at` timestamp NULL DEFAULT current_timestamp(),
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `is_active` tinyint(1) DEFAULT 1,
+  `start_date` timestamp NULL DEFAULT current_timestamp(),
+  `end_date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_team_member` (`team_id`,`user_id`),
   KEY `idx_user_id` (`user_id`),
   KEY `idx_team_id` (`team_id`),
-  KEY `idx_is_lead` (`is_lead`)
+  KEY `idx_is_lead` (`is_lead`),
+  KEY `idx_is_active` (`is_active`),
+  KEY `idx_team_user_active` (`team_id`,`user_id`,`is_active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1619,11 +2055,17 @@ CREATE TABLE `teams` (
   `created_by` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `manager_user_id` int(11) DEFAULT NULL,
+  `budget_year` int(11) DEFAULT NULL,
+  `status` enum('active','inactive','archived') DEFAULT 'active',
+  `is_system` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `idx_name` (`name`),
   KEY `idx_department` (`department`),
-  KEY `idx_is_active` (`is_active`)
+  KEY `idx_is_active` (`is_active`),
+  KEY `idx_manager_user_id` (`manager_user_id`),
+  KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1659,8 +2101,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `idx_users_language` (`language_id`),
-  KEY `idx_users_timezone` (`timezone`),
-  CONSTRAINT `fk_users_language` FOREIGN KEY (`language_id`) REFERENCES `languages` (`id`) ON DELETE SET NULL
+  KEY `idx_users_timezone` (`timezone`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1671,11 +2112,11 @@ CREATE TABLE `users` (
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` VALUES
-(1,'Test User 1','test_user_1','$2y$10$yczDkVWi5L1LqdTNB6xj2uHgS2escWAmSbJ6DHD5vWOeNHMBF47EC',1,'test_user_1@test.com',NULL,1,'UTC',1,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(2,'Test User 2','test_user_2','$2y$10$wLTDPcsod5aymK0h.dRRpOGFcbzssofoOxcJbZUcRs8usS9ufmreu',2,'test_user_2@test.com',NULL,1,'UTC',1,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(3,'Test User 3','test_user_3','$2y$10$zWZOuFeV4w/CJiQIfShq3esu52LQqlgEJ98ue7PJ7AYZn77OjPP7y',2,'test_user_3@test.com',NULL,1,'UTC',1,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(4,'Test User 4','test_user_4','$2y$10$Fe05trEpbSXrOfsd66Ss5OYAdpBwt0J3bXRKUJDkVNUUaHHVAzdsy',2,'test_user_4@test.com',NULL,1,'UTC',1,'2025-11-18 20:29:14','2025-11-18 20:29:14'),
-(5,'Test User 5','test_user_5','$2y$10$s1fUt/kbIKKzflL4vryrtePH5YRe.ldfaDkfPv60ybj4i25jml4ue',2,'test_user_5@test.com',NULL,1,'UTC',1,'2025-11-18 20:29:14','2025-11-18 20:29:14');
+(1,'Super Administrator','superadmin','$2y$10$dzbeREFscbGw87NyKR9L1uENv7ciITHG9SwGnVZxFNongzL1475a6',1,'superadmin@democrm.local',NULL,1,'UTC',1,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(2,'Administrator','admin','$2y$10$dzbeREFscbGw87NyKR9L1uENv7ciITHG9SwGnVZxFNongzL1475a6',2,'admin@democrm.local',NULL,1,'UTC',1,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(3,'Sales Manager','salesman','$2y$10$dzbeREFscbGw87NyKR9L1uENv7ciITHG9SwGnVZxFNongzL1475a6',3,'salesman@democrm.local',NULL,1,'UTC',1,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(4,'Sales Assistant','salesasst','$2y$10$dzbeREFscbGw87NyKR9L1uENv7ciITHG9SwGnVZxFNongzL1475a6',4,'salesasst@democrm.local',NULL,1,'UTC',1,'2025-11-20 02:15:53','2025-11-20 02:15:53'),
+(5,'Sales Person','salesperson','$2y$10$dzbeREFscbGw87NyKR9L1uENv7ciITHG9SwGnVZxFNongzL1475a6',5,'salesperson@democrm.local',NULL,1,'UTC',1,'2025-11-20 02:15:53','2025-11-20 02:15:53');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1688,4 +2129,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-18 20:29:14
+-- Dump completed on 2025-11-20  2:15:53

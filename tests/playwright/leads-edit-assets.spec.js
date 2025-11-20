@@ -1,5 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { login } = require('./auth-helper');
+const { DEFAULT_TEST_USER } = require('./test-credentials');
 
 /**
  * Playwright tests for Leads Edit Asset Organization
@@ -10,8 +11,8 @@ const { login } = require('./auth-helper');
  * 3. All JavaScript functionality works after refactoring
  */
 test.describe('Leads Edit Asset Organization Tests', () => {
-  const testUsername = process.env.CRM_TEST_USERNAME || 'admin';
-  const testPassword = process.env.CRM_TEST_PASSWORD || 'admin123';
+  const testUsername = DEFAULT_TEST_USER.username;
+  const testPassword = DEFAULT_TEST_USER.password;
 
   test.beforeEach(async ({ page }) => {
     await page.setExtraHTTPHeaders({

@@ -13,57 +13,96 @@ const { DEFAULT_TEST_USER } = require('./test-credentials');
 async function login (page, username = DEFAULT_TEST_USER.username, password = DEFAULT_TEST_USER.password) {
   try {
     console.log(`\n🔐 Attempting login with username: ${username}`);
+    
+    // Add header to tell remote CRM to use test database
+    await page.setExtraHTTPHeaders({ 'X-Playwright-Test': 'true' });
+    
     await page.goto('/login.php');
     await page.waitForLoadState('networkidle');
 
     // Try different possible field names
-    const usernameField = page.locator('input[name="username"], input[name="email"], input[type="email"]').first();
-    const passwordField = page.locator('input[name="password"], input[type="password"]').first();
-    const submitButton = page.locator('button[type="submit"], input[type="submit"]').first();
+    const usernameField = page.locator('input[name="username"], input[id="username"]').first();
+    const passwordField = page.locator('input[name="password"], input[id="password"]').first();
+    const submitButton = page.locator('button[name="login"], button[id="login"], button[type="submit"], input[type="submit"]').first();
 
     // Check if login form exists
     if (!(await usernameField.isVisible()) || !(await passwordField.isVisible())) {
       console.log('Login form not found or not visible');
+      console.log(`Username field visible: ${await usernameField.isVisible()}`);
+      console.log(`Password field visible: ${await passwordField.isVisible()}`);
       return false;
     }
+    
+    // Check submit button
+    const buttonText = await submitButton.textContent();
+    console.log(`Submit button text: "${buttonText}"`);
+    console.log(`Submit button visible: ${await submitButton.isVisible()}`);
 
     // Fill in credentials
     await usernameField.fill(username);
     await passwordField.fill(password);
-    console.log(`📝 Filled credentials for ${username}`);
+    
+    // Verify values were filled
+    const filledUsername = await usernameField.inputValue();
+    const filledPassword = await passwordField.inputValue();
+    console.log(`📝 Filled username: "${filledUsername}" (expected: "${username}")`);
+    console.log(`📝 Filled password: ${'*'.repeat(Math.min(filledPassword.length, 8))}${filledPassword.length > 8 ? '...' : ''} (length: ${filledPassword.length})`);
+    
+    // Log the form data being sent
+    const formAction = await page.locator('form').first().getAttribute('action');
+    const formMethod = await page.locator('form').first().getAttribute('method');
+    console.log(`📋 Form: ${formMethod?.toUpperCase()} ${formAction}`);
 
-    // Submit form and wait for navigation with timeout
+    // Submit form - wait for navigation
+    console.log('🔐 Submitting login form...');
     try {
       await Promise.all([
         page.waitForNavigation({ waitUntil: 'networkidle', timeout: 10000 }),
         submitButton.click()
       ]);
+      console.log('✓ Form submitted and page navigated');
     } catch (navError) {
       console.log(`⚠️ Navigation timeout or error: ${navError.message}`);
-      // Continue anyway to check page state
+      try {
+        await page.waitForTimeout(2000);
+        console.log('✓ Waited for page settlement');
+      } catch (err) {
+        console.log(`⚠️ Error during wait: ${err.message}`);
+      }
     }
 
-    // Wait a bit more for page to settle
-    await page.waitForTimeout(1000);
-
     // Check for error messages on the page
-    const errorMessage = await page.locator('.alert.alert-danger, .error, [role="alert"]').first().textContent({ timeout: 1000 }).catch(() => null);
-    if (errorMessage) {
-      console.log(`❌ Error on page: ${errorMessage.trim()}`);
+    const errorAlert = page.locator('.alert.alert-danger, .error, [role="alert"]');
+    const errorCount = await errorAlert.count();
+    if (errorCount > 0) {
+      const errorMessage = await errorAlert.first().textContent();
+      console.log(`⚠️ Alert displayed on page: "${errorMessage?.trim()}"`);
     }
 
     // Check if we're still on login page (login failed) or redirected (login success)
     const currentUrl = page.url();
     const pageTitle = await page.title();
+    const pageContent = await page.content();
     console.log(`📍 Current URL: ${currentUrl}`);
     console.log(`📄 Page title: ${pageTitle}`);
     
-    const loginSuccessful = !currentUrl.includes('login.php');
+    // Multiple checks for successful login
+    const stillOnLoginPage = currentUrl.includes('login.php');
+    const hasLoginForm = pageContent.includes('form-login') || pageContent.includes('name="username"');
+    const hasNavigationMenu = pageContent.includes('navbar') || pageContent.includes('nav ') || pageContent.includes('menu');
+    const hasLogoutLink = pageContent.includes('logout') || pageContent.includes('Logout');
+    
+    const loginSuccessful = !stillOnLoginPage || (hasNavigationMenu && !hasLoginForm) || hasLogoutLink;
+
+    console.log(`  - Still on login page: ${stillOnLoginPage}`);
+    console.log(`  - Has login form: ${hasLoginForm}`);
+    console.log(`  - Has navigation: ${hasNavigationMenu}`);
+    console.log(`  - Has logout link: ${hasLogoutLink}`);
 
     if (loginSuccessful) {
       console.log('✅ Login successful');
     } else {
-      console.log('❌ Login failed - still on login page');
+      console.log('❌ Login failed - still on login page or no navigation detected');
     }
 
     return loginSuccessful;

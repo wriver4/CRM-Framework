@@ -73,4 +73,7 @@ module.exports = defineConfig({
 
   /* No local web server needed since we're testing remote */
   // webServer: undefined,
+
+  /* Global setup to initialize test database */
+  globalSetup: require.resolve('./tests/playwright/globalSetup.js'),
 });
