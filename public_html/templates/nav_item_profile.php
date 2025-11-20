@@ -159,6 +159,7 @@ if ($currentUserId > 0) {
         <i class="fa fa-shield-alt me-2"></i><?= $lang['navbar_security']; ?>
       </a>
       <ul class="dropdown-menu" aria-labelledby="securityDropdown">
+        <li><h6 class="dropdown-header">Core RBAC</h6></li>
         <li><a class="dropdown-item"
              href="<?php echo URL . '/admin/security/roles/list' ?>"><?= $lang['roles']; ?></a>
         </li>
@@ -167,6 +168,61 @@ if ($currentUserId > 0) {
         </li>
         <li><a class="dropdown-item"
              href="<?php echo URL . '/admin/security/roles_permissions/list' ?>"><?= $lang['roles_permissions']; ?></a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li><h6 class="dropdown-header">Advanced Features</h6></li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/security/delegation_analytics/list' ?>">
+             <i class="fa fa-chart-line me-2"></i>Delegation Analytics</a>
+        </li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/security/role_recommendations/list' ?>">
+             <i class="fa fa-lightbulb me-2"></i>Role Recommendations</a>
+        </li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/security/compliance_reports/list' ?>">
+             <i class="fa fa-file-contract me-2"></i>Compliance Reports</a>
+        </li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/security/permission_conflicts/list' ?>">
+             <i class="fa fa-exclamation-triangle me-2"></i>Permission Conflicts</a>
+        </li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/security/bulk_operations/list' ?>">
+             <i class="fa fa-tasks me-2"></i>Bulk Operations</a>
+        </li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/security/delegation_templates/list' ?>">
+             <i class="fa fa-copy me-2"></i>Delegation Templates</a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li><h6 class="dropdown-header">Monitoring & Auditing</h6></li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/security/audit_log/list' ?>">
+             <i class="fa fa-history me-2"></i>Audit Log</a>
+        </li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/security/role_hierarchy/list' ?>">
+             <i class="fa fa-project-diagram me-2"></i>Role Hierarchy</a>
+        </li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/security/role_activity/list' ?>">
+             <i class="fa fa-user-clock me-2"></i>Role Activity</a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li><h6 class="dropdown-header">Requests & Approvals</h6></li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/security/permission_requests/list' ?>">
+             <i class="fa fa-inbox me-2"></i>Permission Requests</a>
+        </li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/security/permission_approvals/list' ?>">
+             <i class="fa fa-check-circle me-2"></i>Permission Approvals</a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item"
+             href="<?php echo URL . '/admin/security/permission_reconciliation/list' ?>">
+             <i class="fa fa-sync-alt me-2"></i>Permission Reconciliation</a>
         </li>
       </ul>
     </li>

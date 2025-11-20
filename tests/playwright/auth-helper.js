@@ -12,6 +12,7 @@ const { DEFAULT_TEST_USER } = require('./test-credentials');
  */
 async function login (page, username = DEFAULT_TEST_USER.username, password = DEFAULT_TEST_USER.password) {
   try {
+    console.log(`\n🔐 Attempting login with username: ${username}`);
     await page.goto('/login.php');
     await page.waitForLoadState('networkidle');
 
@@ -29,15 +30,34 @@ async function login (page, username = DEFAULT_TEST_USER.username, password = DE
     // Fill in credentials
     await usernameField.fill(username);
     await passwordField.fill(password);
+    console.log(`📝 Filled credentials for ${username}`);
 
-    // Submit form
-    await submitButton.click();
+    // Submit form and wait for navigation with timeout
+    try {
+      await Promise.all([
+        page.waitForNavigation({ waitUntil: 'networkidle', timeout: 10000 }),
+        submitButton.click()
+      ]);
+    } catch (navError) {
+      console.log(`⚠️ Navigation timeout or error: ${navError.message}`);
+      // Continue anyway to check page state
+    }
 
-    // Wait for navigation
-    await page.waitForLoadState('networkidle');
+    // Wait a bit more for page to settle
+    await page.waitForTimeout(1000);
+
+    // Check for error messages on the page
+    const errorMessage = await page.locator('.alert.alert-danger, .error, [role="alert"]').first().textContent({ timeout: 1000 }).catch(() => null);
+    if (errorMessage) {
+      console.log(`❌ Error on page: ${errorMessage.trim()}`);
+    }
 
     // Check if we're still on login page (login failed) or redirected (login success)
     const currentUrl = page.url();
+    const pageTitle = await page.title();
+    console.log(`📍 Current URL: ${currentUrl}`);
+    console.log(`📄 Page title: ${pageTitle}`);
+    
     const loginSuccessful = !currentUrl.includes('login.php');
 
     if (loginSuccessful) {
@@ -50,6 +70,7 @@ async function login (page, username = DEFAULT_TEST_USER.username, password = DE
 
   } catch (error) {
     console.log('❌ Login error:', error.message);
+    console.log(error.stack);
     return false;
   }
 }

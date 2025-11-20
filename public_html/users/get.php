@@ -10,7 +10,7 @@ if ($dir == 'users' && $page == 'list') {
 }
 
 if ($dir == 'users' && $page == 'view') {
-  $id = trim($_GET["id"]);
+  $id = (int)trim($_GET["id"]);
   $result = $users->get_by_id($id);
   $rname = $result["role"];
   $full_name = $result["full_name"];
@@ -24,7 +24,7 @@ if ($dir == 'users' && $page == 'view') {
 
 if ($dir == 'users' && $page == 'edit') {
    if ($form == "profile"){
-    $id = trim($_GET["id"]);
+    $id = (int)trim($_GET["id"]);
     $result = $users->get_by_id($id);
     $rid = $result["role_id"];
     $full_name = $result["full_name"];
@@ -36,7 +36,7 @@ if ($dir == 'users' && $page == 'edit') {
 }
 
 if ($dir == 'users' && $page == 'delete') {
-$id = trim($_GET["id"]);
+$id = (int)trim($_GET["id"]);
 $result = $users->get_by_id($id);
 $rid = $result["role"];
 $full_name = $result["full_name"];

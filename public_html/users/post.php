@@ -4,7 +4,7 @@ require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/config/system.php';
 $not->loggedin();
 $users = new Users();
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'users' && $_POST['page'] == 'new') {
-  $rid = htmlentities(trim($_POST["rid"]));
+  $rid = (int)trim($_POST["rid"]);
   $full_name = htmlentities(trim($_POST["full_name"]));
   $username = htmlentities(trim($_POST["username"]));
   $username = str_replace(' ', '', $username);
@@ -14,25 +14,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'users' && $_POST['
   $password = htmlentities(trim($_POST["password"]));
   $password = $helper->hash_password($password);
   $users->new($rid, $full_name, $username, $email, $password);
-  $user_id = $users->last_row_id();;
+  $user_id = $users->last_row_id();
+  
+  if (isset($_POST['roles']) && is_array($_POST['roles'])) {
+    $roles = array_filter(array_map('intval', $_POST['roles']));
+    foreach ($roles as $role_id) {
+      if ($role_id != $rid) {
+        $users->addUserRole($user_id, $role_id, false);
+      }
+    }
+  }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'users' && $_POST['page'] == 'edit' && $_POST['form_name'] == 'user_profile') {
-  $id = $_POST["id"];
+  $id = (int)trim($_POST["id"]);
   $full_name = htmlentities(trim($_POST["full_name"]));
-  $password = trim($_POST["password"]);
-  (int)$rid = htmlentities(trim($_POST["rid"]));
+  $password = trim($_POST["password"] ?? '');
+  $rid = (int)trim($_POST["rid"]);
   $email = htmlentities(trim($_POST["email"]));
   $email = filter_var($email, FILTER_VALIDATE_EMAIL);
-  print_r($_POST);
   $users->edit_profile($id, $full_name, $password, $rid, $email);
+  
+  if (isset($_POST['roles']) && is_array($_POST['roles'])) {
+    $roles = array_filter(array_map('intval', $_POST['roles']));
+    foreach ($roles as $role_id) {
+      if ($role_id != $rid) {
+        $users->addUserRole($id, $role_id, false);
+      }
+    }
+  }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'users' && $_POST['page'] == 'edit' && $_POST['form_name'] == 'add_prop_id') {
 
   $message = "";
-  $location = "Location:" . URL . "/users/edit.php?id=" . $_POST["id"] . "&message=" . $message;
-  $id = htmlentities($_POST["id"]);
+  $id = (int)trim($_POST["id"]);
+  $location = "Location:" . URL . "/users/edit.php?id=" . $id . "&message=" . $message;
   $new_prop_id = htmlentities(trim($_POST["new_prop_id"]));;
   $prop_result = $users->add_user_properties_by_id($id, $new_prop_id);
   /*
@@ -65,6 +82,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'users' && $_POST['
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['dir'] == 'users' && $_POST['page'] == 'delete') {
   $status = 0;
-  $id = htmlentities(trim($_POST['id']));
+  $id = (int)trim($_POST['id']);
   $users->delete($id, $status);;
 }

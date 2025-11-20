@@ -59,12 +59,12 @@ $contacts = new Contacts();
 //}
 
 if ($dir == 'contacts' && $page == 'view') {
-  $id = trim($_GET["id"]);
+  $id = (int)trim($_GET["id"]);
   $result = $contacts->get_by_id($id);
 }
 
 if ($dir == 'contacts' && $page == 'edit') {
-  $id = trim($_GET["id"]);
+  $id = (int)trim($_GET["id"]);
   $result = $contacts->get_by_id($id);
   $contact_type = (int) $result['contact_type'];
   $first_name = $result['first_name'];
@@ -98,6 +98,6 @@ if ($dir == 'contacts' && $page == 'edit') {
 }
 
 if ($dir == 'contacts' && $page == 'delete') {
-  $id = trim($_GET["id"]);
+  $id = (int)trim($_GET["id"]);
   $result = $contacts->get_by_id($id);
 }

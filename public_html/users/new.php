@@ -35,6 +35,14 @@ require SECTIONOPEN;
       <?php $helper->select_role($lang); ?></select>
   </div>
   <div class="form-group pb-2">
+    <label class="pb-1 pt-1"><?= $lang['additional_roles'] ?? 'Additional Roles'; ?></label>
+    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; padding: 10px; border-radius: 4px;">
+      <?php
+        $helper->select_multiple_roles($lang, []);
+      ?>
+    </div>
+  </div>
+  <div class="form-group pb-2">
     <label for="full_name"
            class="required pb-1 pt-1"><?= $lang['full_name']; ?></label>
     <input type="text"

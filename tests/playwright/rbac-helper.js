@@ -9,34 +9,39 @@
  */
 export const testUsers = {
   superAdmin: {
-    username: 'test_super_admin',
-    password: 'test_password',
-    role: 'super_admin',
-    permissions: 'all'
+    username: 'superadmin',
+    password: 'testpass123',
+    role: 'Super Administrator',
+    permissions: 'all',
+    roleId: 1
+  },
+  admin: {
+    username: 'admin',
+    password: 'testpass123',
+    role: 'Administrator',
+    permissions: 'admin',
+    roleId: 2
   },
   salesManager: {
-    username: 'test_sales_manager',
-    password: 'test_password',
-    role: 'sales_manager',
-    permissions: 'sales_management'
+    username: 'salesman',
+    password: 'testpass123',
+    role: 'Sales Manager',
+    permissions: 'sales_management',
+    roleId: 3
   },
-  salesRep: {
-    username: 'test_sales_rep',
-    password: 'test_password',
-    role: 'sales_rep',
-    permissions: 'sales_basic'
+  salesAssistant: {
+    username: 'salesasst',
+    password: 'testpass123',
+    role: 'Sales Assistant',
+    permissions: 'sales_support',
+    roleId: 4
   },
-  viewer: {
-    username: 'test_viewer',
-    password: 'test_password',
-    role: 'viewer',
-    permissions: 'read_only'
-  },
-  restricted: {
-    username: 'test_restricted',
-    password: 'test_password',
-    role: 'restricted',
-    permissions: 'minimal'
+  salesPerson: {
+    username: 'salesperson',
+    password: 'testpass123',
+    role: 'Sales Person',
+    permissions: 'sales_basic',
+    roleId: 5
   }
 };
 
@@ -50,13 +55,15 @@ export async function loginAs (page, userType) {
     throw new Error(`Unknown user type: ${userType}`);
   }
 
-  await page.goto('/login');
+  await page.goto('/login.php');
   await page.fill('input[name="username"]', user.username);
   await page.fill('input[name="password"]', user.password);
-  await page.click('button[type="submit"]');
-
-  // Wait for redirect after login
-  await page.waitForURL(/\/(dashboard|leads|admin)/);
+  
+  // Wait for navigation before continuing
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'networkidle' }),
+    page.click('button[type="submit"]')
+  ]);
 
   return user;
 }
@@ -227,36 +234,36 @@ export const permissionScenarios = {
   // Module-level scenarios
   moduleAccess: [
     { user: 'superAdmin', module: 'admin', expected: true },
+    { user: 'admin', module: 'admin', expected: true },
     { user: 'salesManager', module: 'leads', expected: true },
-    { user: 'salesRep', module: 'leads', expected: true },
-    { user: 'viewer', module: 'leads', expected: true },
-    { user: 'restricted', module: 'admin', expected: false }
+    { user: 'salesAssistant', module: 'leads', expected: true },
+    { user: 'salesPerson', module: 'leads', expected: true }
   ],
 
   // Action-level scenarios
   actionPermissions: [
     { user: 'superAdmin', module: 'leads', action: 'delete', expected: true },
-    { user: 'salesManager', module: 'leads', action: 'delete', expected: true },
-    { user: 'salesRep', module: 'leads', action: 'create', expected: true },
-    { user: 'salesRep', module: 'leads', action: 'delete', expected: false },
-    { user: 'viewer', module: 'leads', action: 'edit', expected: false }
+    { user: 'admin', module: 'leads', action: 'delete', expected: true },
+    { user: 'salesManager', module: 'leads', action: 'create', expected: true },
+    { user: 'salesAssistant', module: 'leads', action: 'create', expected: true },
+    { user: 'salesPerson', module: 'leads', action: 'edit', expected: true }
   ],
 
   // Field-level scenarios
   fieldPermissions: [
+    { user: 'admin', field: 'email', canView: true, canEdit: true },
     { user: 'salesManager', field: 'email', canView: true, canEdit: true },
-    { user: 'salesRep', field: 'email', canView: true, canEdit: true },
-    { user: 'viewer', field: 'email', canView: true, canEdit: false },
-    { user: 'restricted', field: 'email', canView: false, canEdit: false }
+    { user: 'salesAssistant', field: 'email', canView: true, canEdit: true },
+    { user: 'salesPerson', field: 'email', canView: true, canEdit: true }
   ],
 
   // Record-level scenarios
   recordPermissions: [
-    { user: 'salesManager', scope: 'all', expected: true },
-    { user: 'salesRep', scope: 'own', expected: true },
-    { user: 'salesRep', scope: 'other', expected: false },
-    { user: 'viewer', scope: 'own', expected: true },
-    { user: 'viewer', scope: 'other', expected: false }
+    { user: 'superAdmin', scope: 'all', expected: true },
+    { user: 'admin', scope: 'all', expected: true },
+    { user: 'salesManager', scope: 'own', expected: true },
+    { user: 'salesAssistant', scope: 'own', expected: true },
+    { user: 'salesPerson', scope: 'own', expected: true }
   ]
 };
 

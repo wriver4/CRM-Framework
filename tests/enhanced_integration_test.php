@@ -38,6 +38,13 @@
  * php tests/enhanced_integration_test.php --comprehensive --performance-report
  */
 
+// Set up test environment BEFORE loading system config
+$_ENV['APP_ENV'] = 'testing';
+$_ENV['DB_HOST'] = 'localhost';
+$_ENV['DB_NAME'] = 'democrm_test';
+$_ENV['DB_USER'] = 'democrm_test';
+$_ENV['DB_PASS'] = 'TestDB_2025_Secure!';
+
 // Set up paths and autoloading
 $rootPath = dirname(__DIR__);
 require_once $rootPath . '/config/system.php';
@@ -69,41 +76,41 @@ class EnhancedIntegrationTest {
     private $startMemory;
     private $testSessionId;
     
-    // Test user credentials from .zencoder/rules/test_users.md
+    // Test user credentials matching test database seeding
     private $testUsers = [
         'superadmin' => [
-            'username' => 'testadmin',
-            'password' => 'TestsuperadminHQ4!!@@1',
-            'email' => 'mark@waveguardco.com',
+            'username' => 'superadmin',
+            'password' => 'testpass123',
+            'email' => 'superadmin@test.com',
             'role_id' => 1,
             'role_name' => 'Super Administrator'
         ],
         'admin' => [
-            'username' => 'testadmin2',
-            'password' => 'TestadminHQ4!!@@1',
-            'email' => 'mark@waveguardco.com',
+            'username' => 'admin',
+            'password' => 'testpass123',
+            'email' => 'admin@test.com',
             'role_id' => 2,
             'role_name' => 'Administrator'
         ],
         'sales_manager' => [
-            'username' => 'testsalesmgr',
-            'password' => 'TestsalesmgrHQ4!!@@1',
-            'email' => 'mark@waveguardco.com',
-            'role_id' => 13,
+            'username' => 'salesman',
+            'password' => 'testpass123',
+            'email' => 'sales@test.com',
+            'role_id' => 3,
             'role_name' => 'Sales Manager'
         ],
         'sales_assistant' => [
-            'username' => 'testsalesasst',
-            'password' => 'TestsalesasstHQ4!!@@1',
-            'email' => 'mark@waveguardco.com',
-            'role_id' => 14,
+            'username' => 'salesasst',
+            'password' => 'testpass123',
+            'email' => 'asst@test.com',
+            'role_id' => 4,
             'role_name' => 'Sales Assistant'
         ],
         'sales_person' => [
-            'username' => 'testsalesperson',
-            'password' => 'TestsalespersonHQ4!!@@1',
-            'email' => 'mark@waveguardco.com',
-            'role_id' => 15,
+            'username' => 'salesperson',
+            'password' => 'testpass123',
+            'email' => 'person@test.com',
+            'role_id' => 5,
             'role_name' => 'Sales Person'
         ]
     ];
@@ -319,10 +326,14 @@ class EnhancedIntegrationTest {
         $user = $this->testUsers[$userKey];
         
         try {
-            // Simulate login process
-            $userData = $this->users->authenticate($user['username'], $user['password']);
+            // Query database for user with given username
+            $pdo = $this->db->dbcrm();
+            $sql = "SELECT id, username, password, full_name, email, role_id FROM users WHERE username = :username AND status = 1 LIMIT 1";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':username' => $user['username']]);
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            if ($userData) {
+            if ($userData && password_verify($user['password'], $userData['password'])) {
                 $this->currentUser = $userData;
                 $this->currentUser['role_key'] = $userKey;
                 
@@ -354,7 +365,7 @@ class EnhancedIntegrationTest {
                 
                 return true;
             } else {
-                $this->handleError("Authentication failed for user: {$user['username']}", null, 'ERROR');
+                $this->handleError("Authentication failed for user: {$user['username']} (invalid credentials or inactive)", null, 'ERROR');
                 return false;
             }
         } catch (Exception $e) {

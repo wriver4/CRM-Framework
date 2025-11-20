@@ -91,28 +91,38 @@ class Helpers extends Database
   public function get_role_array($lang)
   {
     $role_array = [
-      '21' => $lang['role_id_21'],
-      '20' => $lang['role_id_20'],
-      '19' => $lang['role_id_19'],
-      '18' => $lang['role_id_18'],
-      '17' => $lang['role_id_17'],
-      '16' => $lang['role_id_16'],
-      '15' => $lang['role_id_15'],
-      '14' => $lang['role_id_14'],
-      '13' => $lang['role_id_13'],
-      '12' => $lang['role_id_12'],
-      '11' => $lang['role_id_11'],
-      '10' => $lang['role_id_10'],
-      '9' => $lang['role_id_9'],
-      '8' => $lang['role_id_8'],
-      '7' => $lang['role_id_7'],
-      '6' => $lang['role_id_6'],
-      '5' => $lang['role_id_5'],
-      '4' => $lang['role_id_4'],
-      '3' => $lang['role_id_3'],
-      '2' => $lang['role_id_2'],
       '1' => $lang['role_id_1'],
-      '22' => $lang['role_id_22'],
+      '2' => $lang['role_id_2'],
+      '10' => $lang['role_id_10'],
+      '11' => $lang['role_id_11'],
+      '12' => $lang['role_id_12'],
+      '13' => $lang['role_id_13'],
+      '14' => $lang['role_id_14'],
+      '30' => $lang['role_id_30'],
+      '35' => $lang['role_id_35'],
+      '40' => $lang['role_id_40'],
+      '41' => $lang['role_id_41'],
+      '42' => $lang['role_id_42'],
+      '43' => $lang['role_id_43'],
+      '50' => $lang['role_id_50'],
+      '51' => $lang['role_id_51'],
+      '52' => $lang['role_id_52'],
+      '60' => $lang['role_id_60'],
+      '70' => $lang['role_id_70'],
+      '72' => $lang['role_id_72'],
+      '80' => $lang['role_id_80'],
+      '82' => $lang['role_id_82'],
+      '90' => $lang['role_id_90'],
+      '100' => $lang['role_id_100'],
+      '110' => $lang['role_id_110'],
+      '120' => $lang['role_id_120'],
+      '130' => $lang['role_id_130'],
+      '140' => $lang['role_id_140'],
+      '150' => $lang['role_id_150'],
+      '160' => $lang['role_id_160'],
+      '161' => $lang['role_id_161'],
+      '162' => $lang['role_id_162'],
+      '163' => $lang['role_id_163'],
     ];
     return $role_array;
   }
@@ -124,7 +134,7 @@ class Helpers extends Database
     }
     $roles = $this->get_role_array($lang);
     foreach ($roles as $key => $value) {
-      if ($key != 22) {
+      if ($key != 1 && $key != 2) {
         echo '<option value="'
           . $key
           . '"'
@@ -1320,6 +1330,50 @@ public function admin_select_property_id($lang, $prop_id )
       6 => $lang['note_source_in_person'],
       4 => $lang['note_source_internal_note']
     ];
+  }
+
+  public function select_multiple_roles($lang, $selected_role_ids = [])
+  {
+    if (!is_array($selected_role_ids)) {
+      $selected_role_ids = [];
+    }
+    $roles = $this->get_role_array($lang);
+    foreach ($roles as $key => $value) {
+      if ($key != 1 && $key != 2) {
+        $checked = in_array($key, $selected_role_ids) ? ' checked="checked"' : '';
+        echo '<div class="form-check">';
+        echo '<input class="form-check-input" type="checkbox" name="roles[]" value="' . $key . '" id="role_' . $key . '"' . $checked . '>';
+        echo '<label class="form-check-label" for="role_' . $key . '">' . $value . '</label>';
+        echo '</div>';
+      }
+    }
+  }
+
+  public function get_user_roles_display($user_id, $lang)
+  {
+    $users = new Users();
+    $roles = $users->getUserRoles($user_id);
+    $role_names = [];
+    foreach ($roles as $role) {
+      if ($role['is_primary']) {
+        $role_names[] = '<strong>' . htmlspecialchars($role['role']) . '</strong>';
+      } else {
+        $role_names[] = htmlspecialchars($role['role']);
+      }
+    }
+    return implode(', ', $role_names);
+  }
+
+  public function get_user_primary_role_name($user_id)
+  {
+    $users = new Users();
+    $roles = $users->getUserRoles($user_id);
+    foreach ($roles as $role) {
+      if ($role['is_primary']) {
+        return $role['role'];
+      }
+    }
+    return null;
   }
 
 }

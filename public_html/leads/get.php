@@ -30,7 +30,7 @@ if (isset($_GET['action'])) {
         case 'lead_with_user':
             // Get lead by ID with user information
             if (isset($_GET['id'])) {
-                $lead = $leads->get_lead_by_lead_id($_GET['id']);  // Use lead_id (external number) instead of internal id
+                $lead = $leads->get_lead_by_lead_id((int)trim($_GET['id']));
                 if ($lead && !empty($lead['last_edited_by'])) {
                     $lead['last_edited_by_name'] = $users->get_name_by_id($lead['last_edited_by']);
                 }
@@ -42,7 +42,7 @@ if (isset($_GET['action'])) {
         case 'user_name':
             // Get user name by ID
             if (isset($_GET['user_id'])) {
-                $user_name = $users->get_name_by_id($_GET['user_id']);
+                $user_name = $users->get_name_by_id((int)trim($_GET['user_id']));
                 echo $user_name ?: 'Unknown User';
             }
             break;
@@ -104,8 +104,8 @@ if ($dir == 'leads' && $page == 'list') {
 }
 
 if ($dir == 'leads' && $page == 'view') {
-    $id = trim($_GET["id"]);
-    $result = $leads->get_lead_by_lead_id($id);  // Use lead_id (external number) instead of internal id
+    $id = (int)trim($_GET["id"]);
+    $result = $leads->get_lead_by_lead_id($id);
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
         
@@ -147,8 +147,8 @@ if ($dir == 'leads' && $page == 'view') {
 }
 
 if ($dir == 'leads' && $page == 'edit') {
-    $id = trim($_GET["id"]);
-    $result = $leads->get_lead_by_lead_id($id);  // Use lead_id (external number) instead of internal id
+    $id = (int)trim($_GET["id"]);
+    $result = $leads->get_lead_by_lead_id($id);
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
         
@@ -220,7 +220,7 @@ if ($dir == 'leads' && $page == 'edit') {
         $selected_contact_id = null;
         if (!empty($property_contacts)) {
             // Check if a specific contact_id was passed in URL (e.g., from calendar link)
-            $url_contact_id = $_GET['contact_id'] ?? null;
+            $url_contact_id = isset($_GET['contact_id']) ? (int)trim($_GET['contact_id']) : null;
             if ($url_contact_id) {
                 // Verify that the specified contact_id exists for this lead
                 foreach ($property_contacts as $contact) {
@@ -245,8 +245,8 @@ if ($dir == 'leads' && $page == 'new') {
 }
 
 if ($dir == 'leads' && $page == 'delete') {
-    $id = trim($_GET["id"]);
-    $result = $leads->get_lead_by_lead_id($id);  // Use lead_id (external number) instead of internal id
+    $id = (int)trim($_GET["id"]);
+    $result = $leads->get_lead_by_lead_id($id);
     if ($result && !empty($result[0])) {
         $result = $result[0]; // get_lead_by_id returns array
         $first_name = $result["first_name"];

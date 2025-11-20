@@ -37,12 +37,13 @@ class UsersList extends EditDeleteTable
             $prop_id = implode(', ', $prop_results);
             echo '<td>';
             echo $prop_id;
-            /*if (is_array($jdcv)) {
-              $jdvc_s = implode(', ', $jdcv);
-              echo $jdvc_s;
-            } else {
-              echo $jdcv;
-            }*/
+            echo '</td>';
+            break;
+          case 'role':
+            $helper = new Helpers();
+            $roles_display = $helper->get_user_roles_display($id, $this->lang);
+            echo '<td>';
+            echo $roles_display;
             echo '</td>';
             break;
           default:

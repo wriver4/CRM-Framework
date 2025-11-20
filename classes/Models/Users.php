@@ -75,6 +75,8 @@ class Users extends Database
 		$stmt->bindValue(':password', $password, PDO::PARAM_STR);
 		try {
 			$stmt->execute();
+			$user_id = $this->last_row_id();
+			$this->addUserRole($user_id, $rid, true);
 			$stmt = null;
 			header("location: list");
 		} catch (PDOException $e) {
@@ -115,11 +117,12 @@ class Users extends Database
 			$stmt->bindValue(':language_id', $language_id, PDO::PARAM_INT);
 		}
 		if ($stmt->execute()) {
+			$this->setUserPrimaryRole($id, $rid);
+			$stmt = null;
 			header("location: list");
 		} else {
 			echo "Something went wrong. Please try again later.";
 		}
-		$stmt = null;
 	}
 
 	/**
@@ -270,4 +273,78 @@ class Users extends Database
 	{
 	}
 	*/
+
+	public function addUserRole($user_id, $role_id, $is_primary = false)
+	{
+		$sql = "INSERT INTO user_roles (user_id, role_id, is_primary, assigned_at) 
+				SELECT :user_id, r.id, :is_primary, NOW() FROM roles r 
+				WHERE r.role_id = :role_id
+				ON DUPLICATE KEY UPDATE is_active = TRUE, is_primary = :is_primary";
+		$stmt = $this->dbcrm()->prepare($sql);
+		$stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+		$stmt->bindValue(':role_id', $role_id, PDO::PARAM_INT);
+		$stmt->bindValue(':is_primary', $is_primary ? 1 : 0, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
+
+	public function removeUserRole($user_id, $role_id)
+	{
+		$sql = "DELETE FROM user_roles WHERE user_id = :user_id AND role_id = (
+					SELECT id FROM roles WHERE role_id = :role_id
+				)";
+		$stmt = $this->dbcrm()->prepare($sql);
+		$stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+		$stmt->bindValue(':role_id', $role_id, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
+
+	public function getUserRoles($user_id)
+	{
+		$sql = "SELECT r.role_id, r.role, ur.is_primary, ur.is_active, ur.assigned_at 
+				FROM user_roles ur 
+				LEFT JOIN roles r ON ur.role_id = r.id 
+				WHERE ur.user_id = :user_id AND ur.is_active = TRUE 
+				ORDER BY ur.is_primary DESC, ur.assigned_at ASC";
+		$stmt = $this->dbcrm()->prepare($sql);
+		$stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+		$stmt->execute();
+		return $stmt->fetchAll();
+	}
+
+	public function getUserPrimaryRole($user_id)
+	{
+		$sql = "SELECT r.role_id FROM user_roles ur 
+				INNER JOIN roles r ON ur.role_id = r.id 
+				WHERE ur.user_id = :user_id AND ur.is_primary = TRUE AND ur.is_active = TRUE 
+				LIMIT 1";
+		$stmt = $this->dbcrm()->prepare($sql);
+		$stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+		$stmt->execute();
+		$result = $stmt->fetch();
+		return $result ? $result['role_id'] : null;
+	}
+
+	public function setUserPrimaryRole($user_id, $role_id)
+	{
+		$sql_clear = "UPDATE user_roles SET is_primary = FALSE 
+					  WHERE user_id = :user_id";
+		$stmt_clear = $this->dbcrm()->prepare($sql_clear);
+		$stmt_clear->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+		$stmt_clear->execute();
+
+		$sql_set = "UPDATE user_roles SET is_primary = TRUE 
+					WHERE user_id = :user_id AND role_id = (
+						SELECT id FROM roles WHERE role_id = :role_id
+					)";
+		$stmt_set = $this->dbcrm()->prepare($sql_set);
+		$stmt_set->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+		$stmt_set->bindValue(':role_id', $role_id, PDO::PARAM_INT);
+		return $stmt_set->execute();
+	}
+
+	public function getUserRolesAsJson($user_id)
+	{
+		$roles = $this->getUserRoles($user_id);
+		return json_encode($roles);
+	}
 }

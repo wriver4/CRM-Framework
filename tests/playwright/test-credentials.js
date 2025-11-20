@@ -4,47 +4,47 @@
 const TEST_CREDENTIALS = {
   // Super Administrator - Full access
   superAdmin: {
-    username: 'testadmin',
-    password: 'TestsuperadminHQ4!!@@1',
-    email: 'mark@waveguardco.com',
+    username: 'superadmin',
+    password: 'testpass123',
+    email: 'superadmin@democrm.local',
     role: 'Super Administrator',
     roleId: 1
   },
 
   // Administrator - High level access
   admin: {
-    username: 'testadmin2',
-    password: 'TestadminHQ4!!@@1',
-    email: 'mark@waveguardco.com',
+    username: 'admin',
+    password: 'testpass123',
+    email: 'admin@democrm.local',
     role: 'Administrator',
     roleId: 2
   },
 
   // Sales Manager - Sales management access
   salesManager: {
-    username: 'testsalesmgr',
-    password: 'TestsalesmanHQ4!!@@1',
-    email: 'mark@waveguardco.com',
+    username: 'salesman',
+    password: 'testpass123',
+    email: 'salesman@democrm.local',
     role: 'Sales Manager',
-    roleId: 13
+    roleId: 3
   },
 
   // Sales Assistant - Sales support access
   salesAssistant: {
-    username: 'testsalesasst',
-    password: 'TestsalesassHQ4!!@@1',
-    email: 'mark@waveguardco.com',
+    username: 'salesasst',
+    password: 'testpass123',
+    email: 'salesasst@democrm.local',
     role: 'Sales Assistant',
-    roleId: 14
+    roleId: 4
   },
 
   // Sales Person - Basic sales access
   salesPerson: {
-    username: 'testsalesperson',
-    password: 'TestsalespersonHQ4!!@@1',
-    email: 'mark@waveguardco.com',
+    username: 'salesperson',
+    password: 'testpass123',
+    email: 'salesperson@democrm.local',
     role: 'Sales Person',
-    roleId: 15
+    roleId: 5
   }
 };
 

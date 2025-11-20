@@ -2,8 +2,14 @@
   "zencoder.mcpServers": {
     "democrm-context": {
       "command": "/usr/bin/node",
-      "args": ["/home/democrm/.zencoder/mcp-server/index.js"],
+      "args": [
+        "/home/democrm/.zencoder/mcp-server/index.js"
+      ],
       "env": {}
     }
-  }
+  },
+  "workbench.externalBrowser": "",
+  "phpserver.browser": "",
+  "playwright.reuseBrowser": false,
+  "simpleBrowser.focusLockIndicator.enabled": false
 }

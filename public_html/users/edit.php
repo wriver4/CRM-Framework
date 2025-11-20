@@ -34,7 +34,7 @@ require 'get.php';
                maxlength="100"
                id="full_name"
                class="form-control"
-               value="<?= $full_name; ?>"
+               value="<?= htmlspecialchars($full_name, ENT_QUOTES, 'UTF-8'); ?>"
                tabindex="1">
       </div>
     </div>
@@ -48,7 +48,7 @@ require 'get.php';
                maxlength="100"
                id="username"
                class="form-control"
-               value="<?= $username; ?>">
+               value="<?= htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>">
       </div>
     </div>
   </div>
@@ -56,12 +56,12 @@ require 'get.php';
     <label for="password"
            class="required pb-1 pt-1"><?= $lang['password']; ?></label>
     <input type="password"
-           <?= in_array(1023, $_SESSION['permissions']) ? '' : 'disabled'; ?>
+           <?= in_array('user.edit.password', $_SESSION['permissions'] ?? []) ? '' : 'disabled'; ?>
            name="password"
            maxlength="250"
            id="password"
            class="form-control"
-           value="<?= $password; ?>">
+           value="<?= htmlspecialchars($password, ENT_QUOTES, 'UTF-8'); ?>">
   </div>
   <div class="form-group pb-1">
     <label for="rid"
@@ -72,6 +72,16 @@ require 'get.php';
       <?php $helper->select_role($lang, $rid); ?></select>
   </div>
   <div class="form-group pb-1">
+    <label class="pb-1 pt-1"><?= $lang['additional_roles'] ?? 'Additional Roles'; ?></label>
+    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #dee2e6; padding: 10px; border-radius: 4px;">
+      <?php
+        $user_roles = $users->getUserRoles($id);
+        $role_ids = array_map(function($r) { return $r['role_id']; }, $user_roles);
+        $helper->select_multiple_roles($lang, $role_ids);
+      ?>
+    </div>
+  </div>
+  <div class="form-group pb-1">
     <label for="email"
            class="pb-1 pt-1"><?= $lang['email']; ?></label>
     <input type="email"
@@ -80,7 +90,7 @@ require 'get.php';
            maxlength="250"
            id="email"
            class="form-control"
-           value="<?= $email; ?>">
+           value="<?= htmlspecialchars($email ?? '', ENT_QUOTES, 'UTF-8'); ?>">
   </div>
   <div class="form-group pb-1">
     <label for="status"
@@ -96,7 +106,7 @@ require 'get.php';
   <p></p>
   <input type="hidden"
          name="id"
-         value="<?= $id; ?>">
+         value="<?= (int)$id; ?>">
   <input type="hidden"
          name="dir"
          value="<?= $dir; ?>">
