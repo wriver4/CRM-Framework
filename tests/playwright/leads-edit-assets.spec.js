@@ -29,7 +29,7 @@ test.describe('Leads Edit Asset Organization Tests', () => {
     }
 
     // Navigate to a leads edit page (assuming lead ID 1 exists)
-    await page.goto('/leads/edit.php?lead_id=1');
+    await page.goto('/leads/edit.php?id=1');
     await page.waitForLoadState('networkidle');
 
     // 1. Check that contact-selector.js loads
@@ -65,7 +65,7 @@ test.describe('Leads Edit Asset Organization Tests', () => {
       return;
     }
 
-    await page.goto('/leads/edit.php?lead_id=1');
+    await page.goto('/leads/edit.php?id=1');
     await page.waitForLoadState('networkidle');
 
     // Check that window.leadsEditData is properly injected
@@ -103,7 +103,7 @@ test.describe('Leads Edit Asset Organization Tests', () => {
       return;
     }
 
-    await page.goto('/leads/edit.php?lead_id=1');
+    await page.goto('/leads/edit.php?id=1');
     await page.waitForLoadState('networkidle');
 
     // Check that there's no inline JavaScript in the main content area
@@ -133,7 +133,7 @@ test.describe('Leads Edit Asset Organization Tests', () => {
       return;
     }
 
-    await page.goto('/leads/edit.php?lead_id=1');
+    await page.goto('/leads/edit.php?id=1');
     await page.waitForLoadState('networkidle');
 
     // Wait for JavaScript to initialize
@@ -176,7 +176,7 @@ test.describe('Leads Edit Asset Organization Tests', () => {
       return;
     }
 
-    await page.goto('/leads/edit.php?lead_id=1');
+    await page.goto('/leads/edit.php?id=1');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -213,7 +213,7 @@ test.describe('Leads Edit Asset Organization Tests', () => {
       return;
     }
 
-    await page.goto('/leads/edit.php?lead_id=1');
+    await page.goto('/leads/edit.php?id=1');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -251,7 +251,7 @@ test.describe('Leads Edit Asset Organization Tests', () => {
       }
     });
 
-    await page.goto('/leads/edit.php?lead_id=1');
+    await page.goto('/leads/edit.php?id=1');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(3000);
 

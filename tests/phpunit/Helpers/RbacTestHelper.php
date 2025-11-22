@@ -164,24 +164,76 @@ class RbacTestHelper
     }
     
     /**
-     * Seed standard RBAC test data
+     * Seed standard RBAC test data with 32-role system
      */
     public function seedStandardRbacData(): array
     {
         $roles = [];
         $permissions = [];
         
-        // Create standard roles
-        $roles['super_admin'] = $this->createRole('super_admin', 'Full system access');
-        $roles['sales_manager'] = $this->createRole('sales_manager', 'Sales module management');
-        $roles['sales_rep'] = $this->createRole('sales_rep', 'Sales module read/write');
-        $roles['viewer'] = $this->createRole('viewer', 'Read-only access');
-        $roles['restricted'] = $this->createRole('restricted', 'Minimal access');
+        // Create roles by category (following 32-role system)
+        
+        // System roles (1-2) - excluded from user assignment
+        $roles['system_owner'] = 1; // System Owner
+        $roles['system_admin'] = 2; // System Admin
+        
+        // Executive roles (10-14)
+        $roles['company_owner'] = 10;
+        $roles['executive_vp'] = 11;
+        $roles['executive_manager'] = 12;
+        $roles['department_head'] = 13;
+        $roles['operations_manager'] = 14;
+        
+        // Sales roles (30-39)
+        $roles['sales_manager'] = 30;
+        $roles['sales_rep'] = 35;
+        
+        // Engineering roles (40-49)
+        $roles['engineering_director'] = 40;
+        $roles['engineering_manager'] = 41;
+        $roles['tech_lead'] = 42;
+        $roles['engineer'] = 43;
+        
+        // Manufacturing roles (50-59)
+        $roles['manufacturing_manager'] = 50;
+        $roles['production_supervisor'] = 51;
+        $roles['production_worker'] = 52;
+        
+        // Field Service roles (60-69)
+        $roles['field_service_manager'] = 60;
+        
+        // HR roles (70-79)
+        $roles['hr_manager'] = 70;
+        $roles['hr_coordinator'] = 72;
+        
+        // Accounting roles (80-89)
+        $roles['accounting_manager'] = 80;
+        $roles['accountant'] = 82;
+        
+        // Support roles (90-99)
+        $roles['support_manager'] = 90;
+        
+        // Partner roles (100-159)
+        $roles['partner_executive'] = 100;
+        $roles['partner_manager'] = 110;
+        $roles['partner_sales'] = 120;
+        $roles['partner_support'] = 130;
+        $roles['partner_developer'] = 140;
+        $roles['partner_user'] = 150;
+        
+        // Client roles (160-163)
+        $roles['client_admin'] = 160;
+        $roles['client_manager'] = 161;
+        $roles['client_user'] = 162;
+        $roles['client_viewer'] = 163;
         
         // Create module-level permissions
         $permissions['leads.access'] = $this->createPermission('leads.access', 'Access leads module');
         $permissions['contacts.access'] = $this->createPermission('contacts.access', 'Access contacts module');
         $permissions['admin.access'] = $this->createPermission('admin.access', 'Access admin module');
+        $permissions['engineering.access'] = $this->createPermission('engineering.access', 'Access engineering module');
+        $permissions['manufacturing.access'] = $this->createPermission('manufacturing.access', 'Access manufacturing module');
+        $permissions['hr.access'] = $this->createPermission('hr.access', 'Access HR module');
         
         // Create action-level permissions
         $permissions['leads.view'] = $this->createPermission('leads.view', 'View leads');
@@ -201,43 +253,87 @@ class RbacTestHelper
         $permissions['leads.view.team'] = $this->createPermission('leads.view.team', 'View team leads');
         $permissions['leads.view.all'] = $this->createPermission('leads.view.all', 'View all leads');
         
-        // Assign permissions to super_admin (all permissions)
-        foreach ($permissions as $perm) {
-            $this->assignPermissionToRole($roles['super_admin'], $perm);
+        // Assign permissions to executive roles (broad access)
+        $executivePerms = array_values($permissions); // All permissions
+        foreach ($executivePerms as $perm) {
+            $this->assignPermissionToRole($roles['executive_vp'], $perm);
+            $this->assignPermissionToRole($roles['company_owner'], $perm);
         }
         
-        // Assign permissions to sales_manager
+        // Assign permissions to sales_manager (30)
         $managerPerms = [
             'leads.access', 'leads.view', 'leads.create', 'leads.edit', 'leads.delete',
             'leads.export', 'leads.view.email', 'leads.edit.stage', 'leads.view.notes',
             'leads.view.all', 'contacts.access'
         ];
         foreach ($managerPerms as $permKey) {
-            $this->assignPermissionToRole($roles['sales_manager'], $permissions[$permKey]);
+            if (isset($permissions[$permKey])) {
+                $this->assignPermissionToRole($roles['sales_manager'], $permissions[$permKey]);
+            }
         }
         
-        // Assign permissions to sales_rep
+        // Assign permissions to sales_rep (35)
         $repPerms = [
             'leads.access', 'leads.view', 'leads.create', 'leads.edit',
             'leads.view.email', 'leads.view.notes', 'leads.view.own', 'leads.edit.own'
         ];
         foreach ($repPerms as $permKey) {
-            $this->assignPermissionToRole($roles['sales_rep'], $permissions[$permKey]);
+            if (isset($permissions[$permKey])) {
+                $this->assignPermissionToRole($roles['sales_rep'], $permissions[$permKey]);
+            }
         }
         
-        // Assign permissions to viewer
-        $viewerPerms = ['leads.access', 'leads.view', 'leads.view.own'];
-        foreach ($viewerPerms as $permKey) {
-            $this->assignPermissionToRole($roles['viewer'], $permissions[$permKey]);
+        // Assign permissions to engineer (43)
+        $engineerPerms = ['leads.access', 'leads.view', 'leads.view.email'];
+        foreach ($engineerPerms as $permKey) {
+            if (isset($permissions[$permKey])) {
+                $this->assignPermissionToRole($roles['engineer'], $permissions[$permKey]);
+            }
         }
         
-        // Restricted role gets minimal permissions
-        $this->assignPermissionToRole($roles['restricted'], $permissions['leads.view.own']);
+        // Assign permissions to client_user (162) - minimal
+        $this->assignPermissionToRole($roles['client_user'], $permissions['leads.view.own']);
         
         return [
             'roles' => $roles,
             'permissions' => $permissions
         ];
+    }
+    
+    /**
+     * Get roles by category
+     */
+    public function getRolesByCategory(string $category): array
+    {
+        $categories = [
+            'system' => [1, 2],
+            'executive' => [10, 11, 12, 13, 14],
+            'sales' => [30, 35],
+            'engineering' => [40, 41, 42, 43],
+            'manufacturing' => [50, 51, 52],
+            'field_service' => [60],
+            'hr' => [70, 72],
+            'accounting' => [80, 82],
+            'support' => [90],
+            'partners' => [100, 110, 120, 130, 140, 150],
+            'clients' => [160, 161, 162, 163]
+        ];
+        
+        return $categories[strtolower($category)] ?? [];
+    }
+    
+    /**
+     * Verify system roles are excluded from user assignment
+     */
+    public function verifySystemRolesExcluded(): bool
+    {
+        // Get assignable roles from Roles.php
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM roles WHERE role_id NOT IN (1, 2)");
+        $stmt->execute();
+        $count = (int) $stmt->fetchColumn();
+        
+        // Should be 30 assignable roles (32 total - 2 system)
+        return $count === 30;
     }
     
     /**

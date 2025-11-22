@@ -46,6 +46,13 @@ $login_error_message = '';
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  // DEBUG: Log all login attempts
+  file_put_contents(
+    dirname(__DIR__) . '/logs/login_attempts.log',
+    date('Y-m-d H:i:s') . ' POST: ' . json_encode($_POST) . ' | IP: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL,
+    FILE_APPEND
+  );
+  
   // public function ...
   if (!empty($_POST["login"]) && $_POST["username"] != '' && $_POST["password"] != '' && $_POST["username"] != 'system') {
 
@@ -98,12 +105,13 @@ require BODY;
     <div class="text-center mb-4">
       <img class="mb-4"
            src="<?= IMG . '/logo.svg' ?>"
-           alt=""
+           alt="CRM Logo"
            width="200"
            height="200">
-      <h3 class="h3 mb-3 font-weight-normal text-white"><?= $lang['signin']; ?></h3>
+      <h1 class="h3 mb-3 font-weight-normal text-white"><?= $lang['signin']; ?></h1>
     </div>
     <div class="form-group">
+      <label for="username" class="visually-hidden"><?= $lang['username']; ?></label>
       <input type="text"
              name="username"
              maxlength="100"
@@ -114,6 +122,7 @@ require BODY;
              tabindex="1">
     </div>
     <div class="form-group">
+      <label for="password" class="visually-hidden"><?= $lang['password']; ?></label>
       <input type="password"
              name="password"
              maxlength="250"
@@ -135,6 +144,9 @@ require BODY;
     <input type="hidden"
            name="page"
            value="<?= $page; ?>">
+    <input type="hidden"
+           name="login"
+           value="Login">
     <div class="d-grid pt-2">
       <button type="submit"
               id="login"

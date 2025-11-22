@@ -23,11 +23,12 @@ $expected_roles = [1, 2, 10, 11, 12, 13, 14, 30, 35, 40, 41, 42, 43, 50, 51, 52,
 $sql = "SELECT COUNT(*) as total FROM roles WHERE role_id IN (" . implode(',', $expected_roles) . ")";
 $stmt = $db->dbcrm()->prepare($sql);
 $stmt->execute();
-$result = $stmt->fetch();
+$role_count_result = $stmt->fetch();
+$total_roles = $role_count_result['total'];
 
 echo "Expected roles: " . count($expected_roles) . "\n";
-echo "Active roles: " . $result['total'] . "\n";
-echo "Status: " . ($result['total'] == count($expected_roles) ? "✅ PASS\n" : "❌ FAIL\n");
+echo "Active roles: " . $total_roles . "\n";
+echo "Status: " . ($total_roles == count($expected_roles) ? "✅ PASS\n" : "❌ FAIL\n");
 
 // Test 2: Verify role names
 echo "\n📋 TEST 2: Role Names & Translations\n";
@@ -147,7 +148,7 @@ echo "║                    VALIDATION SUMMARY                      ║\n";
 echo "╚════════════════════════════════════════════════════════════╝\n";
 
 $all_pass = (
-    $result['total'] == count($expected_roles) &&
+    $total_roles == count($expected_roles) &&
     empty($missing_translations) &&
     count($assignable_roles) == 30 &&
     $category_status &&
