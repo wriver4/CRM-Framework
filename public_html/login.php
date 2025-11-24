@@ -146,13 +146,11 @@ require BODY;
            value="<?= $page; ?>">
     <input type="hidden"
            name="login"
-           value="Login">
+           value="login">
     <div class="d-grid pt-2">
       <button type="submit"
               id="login"
               class="btn btn-rounded btn-outline-light"
-              name="login"
-              value="Login"
               tabindex="0"
               role="button"
               aria-pressed="false">
