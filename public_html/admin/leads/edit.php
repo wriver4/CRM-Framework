@@ -252,22 +252,7 @@ require SECTIONOPEN;
       <div class="form-group pb-2">
         <label for="form_country" class="pb-1"><?= $lang['lead_country']; ?></label>
         <select name="form_country" id="form_country" class="form-select" autocomplete="off">
-          <option value=""><?= $lang['select_country']; ?></option>
-          <?php
-          $countries = [
-            'US' => $lang['US'] ?? 'United States',
-            'CA' => $lang['CA'] ?? 'Canada',
-            'MX' => $lang['MX'] ?? 'Mexico',
-            'UK' => $lang['UK'] ?? 'United Kingdom',
-            'AU' => $lang['AU'] ?? 'Australia',
-            'NZ' => $lang['NZ'] ?? 'New Zealand',
-            'BR' => $lang['BR'] ?? 'Brazil'
-          ];
-          foreach ($countries as $key => $value) {
-            $selected = ($key == ($form_country ?? 'US')) ? ' selected' : '';
-            echo '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
-          }
-          ?>
+          <?php $helpers->select_country($lang, $form_country ?? 'US'); ?>
         </select>
       </div>
     </div>
@@ -295,7 +280,7 @@ require SECTIONOPEN;
         <?php
         $services = $helpers->get_lead_services_array($lang);
         $selected_services = !empty($services_interested_in) ? explode(',', $services_interested_in) : [];
-        $service_ids = ['service_wildfire', 'service_assessment', 'service_gutter', 'service_vent', 'service_ltr', 'service_lease', 'service_landscape'];
+        $service_ids = ['service_wildfire', 'service_ltr', 'service_lease'];
         $i = 0;
         foreach ($services as $key => $value) {
           $checked = in_array($key, $selected_services) ? ' checked' : '';

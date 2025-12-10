@@ -31,10 +31,15 @@
     </testsuite>
     <testsuite name="LeadsModule">
       <file>tests/phpunit/Unit/LeadsModelTest.php</file>
+      <file>tests/phpunit/Unit/LeadsFormValidationTest.php</file>
+      <file>tests/phpunit/Unit/LeadsPostHandlerTest.php</file>
       <file>tests/phpunit/Unit/LeadsListTest.php</file>
       <file>tests/phpunit/Unit/PhoneFormattingTest.php</file>
       <file>tests/phpunit/Integration/LeadsIntegrationTest.php</file>
+      <file>tests/phpunit/Integration/LeadsContactSyncIntegrationTest.php</file>
+      <file>tests/phpunit/Integration/LeadsErrorHandlingIntegrationTest.php</file>
       <file>tests/phpunit/Feature/LeadsFeatureTest.php</file>
+      <file>tests/phpunit/Feature/LeadsCompleteWorkflowTest.php</file>
     </testsuite>
     <testsuite name="LeadsOnly">
       <directory>tests/phpunit/Unit</directory>

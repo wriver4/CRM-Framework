@@ -44,6 +44,7 @@ if ($page == 'new' || $page == 'edit') {
 // conditional forms
 if ($dir == 'leads' && $page == 'new') {
   echo '<script src="/assets/js/conditional-forms.js"></script>';
+  echo '<script src="/assets/js/new-leads.js"></script>';
 }
 // hide empty Structure Other/Additional on edit view
 if ($dir == 'leads' && $page == 'edit') {

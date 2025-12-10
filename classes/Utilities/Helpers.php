@@ -358,12 +358,8 @@ public function admin_select_property_id($lang, $prop_id )
   {
     $services_array = [
       '1' => $lang['lead_service_wildfire_spray'], // Exterior Wildfire Spray System
-      '2' => $lang['lead_service_assessment_drone'], // Site Assessment and Drone Footage
-      '3' => $lang['lead_service_gutter_protection'], // Gutter Protection
-      '4' => $lang['lead_service_ember_vent'], // Ember Vent Protection
       '5' => $lang['lead_service_ltr_application'], // Long Term Retardant (LTR) Application
       '6' => $lang['lead_service_lease_system'], // Lease a Protection System
-      '7' => $lang['lead_service_landscape_mitigation'], // Landscape Mitigation
     ];
     return $services_array;
   }
