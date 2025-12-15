@@ -114,6 +114,7 @@ try {
         'cell_phone' => format_phone_number($_POST['cell_phone'] ?? ''),
         'email' => filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL),
         'business_name' => sanitize_input($_POST['business_name'] ?? ''),
+        'project_name' => sanitize_input($_POST['project_name'] ?? ''),
         'contact_type' => (int)($_POST['contact_type'] ?? 1),
         
         // Address information

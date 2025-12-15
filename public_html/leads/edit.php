@@ -492,6 +492,7 @@ require SECTIONOPEN;
   $can_edit_engineering = $helpers->can_edit_engineering($user_rid);
   $can_edit_sales = $helpers->can_edit_sales($user_rid);
   $can_edit_admin_leads = $helpers->can_edit_admin_leads($user_rid);
+  $can_delete_notes = in_array($user_rid, [1, 2]); // Super Admin, Admin
   
   // Check if any engineering data exists to determine default collapse state
   $has_engineering_data = !empty($eng_system_cost_low) || !empty($eng_system_cost_high) || !empty($eng_protected_area);
@@ -880,9 +881,19 @@ require SECTIONOPEN;
                     <?= ucfirst($note['form_source']) ?></small>
                   <?php endif; ?>
                 </div>
-                <small class="text-muted">
-                  <?= date('M d, Y g:i A', strtotime($note['date_created'])) ?>
-                </small>
+                <div class="d-flex align-items-center gap-2">
+                  <small class="text-muted">
+                    <?= date('M d, Y g:i A', strtotime($note['date_created'])) ?>
+                  </small>
+                  <button type="button"
+                          class="btn btn-outline-danger btn-sm delete-note-btn"
+                          data-note-id="<?= $note['id'] ?>"
+                          data-lead-id="<?= $id ?? '' ?>"
+                          <?= !$can_delete_notes ? 'disabled' : '' ?>
+                          title="<?= !$can_delete_notes ? 'Only administrators can delete notes' : 'Delete note' ?>">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
               </div>
               <div class="note-text mb-2">
                 <?= nl2br(htmlspecialchars($note['note_text'])) ?>

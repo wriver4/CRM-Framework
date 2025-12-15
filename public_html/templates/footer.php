@@ -322,7 +322,6 @@ try {
     
     // Output JavaScript includes and initialization
     echo $editorHelper->getJsIncludes();
-    echo $editorHelper->getInitializationScript();
     
     // Load helper JavaScript for additional functionality
     echo '<script src="' . JS . '/summernote-helper.js"></script>';

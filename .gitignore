@@ -51,3 +51,14 @@ videos/
 *.log
 test-output/
 test_results/
+
+# Editor files
+*.swp
+*.swo
+*~
+
+# Backup files
+*.backup
+*.bak
+*.old
+backups_archive/

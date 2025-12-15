@@ -46,12 +46,7 @@ $login_error_message = '';
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // DEBUG: Log all login attempts
-  file_put_contents(
-    dirname(__DIR__) . '/logs/login_attempts.log',
-    date('Y-m-d H:i:s') . ' POST: ' . json_encode($_POST) . ' | IP: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL,
-    FILE_APPEND
-  );
+
   
   // public function ...
   if (!empty($_POST["login"]) && $_POST["username"] != '' && $_POST["password"] != '' && $_POST["username"] != 'system') {
