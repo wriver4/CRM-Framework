@@ -55,13 +55,38 @@ ssh wswg "cd /home/democrm && composer test-coverage"
 ```
 
 ### Playwright Browser Tests
+
+**IMPORTANT**: Playwright tests are located in `/home/mark/Projects/remote_testing/democrm_remote/` (local testing directory, not on remote server).
+
+**Run via Docker Compose** (recommended - handles browser dependencies):
 ```bash
-npm run test              # Run all Playwright tests
-npm run test:headed       # Run with visible browser
-npm run test:ui           # Interactive UI mode
-npm run test:debug        # Debug mode
-npm run test:report       # Show test report
+# Navigate to local testing directory
+cd /home/mark/Projects/remote_testing
+
+# Run all Playwright tests
+docker-compose up playwright-tests
+
+# Watch mode (run tests on file changes)
+docker-compose --profile watch up playwright-watch
+
+# Interactive UI mode
+docker-compose --profile ui up playwright-ui
+# Then open: http://localhost:3000
 ```
+
+**View Reports** (after tests complete):
+```bash
+# From local testing directory
+cd /home/mark/Projects/remote_testing/democrm_remote
+
+# Show test report in browser
+npm run test:report
+
+# Or view HTML report directly
+open playwright-report/index.html
+```
+
+**Note**: Do NOT run `npm test` directly - it requires browser dependencies that are only available in the Docker container.
 
 ### Composer
 ```bash
@@ -260,16 +285,20 @@ DataTables integration for list views with server-side processing.
 
 ## Testing Framework
 
-### Current Status (Phase 1 Complete)
+### PHPUnit Tests (Remote Server)
+
+**Location**: `/home/democrm/tests/phpunit/`
+
+**Current Status (Phase 1 Complete)**:
 - **Total Tests**: 827 tests, 2,247 assertions
 - **Core Classes**: 100% passing (Nonce, Sessions)
 - **Execution Time**: ~2 minutes via SSH
 - **Test Database**: `democrm_test` (configured in phpunit.xml)
 
-### Test Organization
+**Test Organization**:
 ```
 tests/phpunit/
-├── Unit/              # Unit tests
+├── Unit/              # Unit tests (isolated components)
 │   ├── Core/         # Database, Nonce, Sessions
 │   ├── Models/       # Leads, Contacts, Users
 │   └── Utilities/    # Helpers, FormComponents
@@ -277,10 +306,32 @@ tests/phpunit/
 └── Feature/          # End-to-end workflows
 ```
 
-### Testing Environment
+**Testing Environment**:
 - Test mode enabled via `phpunit.xml` env vars
 - Persistent test database (not ephemeral)
 - Base URL: `https://democrm.waveguardco.net`
+
+### Playwright E2E Tests (Local Docker)
+
+**Location**: `/home/mark/Projects/remote_testing/democrm_remote/tests/playwright/`
+
+**Current Status**:
+- **Total Tests**: 145+ tests
+- **Pass Rate**: ~84%
+- **Test Files**: 17 spec files
+- **Execution Time**: ~8 minutes
+
+**Key Test Files**:
+- `navigation.spec.js` - Page load and error detection (5 tests)
+- `leads-comprehensive.spec.js` - Core lead functionality (13 tests)
+- `leads-advanced.spec.js` - Advanced features (27 tests)
+- `calendar.spec.js` - Calendar integration (9 tests)
+- `rbac-permissions.spec.js` - Role-based access (18 tests)
+
+**Testing Environment**:
+- Tests run in Docker container with Chromium
+- Tests against live remote server: `https://democrm.waveguardco.net`
+- Uses test credentials from `tests/test-credentials.js`
 
 ## Common Patterns
 
